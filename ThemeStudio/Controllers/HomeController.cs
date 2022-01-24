@@ -1,18 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.Mvc;
+﻿using LibSass.Compiler;
 using LibSass.Compiler.Options;
-using LibSass.Compiler;
-using System.Collections;
-using System.IO;
 using Newtonsoft.Json;
-using System.Text;
-using System.IO.Compression;
-using System.Web.ModelBinding;
-//using System.Web.Script.Serialization;
 using Newtonsoft.Json.Linq;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.IO.Compression;
+using System.Linq;
+using System.Text;
+using System.Web.ModelBinding;
+using System.Web.Mvc;
 
 namespace ThemeStudio.Controllers
 {
@@ -45,39 +42,37 @@ namespace ThemeStudio.Controllers
         }
         public class ThemeProperties
         {
-            public string theme { get; set; }
-            public IDictionary<string, string> properties { get; set; }
-
-            public string[] dependency { get; set; }
-
-            public string[] components { get; set; }
-
-            public string file { get; set; }
-            public string compatiblity { get; set; }
+            public string Theme { get; set; }
+            public IDictionary<string, string> Properties { get; set; }
+            public string[] Dependency { get; set; }
+            public string[] Components { get; set; }
+            public string File { get; set; }
+            public string Compatiblity { get; set; }
         }
-        public static String GetTimestamp(DateTime value)
+
+        public static string GetTimestamp(DateTime value)
         {
             return value.ToString("yyyyMMddHHmmssffff");
         }
+
         [GZipOrDeflate]
         public string ThemeChange(ThemeProperties color)
         {
             var changes = "";
             var timeStamp = GetTimestamp(DateTime.Now);
-            var keys = color.properties.Keys.ToArray();
-
-            for (var i = 0; i < keys.Length; i++)
-            {
-                var value = color.properties[keys[i]];
-                changes = changes + (keys[i] + ":" + value) + ";\n";
+            var keys = color.Properties.Keys.ToArray();
+            
+            foreach (var key in keys){
+                var value = color.Properties[key];
+                changes += $"{key}:{value};\n";
             }
 
-            var theme = (color.GetType().GetProperty("theme").GetValue(color, null)).ToString();
+            var theme = color.Theme;
             var basePath = AppDomain.CurrentDomain.BaseDirectory.ToString();
-            var path = basePath + "ej2-resource/styles/";
-            var templatepath = basePath + "template/";
-            var templatefile = System.IO.File.ReadAllText(templatepath + theme + ".txt");
-            templatefile = templatefile.Replace("{{:common}}", changes);
+            var templatepath = $"{basePath}template/";
+            var templatefile = System.IO.File.ReadAllText(templatepath + theme + ".txt").Replace("{{:common}}", changes);
+
+            var path = $"{basePath}ej2-resource/styles/";
             var filecontent = "";
             filecontent += templatefile;
             filecontent += System.IO.File.ReadAllText(path + "/all" + theme + ".scss");
@@ -103,46 +98,45 @@ namespace ThemeStudio.Controllers
 
         public string export(ThemeProperties exporting)
         {
-            var themeName = exporting.theme;
+            var themeName = exporting.Theme;
 
             var changes = "";
-            var keys = exporting.properties.Keys.ToArray();
+            var keys = exporting.Properties.Keys.ToArray();
             for (var i = 0; i < keys.Length; i++)
             {
-                var value = exporting.properties[keys[i]];
-                changes = changes + (keys[i] + ":" + value) + ";\n";
+                var value = exporting.Properties[keys[i]];
+                changes += (keys[i] + ":" + value) + ";\n";
             }
 
             var filecontents = "";
             var basePath = AppDomain.CurrentDomain.BaseDirectory.ToString();
             var path = basePath + "ej2-resource/styles/";
-            var components = (exporting.GetType().GetProperty("components").GetValue(exporting, null));
-            var componentsarray = (components as IEnumerable).Cast<object>().Select(x => x.ToString()).ToArray();
+            var componentsarray = exporting.Components;
 
             /* json file content*/
             dynamic settings = new JObject();
             settings.theme = themeName;
-            settings["properties"] = JsonConvert.SerializeObject(exporting.properties);
+            settings["properties"] = JsonConvert.SerializeObject(exporting.Properties);
             settings["components"] = JsonConvert.SerializeObject(componentsarray);
 
             /* json file end */
-            var foldername = exporting.file; // user declare download floder name
+            var foldername = exporting.File; // user declare download floder name
 
             //TODO exporting.dependency
-            var deps = exporting.dependency;
+            var deps = exporting.Dependency;
             var templatepath = basePath + "template/";
             if (themeName.IndexOf('-') != -1)
             {
                 var darkpath = templatepath + "dark/";
                 var templatefile = System.IO.File.ReadAllText(darkpath + themeName + ".txt");
                 templatefile = templatefile.Replace("{{:common}}", changes as string);
-                filecontents = filecontents + templatefile;
+                filecontents += templatefile;
                 var paths = basePath + "ej2-resource/styles/";
                 for (int i = 0; i < deps.Length; i++)
                 {
                     if (deps[i] == "base")
                     {
-                        paths = paths + deps[i] + "/" + themeName + ".scss";
+                        paths += deps[i] + "/" + themeName + ".scss";
                         filecontents += System.IO.File.ReadAllText(paths);
                     }
                     else
@@ -168,7 +162,7 @@ namespace ThemeStudio.Controllers
                 {
                     if (deps[i] == "base")
                     {
-                        path = path + deps[i] + "/" + themeName + ".scss";
+                        path += deps[i] + "/" + themeName + ".scss";
                         filecontents += System.IO.File.ReadAllText(path);
                     }
                     else
@@ -200,7 +194,7 @@ namespace ThemeStudio.Controllers
             var result = sasscompiler(sourcepath);
             
             /* compatibility css */
-            var compatiblity = exporting.compatiblity;
+            var compatiblity = exporting.Compatiblity;
             if (compatiblity == "True")
             {
                 var compataibilitydir = basePath + "outputs/" + foldername + '-' + timeStamp + '-' + str + "/compatibility/";
@@ -277,7 +271,7 @@ namespace ThemeStudio.Controllers
         [GZipOrDeflate]
         public string loadtheme(ThemeProperties themes)
         {
-            string theme = (themes.GetType().GetProperty("theme").GetValue(themes, null)) as string;
+            string theme = themes.Theme;
 
             string basePath = System.AppDomain.CurrentDomain.BaseDirectory.ToString();
             var path = basePath + "Content/ej2/" + theme + ".css";
@@ -286,11 +280,10 @@ namespace ThemeStudio.Controllers
 
         public string dark(ThemeProperties themes)
         {
-            var theme = (themes.GetType().GetProperty("theme").GetValue(themes, null)).ToString();
+            var theme = themes.Theme;
             var basePath = AppDomain.CurrentDomain.BaseDirectory.ToString();
             var path = basePath + "ej2-resource/styles/";
-            var depen = (themes.GetType().GetProperty("dependency").GetValue(themes, null));
-            var deps = (depen as IEnumerable).Cast<object>().Select(x => x.ToString()).ToArray();
+            var deps = themes.Dependency;
             var filecontents = "";
             /* read a sass file */
             for (int i = 0; i < deps.Length; i++)
@@ -333,20 +326,17 @@ namespace ThemeStudio.Controllers
         {
             var sourcepath = "";
             var changes = "";
-            var propertieskey = (color.properties.Keys);
-            var keys = (propertieskey as IEnumerable).Cast<object>().Select(x => x.ToString()).ToArray();
+            var keys = color.Properties.Keys.ToArray();
             for (var i = 0; i < keys.Length; i++)
             {
-                var value = color.properties[keys[i]];
-                changes = changes + (keys[i] + ":" + value) + ";\n";
+                var value = color.Properties[keys[i]];
+                changes += (keys[i] + ":" + value) + ";\n";
             }
 
-            var theme = (color.GetType().GetProperty("theme").GetValue(color, null)) as string;
-            var basePath = System.AppDomain.CurrentDomain.BaseDirectory.ToString();
-            var depen = (color.GetType().GetProperty("dependency").GetValue(color, null));
-            var deps = (depen as IEnumerable).Cast<object>().Select(x => x.ToString()).ToArray();
-            var path = basePath + "ej2-resource/styles/";
-            var templatepath = basePath + "template/dark/";
+            var theme = color.Theme;
+            var basePath = AppDomain.CurrentDomain.BaseDirectory.ToString();
+            var deps = color.Dependency;
+            var templatepath = $"{basePath}template/dark/";
             var templatefile = System.IO.File.ReadAllText(templatepath + theme + ".txt");
             templatefile = templatefile.Replace("{{:common}}", changes as string);
             var filecontent = "";
@@ -355,6 +345,7 @@ namespace ThemeStudio.Controllers
             {
                 if (deps[i] == "base")
                 {
+                    var path = basePath + "ej2-resource/styles/";
                     path = $"{basePath}ej2-resource/styles/";
                     path = $"{path}{deps[i]}/{theme}.scss";
                     filecontent += System.IO.File.ReadAllText(path);
@@ -366,7 +357,7 @@ namespace ThemeStudio.Controllers
                     var files = Directory.GetFiles(sourcedirectories, searchfilename, SearchOption.AllDirectories);
                     foreach (var file in files)
                     {
-                        filecontent = filecontent + System.IO.File.ReadAllText(file);
+                        filecontent += System.IO.File.ReadAllText(file);
                     }
                 }
             }
