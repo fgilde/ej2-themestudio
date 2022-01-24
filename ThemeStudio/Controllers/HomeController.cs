@@ -63,7 +63,7 @@ namespace ThemeStudio.Controllers
         public string ThemeChange(ThemeProperties color)
         {
             var sourcepath = "";
-            string changes = "";
+            var changes = "";
             var propertieskey = (color.properties.Keys);
             string timeStamp = "";
             timeStamp = GetTimestamp(DateTime.Now);
