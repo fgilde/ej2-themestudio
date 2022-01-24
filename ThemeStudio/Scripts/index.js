@@ -2,7 +2,7 @@
 var defaultVal = {};
 var themeColors = {};
 var exportDialog, importDialog, filterDialog;
-var themes = ['material', 'fabric', 'bootstrap', 'highcontrast', 'fabricdark', 'materialdark', 'bootstrapdark', 'highcontrastlight','bootstrap4','fusion'];
+var themes = ['material', 'fabric', 'bootstrap', 'highcontrast', 'fabricdark', 'materialdark', 'bootstrapdark', 'highcontrastlight', 'bootstrap4', 'fusion'];
 var curTheme = 'material';
 var controlContent;
 var colorchange = {};
@@ -359,7 +359,7 @@ var themeProps = {
 
 function filterChanged(event) {
     document.querySelectorAll('.theme-prop-wrapper').forEach(function (el) {
-        if (event.target.value.length <= 0 || el.getAttribute('data-id').toLowerCase().indexOf(event.target.value.toLowerCase()) > -1 || el.querySelector('span').innerText.toLowerCase().indexOf(event.target.value.toLowerCase()) > -1 ) {
+        if (event.target.value.length <= 0 || el.getAttribute('data-id').toLowerCase().indexOf(event.target.value.toLowerCase()) > -1 || el.querySelector('span').innerText.toLowerCase().indexOf(event.target.value.toLowerCase()) > -1) {
             el.style.display = 'block';
         } else {
             el.style.display = 'none';
@@ -371,7 +371,7 @@ function loadJson() {
     getThemeColors();
     renderDialogs();
     //renderRightPane();
-    
+
     var queystring = window.location.search;
     if (queystring.indexOf("?theme=") !== -1) {
         queystring = queystring.replace(googleAngRegex, "");
@@ -382,7 +382,7 @@ function loadJson() {
     } else {
         loadDefaultThemes('material', false);
     }
-    
+
 }
 loadJson();
 
@@ -403,7 +403,7 @@ function getThemeColors() {
 // Render the right pane components
 function renderRightPane() {
     // theme switcher datasource
-    
+
     themeSwitherPopup = new ej.popups.Popup(document.getElementById('theme-switcher-popup'), {
 
         relateTo: themeDropDown,
@@ -428,7 +428,7 @@ function renderRightPane() {
     document.addEventListener('click', function () { togglePopup(true) });
     document.getElementById('themelist').addEventListener('click', function (e) {
         var parent = e.target.closest('li');
-        var theme= parent.id;
+        var theme = parent.id;
         if (theme === curTheme) {
             return;
         }
@@ -439,20 +439,20 @@ function renderRightPane() {
         curTheme = theme;
         //window.location.href = window.location.origin;
         themeSwitherPopup.hide();
-        var isDark = document.getElementById("dark").ej2_instances[0].checked; 
+        var isDark = document.getElementById("dark").ej2_instances[0].checked;
         if (isDark) {
-            if (theme !== "highcontrast" && theme !== "bootstrap4"  && theme !== "fusion") {
+            if (theme !== "highcontrast" && theme !== "bootstrap4" && theme !== "fusion") {
                 theme = theme + "-dark";
             }
         } else {
             //if (theme === "highcontrast") {
             //    theme = theme + "-light";
-                
+
             //}
             theme = theme;
         }
         renderProperties(theme);
-        loadTheme(theme,true);
+        loadTheme(theme, true);
     });
 
     var queystring = window.location.search;
@@ -481,13 +481,13 @@ function renderRightPane() {
             if (themes === "highcontrast") {
                 themes = themes + "-light";
                 renderProperties(themes);
-                loadTheme(themes,true);
+                loadTheme(themes, true);
             } else {
                 renderProperties(themes);
-                loadTheme(themes,true);
+                loadTheme(themes, true);
             }
         }
-       });
+    });
     themeMode.appendTo('#light');
 
     themeMode = new ej.buttons.RadioButton({
@@ -497,10 +497,10 @@ function renderRightPane() {
             if (themes !== "highcontrast") {
                 themes = themes + "-dark";
                 renderProperties(themes);
-                loadTheme(themes,true);
+                loadTheme(themes, true);
             } else {
                 renderProperties(themes);
-                loadTheme(themes,true);
+                loadTheme(themes, true);
             }
         }
     });
@@ -536,7 +536,7 @@ function loadDefaultThemes(theme, isRightpanerender) {
     }
     var str = "";
     str = "?theme=" + theme;
-    history.replaceState({}, '', baseurl + str);    
+    history.replaceState({}, '', baseurl + str);
     curTheme = theme;
     themeColors = ej.base.extend({}, defaultVal, {}, true);
     var ajax = new ej.base.Ajax({
@@ -580,7 +580,7 @@ var themeBodyLeftOverlay = ej.base.select('.theme-body-left-ovelay');
 
 function renderComponents() {
     //ej.base.select('.sb-body-overlay').classList.remove('sb-hide');
-    var isMaterial = curTheme === 'material' ||  curTheme === 'material-dark';
+    var isMaterial = curTheme === 'material' || curTheme === 'material-dark';
     ej.base.enableRipple(isMaterial);
     if (!controlContent) {
         cardelements = $('.layout-card');
@@ -621,12 +621,12 @@ function renderComponents() {
         var grid = new ej.grids.Grid({
             dataSource: window.gridData,
             allowPaging: true,
-           
+
             groupSettings: { columns: ['OrderID'] },
             allowFiltering: true,
             filterSettings: { type: 'Menu' },
             pageSettings: { pageCount: 3, pageSize: 3 },
-            actionComplete:function(args) {
+            actionComplete: function (args) {
                 if (args.requestType === 'grouping') {
                     grid.pageSettings.pageSize = 3;
                 }
@@ -1292,7 +1292,7 @@ function renderComponents() {
     }
     if ($('#Component-rich-text-editor')) {
         var defaultRTE = new ej.richtexteditor.RichTextEditor({
-            
+
             toolbarSettings: {
                 items: ['Bold', 'Italic', 'Underline', 'StrikeThrough',
                     'FontName', 'FontSize', 'FontColor', 'BackgroundColor',
@@ -1311,7 +1311,7 @@ function renderComponents() {
         });
         progressButton.appendTo('#spinleft');
     }
-   
+
     if ($("#spinright").length) {
         progressButton = new ej.splitbuttons.ProgressButton({
             content: 'Spin Right', spinSettings: { position: 'Right' }, isPrimary: true
@@ -1330,7 +1330,7 @@ function renderComponents() {
         progressButton.appendTo('#disabled');
     }
     if ($('#MenuComponent')) {
-         menuItems = [
+        menuItems = [
             {
                 text: 'File',
                 iconCss: 'em-icons e-file',
@@ -1659,7 +1659,7 @@ function renderComponents() {
             rule: importRules,
         });
         qryBldrObj.appendTo('#Component-query-builder');
-       
+
     }
     if ($('#Component-chips')) {
         new ej.buttons.ChipList({ chips: window.chipsData.defaultData }, '#Component-chips');
@@ -1852,7 +1852,7 @@ function renderComponents() {
             },
             view: 'Details'
         });
-       
+
 
         fileObject.appendTo('#Component-file-manager');
     }
@@ -2076,9 +2076,7 @@ function exporting(boolean) {
             colorchange['theme'] = window.themes;
             var themes_var;
             if (window.themes.indexOf('-') !== 1) {
-               
-             themes_var = window.themes.replace("-", "");
-                
+                themes_var = window.themes.replace("-", "");
                 themes_var = themes_var.trim();
             } else {
                 themes_var = window.themes;
@@ -2135,7 +2133,7 @@ function _renderProperties(themeName) {
                 break;
             }
             var property = properties[keys[i]];
-            
+
             var wrapper = new ej.base.createElement('div', { className: 'theme-prop-wrapper', attrs: { 'data-id': property.id } });
             var labelElement = new ej.base.createElement('div', { className: 'f-left theme-property', innerHTML: '<span>' + keys[i] + '</span' });
             clrpkrWrapper = new ej.base.createElement('div', { className: 'f-right theme-value', innerHTML: `<input type="color" class="color-picker ${property.id}" />` });
@@ -2167,7 +2165,7 @@ function _renderProperties(themeName) {
 
                 },
 
-                change: function (args) {                    
+                change: function (args) {
                     var element = this.element.closest('.theme-prop-wrapper');
                     var value = args.currentValue.rgba;
                     var colorEle = this.getWrapper().querySelector('.theme-color');
@@ -2289,7 +2287,7 @@ function loadTheme(theme, isOverylay) {
     if (isOverylay) {
         overlay(true);
     }
-    
+
     if (theme === 'highcontrast') {
         document.body.classList.remove('themestudio-bootstrap');
         document.body.classList.remove('themestudio-fabric');
@@ -2361,7 +2359,7 @@ function loadTheme(theme, isOverylay) {
         document.body.classList.remove('themestudio-highcontrast-light');
         document.body.classList.add('themestudio-bootstrap4');
         document.body.classList.remove('themestudio-fusion');
-        
+
     }
     else if (theme === 'fusion') {
         document.body.classList.remove('themestudio-bootstrap');
@@ -2374,7 +2372,7 @@ function loadTheme(theme, isOverylay) {
         document.body.classList.remove('themestudio-highcontrast-light');
         document.body.classList.remove('themestudio-bootstrap4');
         document.body.classList.add('themestudio-fusion');
-        
+
     }
     else {
         document.body.classList.remove('themestudio-bootstrap-dark');
@@ -2428,7 +2426,7 @@ function loadTheme(theme, isOverylay) {
             loadDefaultThemes1(theme, true);
         }, 500);
 
-       
+
     }
 
 }
@@ -2696,7 +2694,7 @@ var catCard = {
         'col-cards': {
             'cat-editors': ['textbox', 'numerictextbox', 'maskedtextbox', 'slider', 'inplace-editor'],
             'cat-pickers': ['datepicker', 'timepicker', 'datetimepicker', 'daterangepicker'],
-            'cat-dropdown': ['auto-complete', 'drop-down-list', 'multi-select', 'combo-box','list-box'],
+            'cat-dropdown': ['auto-complete', 'drop-down-list', 'multi-select', 'combo-box', 'list-box'],
             'cat-button': ['button', 'drop-down-button', 'split-button', 'button-group', 'progress-button'],
             'check-box': null,
             'radio-button': null,
@@ -2914,18 +2912,18 @@ function getdependency(comp_array) {
     window.dependency_arr = [];
     theme = themeDeps(comp_array, window.dependentCollection["styles"], window.dependentCollection["resources"]);
     var packs = Object.keys(theme.compPack);
-    dependency_arr = ['base','buttons/button'];
+    dependency_arr = ['base', 'buttons/button'];
     var selectComparray = [];
     var colorpickercomponent = [];
     var filecomponent = [];
     for (var pack of packs) {
 
         for (var comp of theme.compPack[pack]) {
-            if (comp_array.indexOf(comp) !== -1 || dependency_arr.indexOf(comp) !== -1  ) {
-               
-                    var styledependency = pack + '/' + (comp === 'listview' ? 'list-view' : comp);
+            if (comp_array.indexOf(comp) !== -1 || dependency_arr.indexOf(comp) !== -1) {
+
+                var styledependency = pack + '/' + (comp === 'listview' ? 'list-view' : comp);
                 selectComparray.push(styledependency);
-                
+
             }
             else {
                 if (((comp === "color-picker") && window.dependency_arr.indexOf('button') === -1) && comp !== "file-manager") {
@@ -2939,11 +2937,11 @@ function getdependency(comp_array) {
                     filecomponent.push(styledependency);
                 }
 
-                }
-               
+            }
+
 
         }
-       
+
     }
     window.dependency_arr.push('layouts/dashboardlayout');
     window.dependency_arr = window.dependency_arr.concat(selectComparray);
@@ -3143,7 +3141,7 @@ function importing(boolean) {
                     controlSection.scrollTop = scrollTop;
                 }
             }
-            
+
         }
 
     }
@@ -3232,9 +3230,9 @@ function loadDefaultThemes1(theme, rendered) {
         styles.innerHTML = data;
         destroyControls();
         renderComponents();
-        
+
         renderRightPane1(darktheme);
-        
+
 
 
 
@@ -3251,8 +3249,8 @@ function loadDefaultThemes1(theme, rendered) {
 }
 function renderRightPane1(theme) {
     // theme switcher datasource
-   
-        
-        renderProperties(theme);
-                
+
+
+    renderProperties(theme);
+
 }
