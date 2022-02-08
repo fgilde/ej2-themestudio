@@ -79,13 +79,7 @@
 }
 
 /*Body section*/
-.theme-body {
-    background-color: #f8f8f8;
-    top: 56px;
-    display: inline;
-    overflow-y: scroll;
-    -webkit-overflow-scrolling: touch;
-}
+
 
 .f-left {
     float: left;
@@ -101,6 +95,18 @@
 
 .e-card.cat-dropdowns .control-area, .e-card.cat-pickers .control-area {
     padding-bottom: 24px;
+}
+
+.theme-body {
+    background-color: #f8f8f8;
+    top: 56px;
+    display: inline;
+    overflow-y: scroll;
+    -webkit-overflow-scrolling: touch;
+
+/*    position: relative;
+    display: flex;
+    flex-direction: column;*/
 }
 
 .theme-body-left {

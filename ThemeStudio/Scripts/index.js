@@ -512,6 +512,7 @@ function renderRightPane() {
 }
 
 function loadThemeProperties(theme, callback) {
+    themeProps[theme] = themeProps[theme] || {};
     if (themeProps[theme]._varsLoaded) {
         callback();
     } else {

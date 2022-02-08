@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using Microsoft.Ajax.Utilities;
 
 namespace ThemeStudio
@@ -23,6 +24,7 @@ namespace ThemeStudio
             return Value.ToLower() == "transparent" || Value.StartsWith("#") ? ScssVariableType.Color : ScssVariableType.Unknown;
         }
 
+        public string CssVarame => $"--{Key.Replace("$", "")}";
         public string Name { get; set; }
         public string Key { get; set; }
         public string Value { get; set; }
@@ -33,6 +35,12 @@ namespace ThemeStudio
     {
         Unknown,
         Color
+    }
+
+    public enum CssVariableDeclaration
+    {
+        UseScssVariable,
+        UseVariableValue
     }
 
 
@@ -51,25 +59,91 @@ namespace ThemeStudio
         public static string ConvertScssVariablesToCssVars(string scssFile, bool saveChangesToFile)
         {
             var content = File.ReadAllText(scssFile);
-            var vars = ReadVariables(scssFile).Where(v => v.Type == ScssVariableType.Color);
-            var builder = new StringBuilder(":root {");
-            foreach (var var in vars)
-            {
-                string cssVarName = $"--{var.Key.Replace("$", "")}";
-                //builder.AppendLine().AppendLine($"{cssVarName}: {var.Value};");
-                builder.AppendLine().AppendLine(string.Format("{0}: {1};", cssVarName, "#{"+var.Key+"}"));
+            var vars = ReadVariables(scssFile).Where(v => v.Type == ScssVariableType.Color).ToList();
+            var declarations = BuildCssVariableDeclarations(vars, CssVariableDeclaration.UseScssVariable);
+            content = ReplaceScssVariableUsings(content, vars);
 
-                //content = content.Replace($": {var.Key} ", $": var({cssVarName}) ");
-                //content = content.Replace($":{var.Key} ", $":var({cssVarName}) ");
-            }
-
-            builder.AppendLine().AppendLine("}");
-            
-            //var result = builder.AppendLine() + content;
-            var result = content + Environment.NewLine + builder.AppendLine();
+            var result = content + Environment.NewLine + declarations;
             if (saveChangesToFile)
                 File.WriteAllText(scssFile, result);
             return result;
+        }
+
+        private static string ReplaceScssVariableUsings(string content, IList<ScssVariable> vars)
+        {
+            var result = new StringBuilder();
+            using (StringReader reader = new StringReader(content))
+            {
+                string line = string.Empty;
+                do
+                {
+                    line = reader.ReadLine();
+                    if (line != null)
+                    {
+                        ScssVariable[] replacements;
+                        if (CanReplaceUsing(line, vars, out replacements))
+                        {
+                            foreach (var variable in replacements)
+                            {
+                                line = line.Replace(variable.Key, $"var({variable.CssVarame}) ");
+                            }
+                            //content = content.Replace($":{var.Key} ", $":var({cssVarName}) ");
+
+                        }
+                    }
+
+                    result.AppendLine(line);
+
+                } while (line != null);
+            }
+
+            return result.ToString();
+        }
+
+        private static string[] UsedVariables(string s, bool allowUsingInFunctions)
+        {
+            if (!allowUsingInFunctions)
+            {
+                s = Regex.Replace(s, @"\(.*\)", "");
+            }
+            var collection = Regex.Matches(s, @"\$[a-z0-9-]+", RegexOptions.IgnoreCase | RegexOptions.CultureInvariant);
+            return (from Match m in collection select m.ToString()).ToArray();
+        }
+
+        private static bool CanReplaceUsing(string line, IList<ScssVariable> vars, out ScssVariable[] replacements)
+        {
+            if (line.Contains("fade"))
+            {
+
+            }
+            replacements = Array.Empty<ScssVariable>();
+            if (!string.IsNullOrWhiteSpace(line) && !line.TrimStart().StartsWith("$") && !line.TrimStart().StartsWith("@") && line.Contains("$"))
+            {
+                var usedVariablesInLine = UsedVariables(line, false);
+                replacements = vars.Where(v => usedVariablesInLine.Any(w => w == v.Key)).ToArray();
+                return replacements.Length > 0;
+            }
+            return false;
+        }
+
+
+        private static string BuildCssVariableDeclarations(IEnumerable<ScssVariable> vars, CssVariableDeclaration valueDeclaration)
+        {
+            var builder = new StringBuilder(":root {");
+            foreach (var var in vars)
+            {
+                if (valueDeclaration == CssVariableDeclaration.UseVariableValue)
+                {
+                    builder.AppendLine().AppendLine($"{var.CssVarame}: {var.Value};");
+                }
+                else if(valueDeclaration == CssVariableDeclaration.UseScssVariable)
+                {
+                    builder.AppendLine().AppendLine($"{var.CssVarame}: {"#{" + var.Key + "}"};");
+                }
+            }
+
+            builder.AppendLine().AppendLine("}");
+            return builder.AppendLine().ToString();
         }
 
         private static ScssVariable TryParseLine(string line)
