@@ -63,9 +63,9 @@ namespace ThemeStudio.Controllers
         public string ThemeChange(ThemeProperties color)
         {
             var sourcepath = "";
-            string changes = "";
+            var changes = "";
             var propertieskey = (color.properties.Keys);
-            string timeStamp = "";
+            var timeStamp = "";
             timeStamp = GetTimestamp(DateTime.Now);
             string[] keys = (propertieskey as IEnumerable).Cast<object>().Select(x => x.ToString()).ToArray();
             for (var i = 0; i < keys.Length; i++)
