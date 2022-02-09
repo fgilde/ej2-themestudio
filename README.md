@@ -1,5 +1,9 @@
-# ej2-themestudio
+# Syncfusion Theme Studio Extended
 
-Theme Studio for Essential JS 2 can be used to customize a new theme from an existing theme. It doesn't support with Data visualization components like Chart, Diagram, Gauge, Range Navigator, Maps.
+This Project is forked from https://github.com/syncfusion/ej2-themestudio
 
-Official theme studio hosted link: https://ej2.syncfusion.com/themestudio/
+Live version of this project running is available here https://sw-theme.azurewebsites.net
+
+# Changes to Original
+This Theme Studio creates css variables from the existing scss variables and use them in css result. This has the imrovement that you can change theme colors, padding and fonts at runtime
+Also this theme studio give you the possibility to change all theme color and not only the default 4 colors Syncfusion provides

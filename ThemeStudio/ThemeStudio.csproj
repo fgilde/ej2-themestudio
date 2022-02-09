@@ -142,12 +142,22 @@
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="Attributes\GZipOrDeflateAttribute.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Extensions\DateTimeExtensions.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Helper\Random.cs" />
+    <Compile Include="Helper\SassCompile.cs" />
+    <Compile Include="Helper\ScssHelper\CssVariableDeclaration.cs" />
+    <Compile Include="Helper\ScssHelper\ScssVariable.cs" />
+    <Compile Include="Helper\ScssHelper\ScssVariableType.cs" />
+    <Compile Include="Models\TemplateContent.cs" />
+    <Compile Include="Models\ThemeProperties.cs" />
+    <Compile Include="Pathes.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ScssReader.cs" />
+    <Compile Include="Helper\ScssHelper\ScssHelper.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\bootstrap.css" />
@@ -963,7 +973,6 @@
     <Folder Include="ej2-resource\styles\pivotgrid\" />
     <Folder Include="ej2-resource\styles\pivotview\pivotgrid\" />
     <Folder Include="ej2-resource\styles\popups\toast\" />
-    <Folder Include="Models\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config">

@@ -1,78 +1,42 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
-using System.Web;
 using Microsoft.Ajax.Utilities;
 
-namespace ThemeStudio
+namespace ThemeStudio.Helper.ScssHelper
 {
-
-    public class ScssVariable
+    public static class ScssHelper
     {
-        private static string[] knownFonts = FontFamily.Families.Select(f => f.Name.ToLower()).ToArray();
-        private static string[] knownStyles = Enum.GetNames(typeof(FontStyle)).Concat(new []{"normal"}).Select(s => s.ToLower()).ToArray();
-        public ScssVariable(string key, string value)
+        public static IEnumerable<ScssVariable> FillReferences(this IEnumerable<ScssVariable> variables)
         {
-            Key = key;
-            Value = value.Trim();
-            Name = string.Join(" ", key.Replace("$", "").Split('-').Where(s => !string.IsNullOrWhiteSpace(s)).Select(s => s[0].ToString().ToUpper() + s.Substring(1)));
-            Type = GetVarType();
+            return variables;
+        }       
+        
+        public static string ToThemePropertiesJson(this IEnumerable<ScssVariable> variables)
+        {
+            var vars = variables.ToList();
+            var palette = vars.Select(v => v.Value).Where(v => v.StartsWith("#")).Distinct().ToArray();
+            var paletteStr = string.Join(",", palette.Select(s => $"\"{s}\""));
+
+            var builder = new StringBuilder();
+            builder.Append("{");
+            for (var index = 0; index < vars.Count; index++)
+            {
+                var variable = vars[index];
+                builder.Append("\"" + variable.Name.Replace("Color", "") + "\" :{");
+                builder.Append("\"id\": \"" + variable.Key.Replace("$", "") + "\",");
+                builder.Append("\"default\": \"" + variable.Value + "\",");
+                builder.Append("\"palettes\": [" + paletteStr + "]");
+                builder.Append("}");
+                if (index < vars.Count - 1) builder.Append(",");
+            }
+
+            return builder.Append("}").ToString();
         }
 
-        private ScssVariableType GetVarType()
-        {
-            bool b;
-            int i;
-            var value = Value.ToLower();
-            if (value == "transparent" || Value.StartsWith("#") || value == "none" || value.StartsWith("rgba(") || value.StartsWith("rgb(") )
-                return ScssVariableType.Color;
-            if (Value.StartsWith("$"))
-                return ScssVariableType.VariableReference;
-            if (bool.TryParse(Value, out b) || (Value.Length > 3 && bool.TryParse(Value.Substring(1, Value.Length-2), out b)))
-                return ScssVariableType.BooleanValue;
-            if (int.TryParse(Value, out i))
-                return ScssVariableType.Number;
-            if (value.Contains("px") || value.Contains("rem") || value.Contains("pt"))
-                return ScssVariableType.Size;
-            if (knownFonts.Any(s => value.Contains(s)))
-                return ScssVariableType.FontFamily;
-            if (knownStyles.Any(s => value.Contains(s)))
-                return ScssVariableType.FontStyle;
-            return ScssVariableType.Unknown;
-        }
-
-        public string CssVarame => $"--{Key.Replace("$", "")}";
-        public string Name { get; set; }
-        public string Key { get; set; }
-        public string Value { get; set; }
-        public ScssVariableType Type { get; set; }
-    }
-
-    public enum ScssVariableType
-    {
-        Unknown,
-        Color,
-        VariableReference,
-        BooleanValue,
-        Size,
-        FontFamily,
-        FontStyle,
-        Number
-    }
-
-    public enum CssVariableDeclaration
-    {
-        UseScssVariable,
-        UseVariableValue
-    }
-
-
-    public static class ScssReader
-    {
         public static IEnumerable<ScssVariable> ReadVariables(IEnumerable<string> fileNames)
         {
             return fileNames.SelectMany(ReadVariables).DistinctBy(v => v.Key);
@@ -86,9 +50,7 @@ namespace ThemeStudio
         public static string ConvertScssVariablesToCssVars(string scssFile, bool saveChangesToFile)
         {
             var content = File.ReadAllText(scssFile);
-            //var vars = ReadVariables(scssFile).Where(v => v.Type == ScssVariableType.Color).ToList();
             var vars = ReadVariables(scssFile).Where(v => v.Type != ScssVariableType.Unknown).ToList();
-            // var vars = ReadVariables(scssFile).ToList();
             var declarations = BuildCssVariableDeclarations(vars, CssVariableDeclaration.UseScssVariable);
             content = ReplaceScssVariableUsings(content, vars);
 
@@ -112,12 +74,8 @@ namespace ThemeStudio
                         ScssVariable[] replacements;
                         if (CanReplaceUsing(line, vars, out replacements))
                         {
-                            foreach (var variable in replacements)
-                            {
-                                line = line.Replace(variable.Key, $"var({variable.CssVarame}) ");
-                            }
+                            line = replacements.Aggregate(line, (current, variable) => current.Replace(variable.Key, $"var({variable.CssVarame}) "));
                             //content = content.Replace($":{var.Key} ", $":var({cssVarName}) ");
-
                         }
                     }
 
