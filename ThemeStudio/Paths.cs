@@ -5,7 +5,7 @@ using ThemeStudio.Models;
 
 namespace ThemeStudio
 {
-    public static class Pathes
+    public static class Paths
     {
         
         public static string BasePath = AppDomain.CurrentDomain.BaseDirectory;

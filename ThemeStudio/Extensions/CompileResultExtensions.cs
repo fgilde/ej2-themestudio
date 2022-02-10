@@ -26,10 +26,10 @@ namespace ThemeStudio.Extensions
 
         public static Tuple<CompileResult, FileInfo> ZipTo(this CompileResult result, ThemeProperties theme, string zipFileName)
         {
-            var directory = Directory.CreateDirectory(Path.Combine(Pathes.Output, zipFileName)).FullName;
+            var directory = Directory.CreateDirectory(Path.Combine(Paths.Output, zipFileName)).FullName;
             result.WriteTo(theme, directory);
 
-            var zipPath = Directory.CreateDirectory(Pathes.OutputZip).FullName;
+            var zipPath = Directory.CreateDirectory(Paths.OutputZip).FullName;
             var zipTarget = Path.Combine(zipPath, $"{zipFileName}.zip");
 
             ZipFile.CreateFromDirectory(directory, zipTarget);

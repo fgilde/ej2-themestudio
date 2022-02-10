@@ -17,7 +17,7 @@ namespace ThemeStudio.Controllers
         [GZipOrDeflate]
         public string ThemeChange(ThemeProperties color)
         {
-            return Pathes.ReadTemplateContent(color)
+            return Paths.ReadTemplateContent(color)
                 .ReplaceWith(color)
                 .AddContent(color)
                 .CompileContent()
@@ -27,14 +27,14 @@ namespace ThemeStudio.Controllers
         public string Export(ThemeProperties exporting)
         {
             var zipFileName = $"{exporting.file}-{DateTime.Now.GetTimestamp()}-{Helper.Random.RandomNumberStr()}";
-            var sassFilePath = Path.Combine(Directory.CreateDirectory(Path.Combine(Pathes.Output, zipFileName)).FullName, $"{exporting.theme}.scss");
+            var sassFilePath = Path.Combine(Directory.CreateDirectory(Path.Combine(Paths.Output, zipFileName)).FullName, $"{exporting.theme}.scss");
             
-            return Pathes.ReadTemplateContent(exporting)
+            return Paths.ReadTemplateContent(exporting)
                 .ReplaceWith(exporting)
                 .AddContent(exporting, true)
                 .ConvertScssVariablesToCssVariables(sassFilePath)
                 .CompileContent()
-                .AddCompatibilityIf(exporting, Path.Combine(Pathes.Output, zipFileName, "compatibility"))
+                .AddCompatibilityIf(exporting, Path.Combine(Paths.Output, zipFileName, "compatibility"))
                 .ZipTo(exporting, zipFileName)
                 .DeleteAfter(TimeSpan.FromSeconds(30))
                 .GetRoute();
@@ -44,7 +44,7 @@ namespace ThemeStudio.Controllers
         [HttpGet]
         public string ThemeProperties([QueryString] string theme)
         {
-            return ScssHelper.ReadVariables(Pathes.GetAllScssFiles(theme)).Where(v => v.Type == ScssVariableType.Color && v.Value.Length == 7)
+            return ScssHelper.ReadVariables(Paths.GetAllScssFiles(theme)).Where(v => v.Type == ScssVariableType.Color && v.Value.Length == 7)
                 .ToThemePropertiesJson();
         }
 
@@ -52,7 +52,7 @@ namespace ThemeStudio.Controllers
         [GZipOrDeflate]
         public string LoadTheme(ThemeProperties themes)
         {
-            return Pathes.ReadCssContent(themes.theme);
+            return Paths.ReadCssContent(themes.theme);
         }
 
         public string Dark(ThemeProperties themes)

@@ -38,16 +38,16 @@ namespace ThemeStudio.Models
         {
             if (dependency.Contains("base"))
             {
-                yield return Path.Combine(Pathes.ResourceStyles, "base", "definition", $"{theme}.scss");
-                yield return Path.Combine(Pathes.ResourceStyles, "base", $"{theme}.scss");
+                yield return Path.Combine(Paths.ResourceStyles, "base", "definition", $"{theme}.scss");
+                yield return Path.Combine(Paths.ResourceStyles, "base", $"{theme}.scss");
             }
         }
 
         public IEnumerable<string> GetDependencyFiles() 
-            => GetBaseDependencyFiles().Concat(dependency.Where(d => d != "base").SelectMany(dep => Directory.GetFiles(Path.Combine(Pathes.ResourceStyles, dep), $"{theme}.scss", SearchOption.AllDirectories)));
+            => GetBaseDependencyFiles().Concat(dependency.Where(d => d != "base").SelectMany(dep => Directory.GetFiles(Path.Combine(Paths.ResourceStyles, dep), $"{theme}.scss", SearchOption.AllDirectories)));
 
         public string GetDependenciesContent() => string.Join("", GetDependencyFiles().Where(File.Exists).Select(File.ReadAllText));
 
-        public string GetScssContent(bool forceDependencyContent) => forceDependencyContent || IsDark ? GetDependenciesContent() : Pathes.ReadScssContent(theme);
+        public string GetScssContent(bool forceDependencyContent) => forceDependencyContent || IsDark ? GetDependenciesContent() : Paths.ReadScssContent(theme);
     }
 }
