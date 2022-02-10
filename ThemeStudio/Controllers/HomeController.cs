@@ -1,6 +1,5 @@
 ﻿using System;
 using System.IO;
-using System.IO.Compression;
 using System.Linq;
 using System.Web.ModelBinding;
 using System.Web.Mvc;
@@ -9,8 +8,6 @@ using ThemeStudio.Extensions;
 using ThemeStudio.Helper;
 using ThemeStudio.Helper.ScssHelper;
 using ThemeStudio.Models;
-using Random = ThemeStudio.Helper.Random;
-
 
 namespace ThemeStudio.Controllers
 {
@@ -23,54 +20,27 @@ namespace ThemeStudio.Controllers
             return Pathes.ReadTemplateContent(color)
                 .ReplaceWith(color)
                 .AddContent(color)
-                .CompileContent();
+                .CompileContent()
+                .CompiledContent;
         }
 
         public string Export(ThemeProperties exporting)
         {
-            var basePath = AppDomain.CurrentDomain.BaseDirectory;
+            var zipFileName = $"{exporting.file}-{DateTime.Now.GetTimestamp()}-{Helper.Random.RandomNumberStr()}";
+            var sassFilePath = Path.Combine(Directory.CreateDirectory(Path.Combine(Pathes.Output, zipFileName)).FullName, $"{exporting.theme}.scss");
             
-            /* json file end */
-            var foldername = $"{exporting.file}-{DateTime.Now.GetTimestamp()}-{Random.RandomNumberStr()}";
-            var outputdir = Directory.CreateDirectory(Path.Combine(Pathes.Output, foldername)).FullName;
-            var sourcepath = Path.Combine(outputdir, $"{exporting.theme}.scss");
-
-
-            string filecontents = Pathes.ReadTemplateContent(exporting)
+            return Pathes.ReadTemplateContent(exporting)
                 .ReplaceWith(exporting)
                 .AddContent(exporting, true)
-                .ConvertScssVariablesToCssVariables(sourcepath);
-
-
-            var result = SassCompile.CompileFile(sourcepath);
-            /* compatibility css */
-            if (exporting.compatiblity == "True")
-            {
-                var compataibilitydir = Directory.CreateDirectory(Path.Combine(Pathes.Output, foldername, "compatibility")).FullName;
-                var fileName = Path.Combine(compataibilitydir, $"{exporting.theme}.scss");
-                System.IO.File.WriteAllText(fileName,
-                    "$css: '.e-css' !default;\n$imported-modules: () !default;\n .e-lib { \n @at-root {\n" +
-                    filecontents +
-                    "}\n& .e-js [class^='e-'], & .e-js [class*=' e-'] {\n  box-sizing: content-box;\n }\n}");
-                var comptibilityresult = SassCompile.CompileFile(fileName);
-                System.IO.File.WriteAllText(compataibilitydir + exporting.theme + ".css", comptibilityresult);
-            }
-
-            /* creation zip file */
-            var zipPath = Directory.CreateDirectory(Path.Combine(basePath, Pathes.OutputZip)).FullName;
-            var zipTarget = Path.Combine(zipPath, $"{foldername}.zip");
-            
-            System.IO.File.WriteAllText(Path.Combine(outputdir, $"{exporting.theme}.css"), result);
-            System.IO.File.WriteAllText(Path.Combine(outputdir, $"{exporting.theme}.scss"), filecontents);
-            System.IO.File.WriteAllText(Path.Combine(outputdir, "settings.json"), exporting.GetSettingsJson());
-            
-            ZipFile.CreateFromDirectory(outputdir, zipTarget);
-            if (Directory.Exists(outputdir)) Directory.Delete(outputdir, true);
-
-            return $"{Pathes.OutputZip}/{foldername}.zip";
+                .ConvertScssVariablesToCssVariables(sassFilePath)
+                .CompileContent()
+                .AddCompatibilityIf(exporting, Path.Combine(Pathes.Output, zipFileName, "compatibility"))
+                .ZipTo(exporting, zipFileName)
+                .DeleteAfter(TimeSpan.FromSeconds(30))
+                .GetRoute();
         }
 
-
+        
         [HttpGet]
         public string ThemeProperties([QueryString] string theme)
         {
@@ -87,15 +57,12 @@ namespace ThemeStudio.Controllers
 
         public string Dark(ThemeProperties themes)
         {
-            return SassCompile.CompileContent(themes.GetDependenciesContent());
+            return SassCompile.CompileContent(themes.GetDependenciesContent()).CompiledContent;
         }
 
         public string DarkThemeChange(ThemeProperties color)
         {
-            return Pathes.ReadTemplateContent(color)
-                .ReplaceWith(color)
-                .AddContent(color)
-                .CompileContent();
+            return ThemeChange(color);
         }
 
         public ActionResult Index()

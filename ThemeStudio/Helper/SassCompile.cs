@@ -7,12 +7,12 @@ namespace ThemeStudio.Helper
 {
     public static class SassCompile
     {
-        public static string CompileContent(this TemplateContent content)
+        public static CompileResult CompileContent(this TemplateContent content)
         {
             return CompileContent(content.ToString());
         }
 
-        public static string CompileContent(string sassContent)
+        public static CompileResult CompileContent(string sassContent)
         {
             var options = new SassOptions
             {
@@ -21,12 +21,12 @@ namespace ThemeStudio.Helper
             return Compile(options);
         }
 
-        public static string CompileFile(this FileInfo path)
+        public static CompileResult CompileFile(this FileInfo path)
         {
             return CompileFile(path.FullName);
         }
 
-        public static string CompileFile(string path)
+        public static CompileResult CompileFile(string path)
         {
             var options = new SassOptions
             {
@@ -35,11 +35,11 @@ namespace ThemeStudio.Helper
             return Compile(options);
         }
 
-        private static string Compile(SassOptions options)
+        private static CompileResult Compile(SassOptions options)
         {
             var sass = new SassCompiler(options);
             var result = sass.Compile();
-            return result.Output;
+            return new CompileResult(result, options.Data);
         }
     }
 }

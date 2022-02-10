@@ -7,9 +7,10 @@ namespace ThemeStudio
 {
     public static class Pathes
     {
-        public const string OutputZip = "outputzip";
-
+        
         public static string BasePath = AppDomain.CurrentDomain.BaseDirectory;
+        public static string OutputZip = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, nameof(OutputZip));
+
         public static string Output => Path.Combine(BasePath, "outputs");
         public static string Template => Path.Combine(BasePath, "template");
         public static string Content => Path.Combine(BasePath, "Content");

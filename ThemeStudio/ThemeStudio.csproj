@@ -144,7 +144,9 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Attributes\GZipOrDeflateAttribute.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Extensions\CompileResultExtensions.cs" />
     <Compile Include="Extensions\DateTimeExtensions.cs" />
+    <Compile Include="Extensions\ThemePropertiesExtensions.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -153,6 +155,8 @@
     <Compile Include="Helper\ScssHelper\CssVariableDeclaration.cs" />
     <Compile Include="Helper\ScssHelper\ScssVariable.cs" />
     <Compile Include="Helper\ScssHelper\ScssVariableType.cs" />
+    <Compile Include="Helper\ServerHelper.cs" />
+    <Compile Include="Models\CompileResult.cs" />
     <Compile Include="Models\TemplateContent.cs" />
     <Compile Include="Models\ThemeProperties.cs" />
     <Compile Include="Pathes.cs" />

@@ -512,15 +512,16 @@ function renderRightPane() {
 }
 
 function loadThemeProperties(theme, callback) {
-    themeProps[theme] = themeProps[theme] || {};
-    if (themeProps[theme]._varsLoaded) {
+    var objectName = theme.replace('-', '');
+    themeProps[objectName] = themeProps[objectName] || {};
+    if (themeProps[objectName]._varsLoaded) {
         callback();
     } else {
         fetch('Home/themeProperties?theme=' + theme)
             .then(response => response.json())
             .then(data => {
-                Object.assign(themeProps[theme], data);
-                themeProps[theme]._varsLoaded = true;
+                Object.assign(themeProps[objectName], data);
+                themeProps[objectName]._varsLoaded = true;
                 callback();
             });
     }
@@ -3043,7 +3044,7 @@ function importing(boolean) {
         var i = 0;
         var fileElement = document.getElementById("fileuploads");
         var fileread = new FileReader();
-        if (!fileElement.files || !fileElement.files[0]) {
+        if (!fileElement || !fileElement.files || !fileElement.files[0]) {
             return;
         }
         fileread.readAsText(fileElement.files[0]);
