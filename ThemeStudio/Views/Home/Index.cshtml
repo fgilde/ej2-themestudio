@@ -173,769 +173,793 @@
 </div>
 
 <div class="theme-body e-view">
-    <div class="theme-body-left leftpanel f-left card-columns" tabindex="0" id="control-section">
 
-        <div id="controls" class="cont-container theme-hide">
+<div class="e-card-content">
+    <div id="Main-splitter">
+        <div>
+            <div class="theme-body-left leftpanel f-left card-columns" tabindex="0" id="control-section">
 
-            <div id='control' class="col-container">
+                <div id="controls" class="cont-container theme-hide">
 
-                <div id="col-1" class="col">
+                    <div id='control' class="col-container">
 
-                    <div class="e-card  theme-comp cat-editors layout-card theme-comp" id="cat-editors">
-                        <div class="e-card-header theme-category-text">
-                            <div class="e-card-header-caption">
-                                <div class="e-card-header-title">Editors</div>
+                        <div id="col-1" class="col">
+
+                            <div class="e-card  theme-comp cat-editors layout-card theme-comp" id="cat-editors">
+                                <div class="e-card-header theme-category-text">
+                                    <div class="e-card-header-caption">
+                                        <div class="e-card-header-title">Editors</div>
+                                    </div>
+                                </div>
+                                <div class="e-card-content">
+                                    <div class='control-area' id='textbox'>
+                                        <span class="component-name">TextBox</span>
+                                        <div class="e-float-input">
+                                            <input type="text" required="">
+                                            <span class="e-float-line"></span>
+                                            <label class="e-float-text">Label</label>
+                                        </div>
+                                    </div>
+                                    <div class='control-area' id='numerictextbox'>
+                                        <span class="component-name"> NumericTextBox</span>
+                                        <input id="component-numeric" type="text">
+                                    </div>
+                                    <div class='control-area' id='maskedtextbox'>
+                                        <span class="component-name">MaskedTextBox</span>
+                                        <input id="component-maskedtextbox" type="text">
+                                    </div>
+                                    <div class='control-area' id='slider'>
+                                        <span class="component-name">Slider</span>
+                                        <div id="component-slider"></div>
+                                    </div>
+                                    <div class='control-area' id='inplace-editor'>
+                                        <span class="component-name">Inplace Editor</span>
+                                        <div id="component-inplace-editor"></div>
+                                    </div>
+                                </div>
                             </div>
+
+                            <div class="e-card  cat-buttons layout-card theme-comp" id="cat-button">
+                                <div class="e-card-header theme-category-text">
+                                    <div class="e-card-header-caption">
+                                        <div class="e-card-header-title">Buttons</div>
+                                    </div>
+                                </div>
+                                <div class="e-card-content">
+                                    <div class='control-area' id='button'>
+                                        <span class="component-name">Button</span>
+                                        <div class="row">
+                                            <div class="col">
+                                                <button id="primarybtn">Primary</button>
+                                            </div>
+                                            <div class="col">
+                                                <button id="normalbtn">Normal</button>
+                                            </div>
+                                            <div class="col">
+                                                <button id="outlinebtn">Outline</button>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col">
+                                                <button id="successbtn">Success</button>
+                                            </div>
+                                            <div class="col">
+                                                <button id="warningbtn">Warning</button>
+                                            </div>
+                                            <div class="col">
+                                                <button id="togglebtn">Play</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class='control-area' id='drop-down-button'>
+                                        <span class="component-name">DropDownButton</span>
+                                        <div class="row">
+                                            <div class="col">
+                                                <button id="textbtn">Profile</button>
+                                            </div>
+                                            <div class="col">
+                                                <button id="icontextbtn">Profile</button>
+                                            </div>
+                                            <div class="col">
+                                                <button id="custombtn">Profile</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class='control-area' id='split-button'>
+                                        <span class="component-name">SplitButton</span>
+                                        <div class="row">
+                                            <div class="col">
+                                                <button id="iconsplitbtn"></button>
+
+                                            </div>
+                                            <div class="col">
+                                                <button id="textsplitbtn"></button>
+                                            </div>
+                                            <div class="col">
+                                                <button id="icontextsplitbtn"></button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class='control-area' id="button-group">
+                                        <span class="component-name">ButtonGroup</span>
+                                        <div class="frame">
+
+                                            <div class="grpbtn">
+                                                <div class="e-btn-group" role="group">
+                                                    <input type="radio" id="left" name="align" />
+                                                    <label class="e-btn" for="left">Left</label>
+                                                    <input type="radio" id="center" name="align" />
+                                                    <label class="e-btn" for="center">Center</label>
+                                                    <input type="radio" id="right" name="align" />
+                                                    <label class="e-btn" for="right">Right</label>
+                                                </div>
+                                            </div>
+
+                                            <div class="grpbtn">
+                                                <div class="e-btn-group e-outline" role="group">
+                                                    <input type="checkbox" id="bold" name="fontstyle" />
+                                                    <label class="e-btn e-outline e-primary" for="bold">Bold</label>
+                                                    <input type="checkbox" id="italic" name="fontstyle" />
+                                                    <label class="e-btn e-outline e-primary" for="italic">Italic</label>
+                                                    <input type="checkbox" id="underline" name="fontstyle" />
+                                                    <label class="e-btn e-outline e-primary" for="underline">Underline</label>
+                                                </div>
+                                            </div>
+
+
+                                        </div>
+                                    </div>
+                                    <div class='control-area' id="progress-button">
+                                        <span class="component-name">ProgressButton</span>
+                                        <div class="row">
+                                            <div class="col">
+                                                <button id="spinleft"></button>
+                                            </div>
+
+                                            <div class="col">
+                                                <button id="spinright"></button>
+                                            </div>
+                                            <div class="col">
+                                                <button id="download"></button>
+                                            </div>
+
+                                        </div>
+                                        <div class="row">
+                                            <div class="col">
+                                                <button id="disabled"></button>
+
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="e-card cat-accordion layout-card theme-comp" id="accordion">
+                                <div class="e-card-header theme-category-text">
+                                    <div class="e-card-header-caption">
+                                        <div class="e-card-header-title">Accordion</div>
+                                    </div>
+                                </div>
+                                <div class="e-card-content">
+                                    <div id="Accordion_icon"></div>
+                                    <div id="athletics" style="display: none">
+                                        <li>
+                                            <span class="e-acrdn-icons e-content-icon marathon"></span> Marathon
+                                        </li>
+                                        <li>
+                                            <span class="e-acrdn-icons e-content-icon javelin"></span> Javelin Throw
+                                        </li>
+                                        @*<li>
+                                    <span class="e-acrdn-icons e-content-icon discus"></span> Discus Throw
+                                </li>
+                                <li>
+                                    <span class="e-acrdn-icons e-content-icon highjump"></span> High Jump
+                                </li>
+                                <li>
+                                    <span class="e-acrdn-icons e-content-icon longjump"></span> Long Jump
+                                </li>*@
+                                    </div>
+                                    <div id="water_games" style="display: none">
+                                        <li>
+                                            <span class="e-acrdn-icons e-content-icon dive"></span> Diving
+                                        </li>
+                                        <li>
+                                            <span class="e-acrdn-icons e-content-icon swimming"></span> Swimming
+                                        </li>
+                                        @*<li>
+                                    <span class="e-acrdn-icons e-content-icon marathan_swim"></span> Marathon Swimming
+                                </li>
+                                <li>
+                                    <span class="e-acrdn-icons e-content-icon sync_swim"></span> Synchronized Swimming
+                                </li>
+                                <li>
+                                    <span class="e-acrdn-icons e-content-icon waterpolo"></span> Water Polo
+                                </li>*@
+                                    </div>
+                                    @*<div id="racing_games" style="display:none">
+                                <li>
+                                    <span class="e-acrdn-icons e-content-icon cycle_BMX"></span> Cycling BMX
+                                </li>
+                                <li>
+                                    <span class="e-acrdn-icons e-content-icon cycle_Mountain"></span> Cycling Mountain Bike
+                                </li>
+                                <li>
+                                    <span class="e-acrdn-icons e-content-icon cycle"></span> Cycle Racing
+                                </li>
+                                <li>
+                                    <span class="e-acrdn-icons e-content-icon sailing"></span> Sailing
+                                </li>
+                                <li>
+                                    <span class="e-acrdn-icons e-content-icon rowing"></span> Rowing
+                                </li>
+                            </div>
+                            <div id="indoor_games" style="display:none">
+                                <li>
+                                    <span class="e-acrdn-icons e-content-icon tennis"></span> Table Tennis
+                                </li>
+                                <li>
+                                    <span class="e-acrdn-icons e-content-icon badminton"></span> Badminton
+                                </li>
+                                <li>
+                                    <span class="e-acrdn-icons e-content-icon volleyball"></span> Volleyball
+                                </li>
+                                <li>
+                                    <span class="e-acrdn-icons e-content-icon boxing"></span> Boxing
+                                </li>
+                                <li>
+                                    <span class="e-acrdn-icons e-content-icon swimming_In"></span> Swimming
+                                </li>
+                            </div>*@
+                                </div>
+                            </div>
+                            <div class="e-card cat-listview layout-card theme-comp" id="listview">
+                                <div class="e-card-header theme-category-text">
+                                    <div class="e-card-header-caption">
+                                        <div class="e-card-header-title">ListView</div>
+                                    </div>
+                                </div>
+                                <div class="e-card-content">
+                                    <div id="listview-def" tabindex="1">
+
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="e-card cat-treeview layout-card theme-comp" id="treeview">
+                                <div class="e-card-header theme-category-text">
+                                    <div class="e-card-header-caption">
+                                        <div class="e-card-header-title">TreeView</div>
+                                    </div>
+                                </div>
+                                <div class="e-card-content">
+                                    <div id="treeviewComponent"></div>
+                                </div>
+                            </div>
+                            <div class="e-card cat-treeview layout-card theme-comp" id="menu">
+                                <div class="e-card-header theme-category-text">
+                                    <div class="e-card-header-caption">
+                                        <div class="e-card-header-title">Menu</div>
+                                    </div>
+                                </div>
+                                <div class="e-card-content">
+                                    <ul id="MenuComponent"></ul>
+                                </div>
+                            </div>
+
                         </div>
-                        <div class="e-card-content">
-                            <div class='control-area' id='textbox'>
-                                <span class="component-name">TextBox</span>
-                                <div class="e-float-input">
-                                    <input type="text" required="">
-                                    <span class="e-float-line"></span>
-                                    <label class="e-float-text">Label</label>
-                                </div>
-                            </div>
-                            <div class='control-area' id='numerictextbox'>
-                                <span class="component-name"> NumericTextBox</span>
-                                <input id="component-numeric" type="text">
-                            </div>
-                            <div class='control-area' id='maskedtextbox'>
-                                <span class="component-name">MaskedTextBox</span>
-                                <input id="component-maskedtextbox" type="text">
-                            </div>
-                            <div class='control-area' id='slider'>
-                                <span class="component-name">Slider</span>
-                                <div id="component-slider"></div>
-                            </div>
-                            <div class='control-area' id='inplace-editor'>
-                                <span class="component-name">Inplace Editor</span>
-                                <div id="component-inplace-editor"></div>
-                            </div>
-                        </div>
-                    </div>
 
-                    <div class="e-card  cat-buttons layout-card theme-comp" id="cat-button">
-                        <div class="e-card-header theme-category-text">
-                            <div class="e-card-header-caption">
-                                <div class="e-card-header-title">Buttons</div>
-                            </div>
-                        </div>
-                        <div class="e-card-content">
-                            <div class='control-area' id='button'>
-                                <span class="component-name">Button</span>
-                                <div class="row">
-                                    <div class="col">
-                                        <button id="primarybtn">Primary</button>
-                                    </div>
-                                    <div class="col">
-                                        <button id="normalbtn">Normal</button>
-                                    </div>
-                                    <div class="col">
-                                        <button id="outlinebtn">Outline</button>
+                        <div id="col-2" class="col">
+                            <div class="e-card  cat-grids layout-card theme-comp two-column" id="grid">
+                                <div class="e-card-header theme-category-text">
+                                    <div class="e-card-header-caption">
+                                        <div class="e-card-header-title">Grid</div>
                                     </div>
                                 </div>
-                                <div class="row">
-                                    <div class="col">
-                                        <button id="successbtn">Success</button>
+                                <div class="e-card-content" style="min-height: 370px; height: 400px; overflow: auto">
+                                    <div id='component-grid' class="theme-comp"></div>
+                                </div>
+                            </div>
+                            <div class="e-card  cat-colorpicker layout-card theme-comp " id='color-picker'>
+                                <div class="e-card-header theme-category-text">
+                                    <div class="e-card-header-caption">
+                                        <div class="e-card-header-title">ColorPicker</div>
                                     </div>
-                                    <div class="col">
-                                        <button id="warningbtn">Warning</button>
-                                    </div>
-                                    <div class="col">
-                                        <button id="togglebtn">Play</button>
+                                </div>
+                                <div class="e-card-content">
+                                    <div id="colorpicker-control">
+                                        <label>Choose a color</label>
+                                        <input id="component-color-picker" type="color">
                                     </div>
                                 </div>
                             </div>
-                            <div class='control-area' id='drop-down-button'>
-                                <span class="component-name">DropDownButton</span>
-                                <div class="row">
-                                    <div class="col">
-                                        <button id="textbtn">Profile</button>
-                                    </div>
-                                    <div class="col">
-                                        <button id="icontextbtn">Profile</button>
-                                    </div>
-                                    <div class="col">
-                                        <button id="custombtn">Profile</button>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class='control-area' id='split-button'>
-                                <span class="component-name">SplitButton</span>
-                                <div class="row">
-                                    <div class="col">
-                                        <button id="iconsplitbtn"></button>
 
+                            <div class="e-card  cat-check-box layout-card theme-comp " id='check-box'>
+                                <div class="e-card-header theme-category-text">
+                                    <div class="e-card-header-caption">
+                                        <div class="e-card-header-title">CheckBox</div>
                                     </div>
-                                    <div class="col">
-                                        <button id="textsplitbtn"></button>
+                                </div>
+                                <div class="e-card-content">
+                                    <div class='control-area'>
+                                        <input id="cb-componentchecked" type="checkbox">
                                     </div>
-                                    <div class="col">
-                                        <button id="icontextsplitbtn"></button>
+                                    <div class="control-area">
+                                        <input id="cb-componentunchecked" type="checkbox">
+                                    </div>
+                                    <div class="control-area">
+                                        <input id="cb-componentintermediate" type="checkbox">
                                     </div>
                                 </div>
                             </div>
-                            <div class='control-area' id="button-group">
-                                <span class="component-name">ButtonGroup</span>
-                                <div class="frame">
+                            <div class="e-card  cat-toolbar layout-card theme-comp two-column" id='toolbar'>
+                                <div class="e-card-header theme-category-text">
+                                    <div class="e-card-header-caption">
+                                        <div class="e-card-header-title">ToolBar</div>
+                                    </div>
+                                </div>
+                                <div class="e-card-content">
+                                    <div class='control-area'>
+                                        <div id="toolbar_default">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="e-card  cat-pickers layout-card theme-comp" id="cat-pickers">
+                                <div class="e-card-header theme-category-text">
+                                    <div class="e-card-header-caption">
+                                        <div class="e-card-header-title">Date & TimePicker</div>
+                                    </div>
+                                </div>
+                                <div class="e-card-content">
+                                    <div class='control-area' id='datepicker'>
+                                        <span class="component-name">DatePicker</span>
+                                        <input id="component-datepicker" type="text">
+                                    </div>
+                                    <div class='control-area' id='timepicker'>
+                                        <span class="component-name">TimePicker</span>
+                                        <input id="component-timepicker" type="text">
+                                    </div>
+                                    <div class='control-area' id='datetimepicker'>
+                                        <span class="component-name">DateTimePicker</span>
+                                        <input id="component-datetimepicker" type="text">
+                                    </div>
+                                    <div class='control-area' id='daterangepicker'>
+                                        <span class="component-name">DateRangePicker</span>
+                                        <input id="component-daterangepicker" type="text">
+                                    </div>
 
-                                    <div class="grpbtn">
-                                        <div class="e-btn-group" role="group">
-                                            <input type="radio" id="left" name="align" />
-                                            <label class="e-btn" for="left">Left</label>
-                                            <input type="radio" id="center" name="align" />
-                                            <label class="e-btn" for="center">Center</label>
-                                            <input type="radio" id="right" name="align" />
-                                            <label class="e-btn" for="right">Right</label>
+                                </div>
+                            </div>
+
+
+                            <div class="e-card cat-calendar layout-card theme-comp" id="calendar">
+                                <div class="e-card-header theme-category-text">
+                                    <div class="e-card-header-caption">
+                                        <div class="e-card-header-title">Calendar</div>
+                                    </div>
+                                </div>
+                                <div class="e-card-content">
+                                    <div id="component-calendar"></div>
+                                </div>
+                            </div>
+
+                            <div class="e-card  cat-tooltip layout-card theme-comp" id="tooltip">
+                                <div class="e-card-header theme-category-text">
+                                    <div class="e-card-header-caption">
+                                        <div class="e-card-header-title">Tooltip</div>
+                                    </div>
+                                </div>
+                                <div class="e-card-content" id="tooltip">
+                                    <button id="component-tooltip">Show Tooltip</button>
+                                </div>
+                            </div>
+                            <div class="e-card  cat-toast layout-card theme-comp" id="toast">
+                                <div class="e-card-header theme-category-text">
+                                    <div class="e-card-header-caption">
+                                        <div class="e-card-header-title">Toast</div>
+                                    </div>
+                                </div>
+                                <div class="e-card-content">
+
+
+                                    <button class="e-btn" id="toastBtnShow">Show Toast</button>
+                                    <div id="element"></div>
+                                    <div id="component-toast"></div>
+
+                                </div>
+                            </div>
+                            <div class="e-card  cat-badge layout-card theme-comp" id="badge">
+                                <div class="e-card-header theme-category-text">
+                                    <div class="e-card-header-caption">
+                                        <div class="e-card-header-title">Badge</div>
+                                    </div>
+                                </div>
+                                <div class="e-card-content">
+                                    <div class="badge-sample-container">
+                                        <div class="badge-block-sample">
+                                            <div class="badge-whatsapp badge-svg_icons"></div>
+                                            <span class="e-badge e-badge-primary e-badge-notification e-badge-overlap">99+</span>
+                                        </div>
+
+                                        <div class="badge-block-sample">
+                                            <div class="badge-twitter badge-svg_icons"></div>
+                                            <span class="e-badge e-badge-secondary e-badge-circle e-badge-notification e-badge-overlap">66</span>
+                                        </div>
+
+                                        <div class="badge-block-sample">
+                                            <div class="badge-facebook badge-svg_icons"></div>
+                                            <span class="e-badge e-badge-primary e-badge-notification e-badge-overlap">99+</span>
+                                        </div>
+
+                                        <div class="badge-block-sample">
+                                            <div class="badge-skype badge-svg_icons"></div>
+                                            <span class="e-badge e-badge-secondary e-badge-circle e-badge-notification e-badge-overlap">66</span>
                                         </div>
                                     </div>
 
-                                    <div class="grpbtn">
-                                        <div class="e-btn-group e-outline" role="group">
-                                            <input type="checkbox" id="bold" name="fontstyle" />
-                                            <label class="e-btn e-outline e-primary" for="bold">Bold</label>
-                                            <input type="checkbox" id="italic" name="fontstyle" />
-                                            <label class="e-btn e-outline e-primary" for="italic">Italic</label>
-                                            <input type="checkbox" id="underline" name="fontstyle" />
-                                            <label class="e-btn e-outline e-primary" for="underline">Underline</label>
-                                        </div>
-                                    </div>
-
-
                                 </div>
                             </div>
-                            <div class='control-area' id="progress-button">
-                                <span class="component-name">ProgressButton</span>
-                                <div class="row">
-                                    <div class="col">
-                                        <button id="spinleft"></button>
-                                    </div>
 
-                                    <div class="col">
-                                        <button id="spinright"></button>
-                                    </div>
-                                    <div class="col">
-                                        <button id="download"></button>
-                                    </div>
-
-                                </div>
-                                <div class="row">
-                                    <div class="col">
-                                        <button id="disabled"></button>
-                                    
-
+                            <div class="e-card cat-tab layout-card theme-comp two-column" id="tab">
+                                <div class="e-card-header theme-category-text">
+                                    <div class="e-card-header-caption">
+                                        <div class="e-card-header-title">Tab</div>
                                     </div>
                                 </div>
+                                <div class="e-card-content">
+                                    <div id="tabComponent"></div>
                                 </div>
-                            </div>
-                    </div>
-
-                    <div class="e-card cat-accordion layout-card theme-comp" id="accordion">
-                        <div class="e-card-header theme-category-text">
-                            <div class="e-card-header-caption">
-                                <div class="e-card-header-title">Accordion</div>
                             </div>
                         </div>
-                        <div class="e-card-content">
-                            <div id="Accordion_icon"></div>
-                            <div id="athletics" style="display:none">
-                                <li>
-                                    <span class="e-acrdn-icons e-content-icon marathon"></span> Marathon
-                                </li>
-                                <li>
-                                    <span class="e-acrdn-icons e-content-icon javelin"></span> Javelin Throw
-                                </li>
-                                @*<li>
-                        <span class="e-acrdn-icons e-content-icon discus"></span> Discus Throw
-                    </li>
-                    <li>
-                        <span class="e-acrdn-icons e-content-icon highjump"></span> High Jump
-                    </li>
-                    <li>
-                        <span class="e-acrdn-icons e-content-icon longjump"></span> Long Jump
-                    </li>*@
+
+                        <div id="col-3" class="col">
+                            <div class="e-card  cat-switch layout-card theme-comp" id='switch'>
+                                <div class="e-card-header theme-category-text">
+                                    <div class="e-card-header-caption">
+                                        <div class="e-card-header-title">Switch</div>
+                                    </div>
+                                </div>
+                                <div class="e-card-content">
+                                    <div>
+                                        <label for="checked" style="padding: 10px 70px 10px 0"> USB Tethering </label>
+                                        <input id="switch-checked" type="checkbox" />
+                                    </div>
+                                    <div>
+                                        <label for="unchecked" style="padding: 10px 24px 10px 0"> Portable Wi-Fi hotspot </label>
+                                        <input id="switch-unchecked" type="checkbox" />
+                                    </div>
+                                </div>
                             </div>
-                            <div id="water_games" style="display:none">
-                                <li>
-                                    <span class="e-acrdn-icons e-content-icon dive"></span> Diving
-                                </li>
-                                <li>
-                                    <span class="e-acrdn-icons e-content-icon swimming"></span> Swimming
-                                </li>
-                                @*<li>
-                        <span class="e-acrdn-icons e-content-icon marathan_swim"></span> Marathon Swimming
-                    </li>
-                    <li>
-                        <span class="e-acrdn-icons e-content-icon sync_swim"></span> Synchronized Swimming
-                    </li>
-                    <li>
-                        <span class="e-acrdn-icons e-content-icon waterpolo"></span> Water Polo
-                    </li>*@
+                            <div class="e-card  cat-radio-button layout-card theme-comp" id='radio-button'>
+                                <div class="e-card-header theme-category-text">
+                                    <div class="e-card-header-caption">
+                                        <div class="e-card-header-title">RadioButton</div>
+                                    </div>
+                                </div>
+                                <div class="e-card-content">
+                                    <div class='control-area'>
+                                        <input id="componentradio1" type="radio">
+                                    </div>
+                                    <div class="control-area">
+                                        <input id="componentradio2" type="radio">
+                                    </div>
+                                    <div class="control-area">
+                                        <input id="componentradio3" type="radio">
+                                    </div>
+                                </div>
                             </div>
-                            @*<div id="racing_games" style="display:none">
-                    <li>
-                        <span class="e-acrdn-icons e-content-icon cycle_BMX"></span> Cycling BMX
-                    </li>
-                    <li>
-                        <span class="e-acrdn-icons e-content-icon cycle_Mountain"></span> Cycling Mountain Bike
-                    </li>
-                    <li>
-                        <span class="e-acrdn-icons e-content-icon cycle"></span> Cycle Racing
-                    </li>
-                    <li>
-                        <span class="e-acrdn-icons e-content-icon sailing"></span> Sailing
-                    </li>
-                    <li>
-                        <span class="e-acrdn-icons e-content-icon rowing"></span> Rowing
-                    </li>
+
+                            <div class="e-card  cat-dropdowns layout-card theme-comp" id="cat-dropdown">
+                                <div class="e-card-header theme-category-text">
+                                    <div class="e-card-header-caption">
+                                        <div class="e-card-header-title">DropDowns</div>
+                                    </div>
+                                </div>
+                                <div class="e-card-content">
+                                    <div class='control-area' id='auto-complete'>
+                                        <span class="component-name">AutoComplete</span>
+                                        <input id="component-autcomplete" type="text">
+                                    </div>
+                                    <div class='control-area' id='drop-down-list'>
+                                        <span class="component-name">DropDownList</span>
+                                        <select id="component-dropdownlist">
+                                            <option value="Game1">American Football</option>
+                                            <option value="Game2">Badminton</option>
+                                            <option value="Game3">Basketball</option>
+                                            <option value="Game4">Cricket</option>
+                                            <option value="Game5">Football</option>
+                                            <option value="Game6">Golf</option>
+                                            <option value="Game7">Hockey</option>
+                                            <option value="Game8">Rugby</option>
+                                            <option value="Game9">Snooker</option>
+                                            <option value="Game10">Tennis</option>
+                                        </select>
+                                    </div>
+                                    <div class='control-area' id='multi-select'>
+                                        <span class="component-name">MultiSelect</span>
+                                        <select id="component-multiselect">
+                                            <option value="Game1">American Football</option>
+                                            <option value="Game2">Badminton</option>
+                                            <option value="Game3">Basketball</option>
+                                            <option value="Game4">Cricket</option>
+                                            <option value="Game5">Football</option>
+                                            <option value="Game6">Golf</option>
+                                            <option value="Game7">Hockey</option>
+                                            <option value="Game8">Rugby</option>
+                                            <option value="Game9">Snooker</option>
+                                            <option value="Game10">Tennis</option>
+                                        </select>
+                                    </div>
+                                    <div class='control-area' id='combo-box'>
+                                        <span class="component-name">ComboBox</span>
+                                        <input type="text" id="component-combobox">
+                                    </div>
+                                    <div class='control-area' id='list-box'>
+                                        <span class="component-name">List Box</span>
+                                        <input id="component-list-box">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="e-card cat-uploader layout-card theme-comp" id="uploader">
+                                <div class="e-card-header theme-category-text">
+                                    <div class="e-card-header-caption">
+                                        <div class="e-card-header-title">Uploader</div>
+                                    </div>
+                                </div>
+                                <div class="e-card-content" id='upload-area'>
+                                    <div class='control-area'>
+                                        <input type="file" id="fileupload" name="UploadFiles">
+                                    </div>
+                                </div>
+
+                            </div>
+
+
+                            <div id="context-menu" class="e-card cat-contextmenu layout-card theme-comp">
+                                <div class="e-card-header theme-category-text">
+                                    <div class="e-card-header-caption">
+                                        <div class="e-card-header-title">ContextMenu</div>
+                                    </div>
+                                </div>
+                                <div class="e-card-content">
+                                    <div id="contextmenuComponent"></div>
+                                    <ul id="contextmenu"></ul>
+                                </div>
+                            </div>
+
+
+                        </div>
+
+                    </div>
+
+                    <div id="two-column-control" class="two-columns col"></div>
+                    <div id="big-control" class="cont-container">
+
+
+                        <div class="e-card cat-tab layout-card theme-comp" id="schedule">
+                            <div class="e-card-header theme-category-text">
+                                <div class="e-card-header-caption">
+                                    <div class="e-card-header-title">Schedule</div>
+                                </div>
+                            </div>
+                            <div class="e-card-content">
+                                <div id="scheduleComponent"></div>
+                            </div>
+                        </div>
+
+                        <div class="e-card cat-tab layout-card theme-comp" id="dialog">
+                            <div class="e-card-header theme-category-text">
+                                <div class="e-card-header-caption">
+                                    <div class="e-card-header-title">Dialog</div>
+                                </div>
+                            </div>
+                            <div class="e-card-content">
+                                <div class='dialog-overlay' id='theme-dialog-wrapper'>
+                                    <button id="confirmBtn" class="dlgbtn" type="button">Open Dialog</button>
+                                    <div id="dialogComponent"></div>
+                                </div>
+
+                            </div>
+                        </div>
+                        <div class="e-card cat-tab layout-card theme-comp" id="rich-text-editor">
+                            <div class="e-card-header theme-category-text">
+                                <div class="e-card-header-caption">
+                                    <div class="e-card-header-title">RichTextEditor</div>
+                                </div>
+                            </div>
+                            <div class="e-card-content">
+                                <div id="Component-rich-text-editor">
+                                    <p>
+                                        The rich text editor component is WYSIWYG ("what you see is what you get") editor that provides the best user experience to create and update the content.
+                                        Users can format their content using standard toolbar commands.
+                                    </p>
+
+                                    <p><b>Key features:</b></p>
+
+                                    <ul>
+                                        <li>
+                                            <p>Provides &lt;IFRAME&gt; and &lt;DIV&gt; modes</p>
+                                        </li>
+                                        <li>
+                                            <p>Capable of handling markdown editing.</p>
+                                        </li>
+                                        <li>
+                                            <p>Contains a modular library to load the necessary functionality on demand.</p>
+                                        </li>
+                                        <li>
+                                            <p>Provides a fully customizable toolbar.</p>
+                                        </li>
+                                        <li>
+                                            <p>Provides HTML view to edit the source directly for developers.</p>
+                                        </li>
+                                        <li>
+                                            <p>Supports third-party library integration.</p>
+                                        </li>
+                                        <li>
+                                            <p>Allows preview of modified content before saving it.</p>
+                                        </li>
+                                        <li>
+                                            <p>Handles images, hyperlinks, video, hyperlinks, uploads, etc.</p>
+                                        </li>
+                                        <li>
+                                            <p>Contains undo/redo manager.</p>
+                                        </li>
+                                        <li>
+                                            <p>Creates bulleted and numbered lists.</p>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="e-card cat-tab layout-card theme-comp" id="pivotview">
+                            <div class="e-card-header theme-category-text">
+                                <div class="e-card-header-caption">
+                                    <div class="e-card-header-title">Pivot Table</div>
+                                </div>
+                            </div>
+                            <div class="e-card-content">
+                                <div id="Component-pivotview" style="height: 100%;"></div>
+                            </div>
+                        </div>
+                        <div class="e-card cat-tab layout-card theme-comp" id="treegrid">
+                            <div class="e-card-header theme-category-text">
+                                <div class="e-card-header-caption">
+                                    <div class="e-card-header-title">Tree Grid</div>
+                                </div>
+                            </div>
+                            <div class="e-card-content">
+                                <div id="Component-treegrid"></div>
+                            </div>
+                        </div>
+                        <div class="e-card cat-tab layout-card theme-comp" id="splitter">
+                            <div class="e-card-header theme-category-text">
+                                <div class="e-card-header-caption">
+                                    <div class="e-card-header-title">Splitter</div>
+                                </div>
+                            </div>
+                            <div class="e-card-content">
+                                <div id="Component-splitter">
+                                    <div class="splitter-content">
+                                        <div>
+                                            Left pane
+                                            <div id='panetext'>size: 25%</div>
+                                            <div id='panetext'>min: 60px</div>
+                                        </div>
+                                    </div>
+                                    <div class="splitter-content">
+                                        <span>
+                                            Middle pane
+                                            <div id='panetext'>size: 50%</div>
+                                            <div id='panetext'>min: 60px</div>
+                                        </span>
+                                    </div>
+                                    <div class="splitter-content">
+                                        <span>
+                                            Right pane
+                                            <div id='panetext'>size: 25%</div>
+                                            <div id='panetext'>min: 60px</div>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="e-card cat-tab layout-card theme-comp" id="query-builder">
+                            <div class="e-card-header theme-category-text">
+                                <div class="e-card-header-caption">
+                                    <div class="e-card-header-title">Query builder</div>
+                                </div>
+                            </div>
+                            <div class="e-card-content">
+                                <div id="Component-query-builder"></div>
+                            </div>
+                        </div>
+                        <div class="e-card cat-tab layout-card theme-comp" id="chips">
+                            <div class="e-card-header theme-category-text">
+                                <div class="e-card-header-caption">
+                                    <div class="e-card-header-title">Chips</div>
+                                </div>
+                            </div>
+                            <div class="e-card-content">
+                                <div id="Component-chips"></div>
+                            </div>
+                        </div>
+                        @*<div class="e-card cat-tab layout-card theme-comp" id="diagram">
+                <div class="e-card-header theme-category-text">
+                    <div class="e-card-header-caption">
+                        <div class="e-card-header-title">Diagram</div>
+                    </div>
                 </div>
-                <div id="indoor_games" style="display:none">
-                    <li>
-                        <span class="e-acrdn-icons e-content-icon tennis"></span> Table Tennis
-                    </li>
-                    <li>
-                        <span class="e-acrdn-icons e-content-icon badminton"></span> Badminton
-                    </li>
-                    <li>
-                        <span class="e-acrdn-icons e-content-icon volleyball"></span> Volleyball
-                    </li>
-                    <li>
-                        <span class="e-acrdn-icons e-content-icon boxing"></span> Boxing
-                    </li>
-                    <li>
-                        <span class="e-acrdn-icons e-content-icon swimming_In"></span> Swimming
-                    </li>
+                <div class="e-card-content">
+                    <div id="diagram-space" class="sb-mobile-diagram">
+                        <div id="Component-diagram"></div>
+                    </diV>
+                    </div>
                 </div>*@
-                        </div>
-                    </div>
-                    <div class="e-card cat-listview layout-card theme-comp" id="listview">
-                        <div class="e-card-header theme-category-text">
-                            <div class="e-card-header-caption">
-                                <div class="e-card-header-title">ListView</div>
-                            </div>
-                        </div>
-                        <div class="e-card-content">
-                            <div id="listview-def" tabindex="1">
-
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="e-card cat-treeview layout-card theme-comp" id="treeview">
-                        <div class="e-card-header theme-category-text">
-                            <div class="e-card-header-caption">
-                                <div class="e-card-header-title">TreeView</div>
-                            </div>
-                        </div>
-                        <div class="e-card-content">
-                            <div id="treeviewComponent"></div>
-                        </div>
-                    </div>
-                    <div class="e-card cat-treeview layout-card theme-comp" id="menu">
-                        <div class="e-card-header theme-category-text">
-                            <div class="e-card-header-caption">
-                                <div class="e-card-header-title">Menu</div>
-                            </div>
-                        </div>
-                        <div class="e-card-content">
-                            <ul id="MenuComponent"></ul>
-                        </div>
-                    </div>
-
-                </div>
-
-                <div id="col-2" class="col">
-                    <div class="e-card  cat-grids layout-card theme-comp two-column" id="grid">
-                        <div class="e-card-header theme-category-text">
-                            <div class="e-card-header-caption">
-                                <div class="e-card-header-title">Grid</div>
-                            </div>
-                        </div>
-                        <div class="e-card-content" style="min-height: 370px;height: 400px;overflow: auto">
-                            <div id='component-grid' class="theme-comp"></div>
-                        </div>
-                    </div>
-                    <div class="e-card  cat-colorpicker layout-card theme-comp " id='color-picker'>
-                        <div class="e-card-header theme-category-text">
-                            <div class="e-card-header-caption">
-                                <div class="e-card-header-title">ColorPicker</div>
-                            </div>
-                        </div>
-                        <div class="e-card-content">
-                            <div id="colorpicker-control">
-                                <label>Choose a color</label>
-                                <input id="component-color-picker" type="color">
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="e-card  cat-check-box layout-card theme-comp " id='check-box'>
-                        <div class="e-card-header theme-category-text">
-                            <div class="e-card-header-caption">
-                                <div class="e-card-header-title">CheckBox</div>
-                            </div>
-                        </div>
-                        <div class="e-card-content">
-                            <div class='control-area'>
-                                <input id="cb-componentchecked" type="checkbox">
-                            </div>
-                            <div class="control-area">
-                                <input id="cb-componentunchecked" type="checkbox">
-                            </div>
-                            <div class="control-area">
-                                <input id="cb-componentintermediate" type="checkbox">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="e-card  cat-toolbar layout-card theme-comp two-column" id='toolbar'>
-                        <div class="e-card-header theme-category-text">
-                            <div class="e-card-header-caption">
-                                <div class="e-card-header-title">ToolBar</div>
-                            </div>
-                        </div>
-                        <div class="e-card-content">
-                            <div class='control-area'>
-                                <div id="toolbar_default">
+                        <div class="e-card cat-tab layout-card theme-comp" id="gantt">
+                            <div class="e-card-header theme-category-text">
+                                <div class="e-card-header-caption">
+                                    <div class="e-card-header-title">Gannt</div>
                                 </div>
                             </div>
-                        </div>
-                    </div>
-                    <div class="e-card  cat-pickers layout-card theme-comp" id="cat-pickers">
-                        <div class="e-card-header theme-category-text">
-                            <div class="e-card-header-caption">
-                                <div class="e-card-header-title">Date & TimePicker</div>
+                            <div class="e-card-content">
+                                <div id="Component-gantt"></div>
                             </div>
                         </div>
-                        <div class="e-card-content">
-                            <div class='control-area' id='datepicker'>
-                                <span class="component-name">DatePicker</span>
-                                <input id="component-datepicker" type="text">
-                            </div>
-                            <div class='control-area' id='timepicker'>
-                                <span class="component-name">TimePicker</span>
-                                <input id="component-timepicker" type="text">
-                            </div>
-                            <div class='control-area' id='datetimepicker'>
-                                <span class="component-name">DateTimePicker</span>
-                                <input id="component-datetimepicker" type="text">
-                            </div>
-                            <div class='control-area' id='daterangepicker'>
-                                <span class="component-name">DateRangePicker</span>
-                                <input id="component-daterangepicker" type="text">
-                            </div>
-
-                        </div>
-                    </div>
-
-
-                    <div class="e-card cat-calendar layout-card theme-comp" id="calendar">
-                        <div class="e-card-header theme-category-text">
-                            <div class="e-card-header-caption">
-                                <div class="e-card-header-title">Calendar</div>
-                            </div>
-                        </div>
-                        <div class="e-card-content">
-                            <div id="component-calendar"></div>
-                        </div>
-                    </div>
-
-                    <div class="e-card  cat-tooltip layout-card theme-comp" id="tooltip">
-                        <div class="e-card-header theme-category-text">
-                            <div class="e-card-header-caption">
-                                <div class="e-card-header-title">Tooltip</div>
-                            </div>
-                        </div>
-                        <div class="e-card-content" id="tooltip">
-                            <button id="component-tooltip">Show Tooltip</button>
-                        </div>
-                    </div>
-                    <div class="e-card  cat-toast layout-card theme-comp" id="toast">
-                        <div class="e-card-header theme-category-text">
-                            <div class="e-card-header-caption">
-                                <div class="e-card-header-title">Toast</div>
-                            </div>
-                        </div>
-                        <div class="e-card-content">
-
-
-                            <button class="e-btn" id="toastBtnShow">Show Toast</button>
-                            <div id="element"></div>
-                            <div id="component-toast"></div>
-
-                        </div>
-                    </div>
-                    <div class="e-card  cat-badge layout-card theme-comp" id="badge">
-                        <div class="e-card-header theme-category-text">
-                            <div class="e-card-header-caption">
-                                <div class="e-card-header-title">Badge</div>
-                            </div>
-                        </div>
-                        <div class="e-card-content">
-                            <div class="badge-sample-container">
-                                <div class="badge-block-sample">
-                                    <div class="badge-whatsapp badge-svg_icons"></div>
-                                    <span class="e-badge e-badge-primary e-badge-notification e-badge-overlap">99+</span>
-                                </div>
-
-                                <div class="badge-block-sample">
-                                    <div class="badge-twitter badge-svg_icons"></div>
-                                    <span class="e-badge e-badge-secondary e-badge-circle e-badge-notification e-badge-overlap">66</span>
-                                </div>
-
-                                <div class="badge-block-sample">
-                                    <div class="badge-facebook badge-svg_icons"></div>
-                                    <span class="e-badge e-badge-primary e-badge-notification e-badge-overlap">99+</span>
-                                </div>
-
-                                <div class="badge-block-sample">
-                                    <div class="badge-skype badge-svg_icons"></div>
-                                    <span class="e-badge e-badge-secondary e-badge-circle e-badge-notification e-badge-overlap">66</span>
+                        <div class="e-card cat-tab layout-card theme-comp" id="file-manager">
+                            <div class="e-card-header theme-category-text">
+                                <div class="e-card-header-caption">
+                                    <div class="e-card-header-title">File Manager</div>
                                 </div>
                             </div>
-
-                        </div>
-                    </div>
-
-                    <div class="e-card cat-tab layout-card theme-comp two-column" id="tab">
-                        <div class="e-card-header theme-category-text">
-                            <div class="e-card-header-caption">
-                                <div class="e-card-header-title">Tab</div>
-                            </div>
-                        </div>
-                        <div class="e-card-content">
-                            <div id="tabComponent"></div>
-                        </div>
-                    </div>
-                </div>
-
-                <div id="col-3" class="col">
-                    <div class="e-card  cat-switch layout-card theme-comp" id='switch'>
-                        <div class="e-card-header theme-category-text">
-                            <div class="e-card-header-caption">
-                                <div class="e-card-header-title">Switch</div>
-                            </div>
-                        </div>
-                        <div class="e-card-content">
-                            <div>
-                                <label for="checked" style="padding: 10px 70px 10px 0"> USB Tethering </label>
-                                <input id="switch-checked" type="checkbox" />
-                            </div>
-                            <div>
-                                <label for="unchecked" style="padding: 10px 24px 10px 0"> Portable Wi-Fi hotspot </label>
-                                <input id="switch-unchecked" type="checkbox" />
-                            </div>
-                        </div>
-                    </div>
-                    <div class="e-card  cat-radio-button layout-card theme-comp" id='radio-button'>
-                        <div class="e-card-header theme-category-text">
-                            <div class="e-card-header-caption">
-                                <div class="e-card-header-title">RadioButton</div>
-                            </div>
-                        </div>
-                        <div class="e-card-content">
-                            <div class='control-area'>
-                                <input id="componentradio1" type="radio">
-                            </div>
-                            <div class="control-area">
-                                <input id="componentradio2" type="radio">
-                            </div>
-                            <div class="control-area">
-                                <input id="componentradio3" type="radio">
+                            <div class="e-card-content">
+                                <div id="Component-file-manager"></div>
                             </div>
                         </div>
                     </div>
 
-                    <div class="e-card  cat-dropdowns layout-card theme-comp" id="cat-dropdown">
-                        <div class="e-card-header theme-category-text">
-                            <div class="e-card-header-caption">
-                                <div class="e-card-header-title">DropDowns</div>
-                            </div>
-                        </div>
-                        <div class="e-card-content">
-                            <div class='control-area' id='auto-complete'>
-                                <span class="component-name">AutoComplete</span>
-                                <input id="component-autcomplete" type="text">
-                            </div>
-                            <div class='control-area' id='drop-down-list'>
-                                <span class="component-name">DropDownList</span>
-                                <select id="component-dropdownlist">
-                                    <option value="Game1">American Football</option>
-                                    <option value="Game2">Badminton</option>
-                                    <option value="Game3">Basketball</option>
-                                    <option value="Game4">Cricket</option>
-                                    <option value="Game5">Football</option>
-                                    <option value="Game6">Golf</option>
-                                    <option value="Game7">Hockey</option>
-                                    <option value="Game8">Rugby</option>
-                                    <option value="Game9">Snooker</option>
-                                    <option value="Game10">Tennis</option>
-                                </select>
-                            </div>
-                            <div class='control-area' id='multi-select'>
-                                <span class="component-name">MultiSelect</span>
-                                <select id="component-multiselect">
-                                    <option value="Game1">American Football</option>
-                                    <option value="Game2">Badminton</option>
-                                    <option value="Game3">Basketball</option>
-                                    <option value="Game4">Cricket</option>
-                                    <option value="Game5">Football</option>
-                                    <option value="Game6">Golf</option>
-                                    <option value="Game7">Hockey</option>
-                                    <option value="Game8">Rugby</option>
-                                    <option value="Game9">Snooker</option>
-                                    <option value="Game10">Tennis</option>
-                                </select>
-                            </div>
-                            <div class='control-area' id='combo-box'>
-                                <span class="component-name">ComboBox</span>
-                                <input type="text" id="component-combobox">
-                            </div>
-                            <div class='control-area' id='list-box'>
-                                <span class="component-name">List Box</span>
-                                <input  id="component-list-box">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="e-card cat-uploader layout-card theme-comp" id="uploader">
-                        <div class="e-card-header theme-category-text">
-                            <div class="e-card-header-caption">
-                                <div class="e-card-header-title">Uploader</div>
-                            </div>
-                        </div>
-                        <div class="e-card-content" id='upload-area'>
-                            <div class='control-area'>
-                                <input type="file" id="fileupload" name="UploadFiles">
-                            </div>
-                        </div>
-
-                    </div>
-
-
-                    <div id="context-menu" class="e-card cat-contextmenu layout-card theme-comp">
-                        <div class="e-card-header theme-category-text">
-                            <div class="e-card-header-caption">
-                                <div class="e-card-header-title">ContextMenu</div>
-                            </div>
-                        </div>
-                        <div class="e-card-content">
-                            <div id="contextmenuComponent"></div>
-                            <ul id="contextmenu"></ul>
-                        </div>
-                    </div>
-                    
 
                 </div>
 
-            </div>
-
-            <div id="two-column-control" class="two-columns col"></div>
-            <div id="big-control" class="cont-container">
 
 
-                <div class="e-card cat-tab layout-card theme-comp" id="schedule">
-                    <div class="e-card-header theme-category-text">
-                        <div class="e-card-header-caption">
-                            <div class="e-card-header-title">Schedule</div>
-                        </div>
-                    </div>
-                    <div class="e-card-content">
-                        <div id="scheduleComponent"></div>
-                    </div>
-                </div>
-
-                <div class="e-card cat-tab layout-card theme-comp" id="dialog">
-                    <div class="e-card-header theme-category-text">
-                        <div class="e-card-header-caption">
-                            <div class="e-card-header-title">Dialog</div>
-                        </div>
-                    </div>
-                    <div class="e-card-content">
-                        <div class='dialog-overlay' id='theme-dialog-wrapper'>
-                            <button id="confirmBtn" class="dlgbtn" type="button">Open Dialog</button>
-                            <div id="dialogComponent"></div>
-                        </div>
-
-                    </div>
-                </div>
-                <div class="e-card cat-tab layout-card theme-comp" id="rich-text-editor">
-                    <div class="e-card-header theme-category-text">
-                        <div class="e-card-header-caption">
-                            <div class="e-card-header-title">RichTextEditor</div>
-                        </div>
-                    </div>
-                    <div class="e-card-content">
-                        <div id="Component-rich-text-editor">
-                            <p>
-                                The rich text editor component is WYSIWYG ("what you see is what you get") editor that provides the best user experience to create and update the content.
-                                Users can format their content using standard toolbar commands.
-                            </p>
-
-                            <p><b>Key features:</b></p>
-
-                            <ul>
-                                <li>
-                                    <p>Provides &lt;IFRAME&gt; and &lt;DIV&gt; modes</p>
-                                </li>
-                                <li>
-                                    <p>Capable of handling markdown editing.</p>
-                                </li>
-                                <li>
-                                    <p>Contains a modular library to load the necessary functionality on demand.</p>
-                                </li>
-                                <li>
-                                    <p>Provides a fully customizable toolbar.</p>
-                                </li>
-                                <li>
-                                    <p>Provides HTML view to edit the source directly for developers.</p>
-                                </li>
-                                <li>
-                                    <p>Supports third-party library integration.</p>
-                                </li>
-                                <li>
-                                    <p>Allows preview of modified content before saving it.</p>
-                                </li>
-                                <li>
-                                    <p>Handles images, hyperlinks, video, hyperlinks, uploads, etc.</p>
-                                </li>
-                                <li>
-                                    <p>Contains undo/redo manager.</p>
-                                </li>
-                                <li>
-                                    <p>Creates bulleted and numbered lists.</p>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-                <div class="e-card cat-tab layout-card theme-comp" id="pivotview">
-                    <div class="e-card-header theme-category-text">
-                        <div class="e-card-header-caption">
-                            <div class="e-card-header-title">Pivot Table</div>
-                        </div>
-                    </div>
-                    <div class="e-card-content">
-                        <div id="Component-pivotview" style="height:100%;"></div>
-                    </div>
-                </div>
-                <div class="e-card cat-tab layout-card theme-comp" id="treegrid">
-                    <div class="e-card-header theme-category-text">
-                        <div class="e-card-header-caption">
-                            <div class="e-card-header-title">Tree Grid</div>
-                        </div>
-                    </div>
-                    <div class="e-card-content">
-                        <div id="Component-treegrid"></div>
-                    </div>
-                </div>
-                <div class="e-card cat-tab layout-card theme-comp" id="splitter">
-                    <div class="e-card-header theme-category-text">
-                        <div class="e-card-header-caption">
-                            <div class="e-card-header-title">Splitter</div>
-                        </div>
-                    </div>
-                    <div class="e-card-content">
-                        <div id="Component-splitter">
-                            <div class="splitter-content">
-                                <div>Left pane<div id='panetext'>size: 25%</div><div id='panetext'>min: 60px</div></div>
-                            </div>
-                            <div class="splitter-content">
-                                <span>Middle pane<div id='panetext'>size: 50%</div><div id='panetext'>min: 60px</div></span>
-                            </div>
-                            <div class="splitter-content">
-                                <span>Right pane<div id='panetext'>size: 25%</div><div id='panetext'>min: 60px</div></span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="e-card cat-tab layout-card theme-comp" id="query-builder">
-                    <div class="e-card-header theme-category-text">
-                        <div class="e-card-header-caption">
-                            <div class="e-card-header-title">Query builder</div>
-                        </div>
-                    </div>
-                    <div class="e-card-content">
-                        <div id="Component-query-builder"></div>
-                    </div>
-                </div>
-                <div class="e-card cat-tab layout-card theme-comp" id="chips">
-                    <div class="e-card-header theme-category-text">
-                        <div class="e-card-header-caption">
-                            <div class="e-card-header-title">Chips</div>
-                        </div>
-                    </div>
-                    <div class="e-card-content">
-                        <div id="Component-chips"></div>
-                    </div>
-                </div>
-                @*<div class="e-card cat-tab layout-card theme-comp" id="diagram">
-        <div class="e-card-header theme-category-text">
-            <div class="e-card-header-caption">
-                <div class="e-card-header-title">Diagram</div>
             </div>
         </div>
-        <div class="e-card-content">
-            <div id="diagram-space" class="sb-mobile-diagram">
-                <div id="Component-diagram"></div>
-            </diV>
-            </div>
-        </div>*@
-                <div class="e-card cat-tab layout-card theme-comp" id="gantt">
-                    <div class="e-card-header theme-category-text">
-                        <div class="e-card-header-caption">
-                            <div class="e-card-header-title">Gannt</div>
+
+        <div>
+            <div class="theme-body-right f-right">
+                <div class="rightpanel theme-hide">
+                    <div class="theme-switch">
+                        <div class="theme-switch-label f-left" id="choose">Choose Theme</div>
+                        <div class="f-right" id="theme-right">
+                            <button class="btn" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" style="line-height: 23px;">
+                                <span id="themeDropText">Material</span>
+                                <span class="theme-header-icon theme-icon-Dropdown theme-change-caret" style="float: right"></span>
+                            </button>
                         </div>
                     </div>
-                    <div class="e-card-content">
-                        <div id="Component-gantt"></div>
-                    </div>
-                </div>
-                <div class="e-card cat-tab layout-card theme-comp" id="file-manager">
-                    <div class="e-card-header theme-category-text">
-                        <div class="e-card-header-caption">
-                            <div class="e-card-header-title">File Manager</div>
+                    <div class="theme-mode">
+                        <div class="theme-mode-label f-left">
+                            <span>Theme Mode</span>
+                        </div>
+                        <div class="theme-modes f-left">
+                            <input id="light" type="radio"/>
+                            <input id="dark" type="radio"/>
                         </div>
                     </div>
-                    <div class="e-card-content">
-                        <div id="Component-file-manager"></div>
+                    <div class="e-float-input prop-filter-input">
+                        <input type="text" id="filter-input" onkeyup="filterChanged(event);" required="">
+                        <span class="e-float-line"></span>
+                        <label class="e-float-text">Filter</label>
                     </div>
+                    <div id="theme-properties" class="themeproperties"></div>
                 </div>
             </div>
-
-
-        </div>
-
-
-
-    </div>
-
-    <div class="theme-body-right f-right">
-        <div class="rightpanel theme-hide">
-            <div class="theme-switch">
-                <div class="theme-switch-label f-left" id="choose">Choose Theme</div>
-                <div class="f-right" id="theme-right">
-                    <button class="btn" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" style="line-height: 23px;">
-                        <span id="themeDropText">Material</span>
-                        <span class="theme-header-icon theme-icon-Dropdown theme-change-caret" style="float:right"></span>
-                    </button>
-                </div>
-            </div>
-            <div class="theme-mode">
-                <div class="theme-mode-label f-left">
-                    <span>Theme Mode</span>
-                </div>
-                <div class="theme-modes f-left">
-                    <input id="light" type="radio" />
-                    <input id="dark" type="radio" />
-                </div>
-            </div>
-            <div class="e-float-input">
-                <input type="text" id="filter-input" onkeyup="filterChanged(event);" required="">
-                <span class="e-float-line"></span>
-                <label class="e-float-text">Filter</label>
-            </div>
-            <div id="theme-properties" class="themeproperties"></div>
         </div>
     </div>
+</div>
+
+
+
 </div>
 <a id="downloadlink" style="display:none"></a>

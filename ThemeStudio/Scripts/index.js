@@ -1618,6 +1618,19 @@ function renderComponents() {
         });
         splitObj1.appendTo('#Component-splitter');
     }
+    if ($('#Main-splitter')) {
+        var splitObj1 = new ej.layouts.Splitter({
+            height: '95vh',
+            paneSettings: [
+                { size: '85%', min: '450px' },
+                { size: '15%', min: '300px' },
+            ],
+            width: '100%',
+            separatorSize: 4
+        });
+        splitObj1.appendTo('#Main-splitter');
+    }
+
     if ($('#Component-pdf-viewer')) {
         var viewer = new ej.pdfviewer.PdfViewer({
             documentPath: "PDF_Succinctly.pdf",
