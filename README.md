@@ -2,7 +2,7 @@
 
 This Project is forked from https://github.com/syncfusion/ej2-themestudio
 
-Live version of this project running is available here https://sw-theme.azurewebsites.net
+Live version of this project running is available here https://sw-theme-studio.azurewebsites.net
 
 # Changes to Original
 This Theme Studio creates css variables from the existing scss variables and use them in css result. This has the imrovement that you can change theme colors, padding and fonts at runtime
