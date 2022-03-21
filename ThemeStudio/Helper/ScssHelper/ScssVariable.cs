@@ -8,12 +8,52 @@ namespace ThemeStudio.Helper.ScssHelper
     {
         private static string[] knownFonts = FontFamily.Families.Select(f => f.Name.ToLower()).ToArray();
         private static string[] knownStyles = Enum.GetNames(typeof(FontStyle)).Concat(new[] { "normal" }).Select(s => s.ToLower()).ToArray();
-        public ScssVariable(string key, string value)
+        
+        public ScssVariable(string key, string value, bool hasDefaultFlag, string fileName, int lineIndex)
         {
+            FileName = fileName;
+            LineIndex = lineIndex;
             Key = key;
-            Value = value.Trim();
-            Name = string.Join(" ", key.Replace("$", "").Split('-').Where(s => !string.IsNullOrWhiteSpace(s)).Select(s => s[0].ToString().ToUpper() + s.Substring(1)));
+            HasDefaultFlag = hasDefaultFlag;
+            OriginalValue = Value = value.Trim().TrimEnd(';');
+            Name = GenerateNameByKey(key);
             Type = GetVarType();
+            UsedVariabled = GetUsedVariables();
+        }
+        
+        public string[] UsedVariabled { get; }
+        
+        public string FileName { get; }
+        public int LineIndex { get; }
+        public string CssVarame => $"--{Key.Replace("$", "")}";
+        public string Name { get; set; }
+        public string Key { get; set; }
+        public bool HasDefaultFlag { get; }
+        public string Flag => HasDefaultFlag ? "!default" : "";
+        public string Value { get; set; }
+        public string OriginalValue { get;}
+        public ScssVariableType Type { get; set; }
+        public bool HasVariableReference => UsedVariabled?.Any() == true;
+
+        public override string ToString()
+        {
+            return ToDeclaration(true);
+        }
+
+        public string ToDeclaration(bool addFlag)
+        {
+            var flag = addFlag ? $" {Flag}" : "";
+            return $"{Key}: {Value}{flag};";
+        }
+
+        private string[] GetUsedVariables()
+        {
+            return ScssHelper.UsedVariables(Value, true);
+        }
+
+        private static string GenerateNameByKey(string key)
+        {
+            return string.Join(" ", key.Replace("$", "").Split('-').Where(s => !string.IsNullOrWhiteSpace(s)).Select(s => s[0].ToString().ToUpper() + s.Substring(1)));
         }
 
         private ScssVariableType GetVarType()
@@ -37,11 +77,5 @@ namespace ThemeStudio.Helper.ScssHelper
                 return ScssVariableType.FontStyle;
             return ScssVariableType.Unknown;
         }
-
-        public string CssVarame => $"--{Key.Replace("$", "")}";
-        public string Name { get; set; }
-        public string Key { get; set; }
-        public string Value { get; set; }
-        public ScssVariableType Type { get; set; }
     }
 }

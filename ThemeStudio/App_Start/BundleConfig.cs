@@ -14,6 +14,9 @@ namespace ThemeStudio
             bundles.Add(new ScriptBundle("~/bundles/themestudio").Include(
                       "~/Scripts/datasource.js",
                        "~/Scripts/combine.js",
+                       "~/Scripts/VirtualList.js",
+                       "~/Scripts/ColorHelper.js",
+                       "~/Scripts/ScssVariableType.js",
                       "~/Scripts/index.js"));
 
             bundles.Add(new StyleBundle("~/Content/css").Include(

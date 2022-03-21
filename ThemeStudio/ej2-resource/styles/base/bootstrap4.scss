@@ -20,6 +20,9 @@ $imported-modules: () !default;
     @content;
   }
 }
+
+$primary: #007bff !default;
+$primary-font: #ffffff !default;
 $font-family: 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif, '-apple-system', 'BlinkMacSystemFont' !default;
 $font-size: 12px !default;
 $font-weight: normal !default;

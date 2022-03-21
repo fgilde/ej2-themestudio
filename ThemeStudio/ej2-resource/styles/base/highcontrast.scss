@@ -20,6 +20,14 @@ $imported-modules: () !default;
     @content;
   }
 }
+
+$selection-bg: #FFD939 !default;
+$selection-border: #FFD939 !default;
+$selection-font: #000000 !default;
+$hover-bg: #685708 !default;
+$hover-border: #ffffff !default;
+$hover-font: #FFFFFF !default;
+$disable: #757575 !default;
 $font-family: 'Segoe UI', 'GeezaPro', 'DejaVu Serif', sans-serif, '-apple-system', 'BlinkMacSystemFont' !default;
 $font-size: 12px !default;
 $font-weight: normal !default;

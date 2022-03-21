@@ -20,6 +20,8 @@ $imported-modules: () !default;
     @content;
   }
 }
+$theme-primary: #0074CC !default;
+$theme-primary-font: #ffffff !default;
 $font-family: 'Segoe UI', 'GeezaPro', 'DejaVu Serif', sans-serif, '-apple-system', 'BlinkMacSystemFont' !default;
 $font-size: 14px !default;
 $font-weight: normal !default;

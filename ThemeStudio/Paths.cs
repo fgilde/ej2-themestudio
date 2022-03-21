@@ -1,13 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using ThemeStudio.Models;
 
 namespace ThemeStudio
 {
     public static class Paths
     {
-        
+        public const string DefaultTheme = "material";
+
         public static string BasePath = AppDomain.CurrentDomain.BaseDirectory;
         public static string OutputZip = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, nameof(OutputZip));
 
@@ -23,6 +25,7 @@ namespace ThemeStudio
         public static string AllScssFile(string themeName) => Path.Combine(ResourceStyles, $"all{themeName}.scss");
 
 
+        public static IEnumerable<string> AvailableThemes() => Directory.EnumerateFiles(Template, "*.txt", SearchOption.TopDirectoryOnly).Select(Path.GetFileNameWithoutExtension);
         public static IEnumerable<string> GetAllScssFiles(string themeName) => Directory.EnumerateFiles(ResourceStyles, $"{themeName}.scss", SearchOption.AllDirectories);
         public static TemplateContent ReadTemplateContent(string themeName, bool isDark = false) => new TemplateContent(File.ReadAllText(TemplateFile(themeName, isDark)));
         public static TemplateContent ReadTemplateContent(ThemeProperties theme) => new TemplateContent(File.ReadAllText(TemplateFile(theme)));

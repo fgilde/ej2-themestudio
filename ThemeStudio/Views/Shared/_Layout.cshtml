@@ -1,8 +1,9 @@
-﻿<!DOCTYPE html>
+﻿@using ThemeStudio.Helper
+<!DOCTYPE html>
 <html>
 <head>
     <script>
-(function (w, d, s, l, i) {
+        (function (w, d, s, l, i) {
             w[l] = w[l] || []; w[l].push({
                 'gtm.start':
                     new Date().getTime(), event: 'gtm.js'
@@ -32,7 +33,7 @@
             <div id="theme-header" class="theme-header e-view" role="banner">
                 <div class="theme-header-left">
                     <div class='ts-header-item ts-table-cell'>
-                        <img style="margin: -10px 0 0 15px;" src="https://serviceware-se.com/fileadmin/medialis/Resources/img/logos/serviceware-logo-mobile.svg"/>
+                        <img style="margin: -10px 0 0 15px;" src="https://serviceware-se.com/fileadmin/medialis/Resources/img/logos/serviceware-logo-mobile.svg" />
                     </div>
                     <div class='ts-header-item ts-table-cell'>
                         <h1 id='ts-header-text' class='e-ts-header-text'>
@@ -51,6 +52,24 @@
 
 
                 <div class='ts-header-right ts-right ts-table'>
+
+                    <div class="sb-header-item sb-table-cell sb-download-wrapper">
+                        @if (!Session.IsAuthenticated())
+                        {
+                            <button id="login-now" class="sb-download-btn">
+                                Login
+                            </button>
+                        }
+                        else
+                        {
+                            <a href="@Url.Action("Logout", "Account", new { theme=Request.QueryString.Get("theme")})">
+                                <button id="logout-now" class="sb-download-btn">
+                                    Logout
+                                </button>
+                            </a>
+                        }
+                    </div>
+
                     <div class='ts-header-item ts-table-cell'>
                         <div class='ts-filter-btn' role="button">
                             <div class="filter">

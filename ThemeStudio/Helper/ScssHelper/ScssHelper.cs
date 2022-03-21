@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using Microsoft.Ajax.Utilities;
+using ThemeStudio.Extensions;
 
 namespace ThemeStudio.Helper.ScssHelper
 {
@@ -18,17 +19,21 @@ namespace ThemeStudio.Helper.ScssHelper
         public static string ToThemePropertiesJson(this IEnumerable<ScssVariable> variables)
         {
             var vars = variables.ToList();
-            var palette = vars.Select(v => v.Value).Where(v => v.StartsWith("#")).Distinct().ToArray();
-            var paletteStr = string.Join(",", palette.Select(s => $"\"{s}\""));
-
+            var suggestionCache = new Dictionary<ScssVariableType, ScssVariable[]>();
+            
             var builder = new StringBuilder();
             builder.Append("{");
             for (var index = 0; index < vars.Count; index++)
             {
                 var variable = vars[index];
+                
+                var suggestion = suggestionCache.ContainsKey(variable.Type) ? suggestionCache[variable.Type] : suggestionCache.AddValue(variable.Type, Suggestions(variable, vars));
+                var paletteStr = string.Join(",", suggestion.Select(s => $"\"{s.Value}\""));
+
                 builder.Append("\"" + variable.Name.Replace("Color", "") + "\" :{");
                 builder.Append("\"id\": \"" + variable.Key.Replace("$", "") + "\",");
                 builder.Append("\"default\": \"" + variable.Value + "\",");
+                builder.Append("\"type\": " + (int)variable.Type + ",");
                 builder.Append("\"palettes\": [" + paletteStr + "]");
                 builder.Append("}");
                 if (index < vars.Count - 1) builder.Append(",");
@@ -37,14 +42,69 @@ namespace ThemeStudio.Helper.ScssHelper
             return builder.Append("}").ToString();
         }
 
+        public static ScssVariable[] Suggestions(ScssVariable variable, IList<ScssVariable> variables)
+        {
+            var res = variables.Where(v => v.Type == variable.Type).DistinctBy(v => v.Value).OrderBy(s => s.Value).ToArray();
+            if (variable.Type == ScssVariableType.Color)
+                res = res.Where(v => !v.Value.Contains("%")).DistinctBy(v => ColorHelper.ParseColor(v.Value)).ToArray();
+            
+            return res;
+        }
+
+        public static IEnumerable<ScssVariable> ReadColorVariables(IEnumerable<string> fileNames)
+        {
+            return ReadEditableVariables(fileNames);
+            //return ReadVariables(fileNames).Where(v => v.Type == ScssVariableType.Color && !v.HasVariableReference);
+        }
+
+        public static IEnumerable<ScssVariable> ReadEditableVariables(IEnumerable<string> fileNames)
+        {
+            
+            return ReadVariables(fileNames).Where(v => (
+                v.Type == ScssVariableType.Color 
+                || v.Type == ScssVariableType.FontFamily 
+                || v.Type == ScssVariableType.FontStyle 
+                || v.Type == ScssVariableType.BooleanValue
+                // || v.Type == ScssVariableType.VariableReference
+                || v.Type == ScssVariableType.Number
+                || v.Type == ScssVariableType.Size 
+                )
+             && !v.HasVariableReference);
+        }
+
         public static IEnumerable<ScssVariable> ReadVariables(IEnumerable<string> fileNames)
         {
-            return fileNames.SelectMany(ReadVariables).DistinctBy(v => v.Key);
+            var r = fileNames.SelectMany(ReadVariables).ToList().DistinctBy(v => v.Name).ToList();
+            return r;
         }
 
         public static IEnumerable<ScssVariable> ReadVariables(string fileName)
         {
-            return File.ReadAllLines(fileName).Select(TryParseLine).Where(v => v != null).DistinctBy(v => v.Key);
+            return File.ReadAllLines(fileName).Select((l, idx) => TryParseLine(l, idx, fileName)).Where(v => v != null).DistinctBy(v => v.Name);
+        }
+
+        public static IEnumerable<ScssVariable> SaveChanges(this IEnumerable<ScssVariable> variables)
+        {
+            var scssVariables = variables as ScssVariable[] ?? variables.ToArray();
+            if (scssVariables.Any())
+            {
+                foreach (var grouping in scssVariables.GroupBy(v => v.FileName))
+                {
+                    string[] lines = File.ReadAllLines(grouping.Key);
+                    foreach (ScssVariable variable in grouping)
+                    {
+                        if (variable.Type == ScssVariableType.Color && variable.Value.StartsWith("rgb", StringComparison.InvariantCultureIgnoreCase))
+                        {
+                            variable.Value = ColorHelper.ParseColor(variable.Value).ToHex();
+                        }
+
+                        lines[variable.LineIndex] = variable.ToDeclaration(true);
+                    }
+
+                    File.WriteAllLines(grouping.Key, lines);
+                }
+            }
+            return scssVariables;
         }
 
         public static string ConvertScssVariablesToCssVars(string scssFile, bool saveChangesToFile)
@@ -87,7 +147,7 @@ namespace ThemeStudio.Helper.ScssHelper
             return result.ToString();
         }
 
-        private static string[] UsedVariables(string s, bool allowUsingInFunctions)
+        internal static string[] UsedVariables(string s, bool allowUsingInFunctions)
         {
             if (!allowUsingInFunctions)
             {
@@ -129,16 +189,21 @@ namespace ThemeStudio.Helper.ScssHelper
             return builder.AppendLine().ToString();
         }
 
-        private static ScssVariable TryParseLine(string line)
+        private static ScssVariable TryParseLine(string line, int lineIndex, string filename)
         {
-            if (line.StartsWith("$"))
+            if (!string.IsNullOrEmpty(line) && line.StartsWith("$") && line.Contains(":"))
             {
+                if (line.Contains("active-bg-color"))
+                {
+
+                }
                 var parts = line.Split(':');
                 if (parts.Length == 2)
                 {
                     string key = parts[0];
+                    bool hasDefaultFlag = parts[1].Contains("!default");
                     string value = parts[1].Replace("!default;", "");
-                    return new ScssVariable(key, value);
+                    return new ScssVariable(key, value, hasDefaultFlag, filename, lineIndex);
                 }
             }
             return null;

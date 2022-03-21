@@ -25,6 +25,10 @@ $imported-modules: () !default;
   @import url('https://fonts.googleapis.com/css?family=Roboto:400,500');
 }
 
+$primary: #3F51B5 !default;
+$primary-font: #ffffff !default;
+$accent: #00b0ff !default;
+$accent-font: #000000 !default;
 $is-roboto-loaded: 'true' !default;
 $font-family: 'Roboto', 'Segoe UI', 'GeezaPro', 'DejaVu Serif', 'sans-serif', '-apple-system', 'BlinkMacSystemFont' !default;
 $font-size: 12px !default;

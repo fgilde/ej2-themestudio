@@ -1,9 +1,13 @@
 // Theme properties
+var useNativeColorCtrl = false;
+var virtualizeThemeProperties = true;
+
+
 var defaultVal = {};
 var themeColors = {};
-var exportDialog, importDialog, filterDialog;
-var themes = ['material', 'fabric', 'bootstrap', 'highcontrast', 'fabricdark', 'materialdark', 'bootstrapdark', 'highcontrastlight','bootstrap4','fusion'];
-var curTheme = 'material';
+var exportDialog, importDialog, filterDialog, loginDialog, createDialog;
+var curThemeName = curTheme = lastRenderedTheme = '';
+
 var controlContent;
 var colorchange = {};
 var themeSwitherPopup;
@@ -13,353 +17,19 @@ var themeDropDownText = document.getElementById('themeDropText');
 var componentsId = [];
 var clrpkrWrapper;
 var checking = [];
-var curThemeName = 'material';
 var queryRegex = /\?+[^>]+/g;
 var googleAngRegex = /\&+[^>]+/g;
-var banana = 44;
+
 //var element = document.getElementById("controls");
-var themeProps = {
-    material: {
-        "Primary Color": {
-            id: "primary",
-            default: "#3f51b5",
-            palettes: [
-                "#f34235", "#e81d62", "#9b26af", "#6639b6", "#3e50b4", "#2095f2",
-                "#02a8f3", "#00bbd3", "#009587", "#4bae4f", "#8ac249", "#ccdb38",
-                "#ffea3a", "#ffc006", "#ff9700", "#ff5621", "#9d9d9d", "#5f7c8a",
-                "#785447", "#000000", "#ffffff"
-            ]
-        },
-        "Primary Font": {
-            id: "primary-font",
-            default: "#fff",
-            palettes: [
-                "#ffffff", "#F2F2F2", "#D8D8D8", "#BFBFBF", "#A5A5A5", "#7F7F7F",
-                "#6E6E6E", "#595959", "#3F3F3F", "#262626", "#0C0C0C", "#000000"
-            ]
-        },
-        "Accent Color": {
-            id: "accent",
-            default: "#ff4081",
-            palettes: [
-                "#ff8A80", "#ff5252", "#ff1744", "#d50000", "#ff80ab", "#ff4081", "#f50057", "#c51162",
-                "#ea80fc", "#e040fb", "#d500f9", "#aa00ff", "#b388ff", "#7c4dff", "#651fff", "#6200ea",
-                "#8c9eff", "#536dfe", "#3d5afe", "#304ffe", "#82b1fc", "#448aff", "#2979ff", "#2962ff",
-                "#80d8ff", "#40c4ff", "#00b0ff", "#0091ea", "#84ffff", "#18ffff", "#00e5ff", "#00b8d4",
-                "#a7ffeb", "#64ffda", "#1de986", "#00bfa5", "#b9fbca", "#69f0ae", "#00e676", "#00c853",
-                "#ccff90", "#b2ff59", "#76ff03", "#64dd17", "#f4ff81", "#eeff41", "#c6ff00", "#aeea00",
-                "#ffff8d", "#ffff00", "#ffea00", "#ffd600", "#ffe57f", "#ffd740", "#ffc400", "#ffa600",
-                "#ffd1b0", "#ffab40", "#ff9100", "#ff6d00", "#ff9e80", "#ff6e40", "#ff3d00", "#dd2c00",
-                "#000000", "#ffffff"
-            ]
-        },
-        "Accent Font": {
-            id: "accent-font",
-            default: "#fff",
-            palettes: [
-                "#ffffff", "#F2F2F2", "#D8D8D8", "#BFBFBF", "#A5A5A5", "#7F7F7F",
-                "#6E6E6E", "#595959", "#3F3F3F", "#262626", "#0C0C0C", "#000000"
-            ]
-        }
-
-
-    },
-    fabric: {
-        "Primary Color": {
-            id: "theme-primary",
-            default: "#0078d7",
-            palettes: [
-                "#002050", "#00188f", "#0078d7", "#0077ff", "#00bcf2", "#0C0C0C",
-                "#004b50", "#004b1c", "#107c10", "#008272", "#00b294", "#474747",
-                "#32145a", "#80397b", "#5c2d91", "#b4009e", "#e300bc", "#6B6D7F",
-                "#a80000", "#d83b01", "#e81123", "#ea4300", "#ff8c00",
-            ]
-        },
-        "Primary font": {
-            id: "theme-primary-font",
-            default: "#fff",
-            palettes: [
-                "#ffffff", "#F2F2F2", "#D8D8D8", "#BFBFBF", "#A5A5A5", "#7F7F7F",
-                "#6E6E6E", "#595959", "#3F3F3F", "#262626", "#0C0C0C", "#000000"
-            ]
-        }
-    },
-    bootstrap: {
-        "Primary Color": {
-            id: "brand-primary",
-            default: "#428bca",
-            palettes: [
-                "#0070F0", "#6610F2", "#6F42C1", "#E83E8B", "#DC3243", "#845454",
-                "#218739", "#128260", "#108193", "#6C7A00", "#B12EF1", "#0178C9",
-                "#74588B", "#C34143", "#5866B6", "#0178C9", "#A459A1", "#C639AE",
-                "#437584", "#6B6D7F", "#333333"
-            ]
-        },
-        "Primary Font": {
-            id: "brand-primary-font",
-            default: "#fff",
-            palettes: [
-                "#ffffff", "#F2F2F2", "#D8D8D8", "#BFBFBF", "#A5A5A5", "#7F7F7F",
-                "#6E6E6E", "#595959", "#3F3F3F", "#262626", "#0C0C0C", "#000000"
-            ]
-        }
-    },
-    fusion: {
-        "Primary Color": {
-            id: "brand-primary",
-            default: "#0565ff",
-            palettes: [
-                "#0565ff", "#6610F2", "#6F42C1", "#E83E8B", "#DC3243", "#845454",
-                "#218739", "#128260", "#108193", "#6C7A00", "#B12EF1", "#0178C9",
-                "#74588B", "#C34143", "#5866B6", "#0178C9", "#A459A1", "#C639AE",
-                "#437584", "#6B6D7F", "#333333"
-            ]
-        },
-        "Primary Font": {
-            id: "brand-primary-font",
-            default: "#fff",
-            palettes: [
-                "#ffffff", "#F2F2F2", "#D8D8D8", "#BFBFBF", "#A5A5A5", "#7F7F7F",
-                "#6E6E6E", "#595959", "#3F3F3F", "#262626", "#0C0C0C", "#000000"
-            ]
-        }
-    },
-    bootstrap4: {
-        "Primary Color": {
-            id: "primary",
-            default: "#007bff",
-            palettes: [
-                "#0070F0", "#6610F2", "#6F42C1", "#E83E8B", "#DC3243", "#845454",
-                "#218739", "#128260", "#108193", "#6C7A00", "#B12EF1", "#0178C9",
-                "#74588B", "#C34143", "#5866B6", "#0178C9", "#A459A1", "#C639AE",
-                "#437584", "#6B6D7F", "#333333"
-            ]
-        },
-        "Primary Font": {
-            id: "primary-font",
-            default: "#fff",
-            palettes: [
-                "#ffffff", "#F2F2F2", "#D8D8D8", "#BFBFBF", "#A5A5A5", "#7F7F7F",
-                "#6E6E6E", "#595959", "#3F3F3F", "#262626", "#0C0C0C", "#000000"
-            ]
-        }
-    },
-    highcontrastlight: {
-        "Selection BG": {
-            id: "selection-bg",
-            default: "#23726C",
-            palettes: ["#3aca4d", "#ffd939", "#cc76f6", "#18d2eb", "#fe8aeb", "#5b94ff",
-                "#ff82aa", "#7D8DFF", "#00D8AE", "#FF7C7E", "#7AA8FF", "#FF8860",
-                "#00CBF1", "#7ED321", "#FD852F", "#E0FF00", "#CDE6F7", "#C09EF7",
-                "#35D283", "#7FCBFE", "#DBE782", "#FFFFFF"
-            ]
-        },
-        "Selection Border": {
-            id: "selection-border",
-            default: "#23726c",
-            palettes: ["#3aca4d", "#ffd939", "#cc76f6", "#18d2eb", "#fe8aeb", "#5b94ff",
-                "#ff82aa", "#7D8DFF", "#00D8AE", "#FF7C7E", "#7AA8FF", "#FF8860",
-                "#00CBF1", "#7ED321", "#FD852F", "#E0FF00", "#CDE6F7", "#C09EF7",
-                "#35D283", "#7FCBFE", "#DBE782", "#FFFFFF"
-            ]
-        },
-        "Selection Font": {
-            id: "selection-font",
-            default: "#FFFFFF",
-            palettes: [
-                "#FFFFFF", "#F2F2F2", "#D8D8D8", "#BFBFBF", "#A5A5A5", "#7F7F7F",
-                "#6E6E6E", "#595959", "#3F3F3F", "#262626", "#0C0C0C", "#000000"
-            ]
-        },
-        "Hover BG": {
-            id: "hover-bg",
-            default: "#C9EDEB",
-            palettes: ["#3aca4d", "#ffd939", "#cc76f6", "#18d2eb", "#fe8aeb", "#5b94ff",
-                "#ff82aa", "#7D8DFF", "#00D8AE", "#FF7C7E", "#7AA8FF", "#FF8860",
-                "#00CBF1", "#7ED321", "#FD852F", "#E0FF00", "#CDE6F7", "#C09EF7",
-                "#35D283", "#7FCBFE", "#DBE782", "#FFFFFF"
-            ]
-        },
-        "Hover Border": {
-            id: "hover-border",
-            default: "#000000",
-            palettes: ["#3aca4d", "#ffd939", "#cc76f6", "#18d2eb", "#fe8aeb", "#5b94ff",
-                "#ff82aa", "#7D8DFF", "#00D8AE", "#FF7C7E", "#7AA8FF", "#FF8860",
-                "#00CBF1", "#7ED321", "#FD852F", "#E0FF00", "#CDE6F7", "#C09EF7",
-                "#35D283", "#7FCBFE", "#DBE782", "#FFFFFF"
-            ]
-        },
-        "Hover Font": {
-            id: "hover-font",
-            default: "#000000",
-            palettes: [
-                "#FFFFFF", "#F2F2F2", "#D8D8D8", "#BFBFBF", "#A5A5A5", "#7F7F7F",
-                "#6E6E6E", "#595959", "#3F3F3F", "#262626", "#0C0C0C", "#000000"
-            ]
-        },
-        "Disable": {
-            id: "disable",
-            default: "#757575",
-            palettes: ["#3aca4d", "#ffd939", "#cc76f6", "#18d2eb", "#fe8aeb", "#5b94ff",
-                "#ff82aa", "#7D8DFF", "#00D8AE", "#FF7C7E", "#7AA8FF", "#FF8860",
-                "#00CBF1", "#7ED321", "#FD852F", "#E0FF00", "#CDE6F7", "#C09EF7",
-                "#35D283", "#7FCBFE", "#DBE782", "#FFFFFF"
-            ]
-        }
-    },
-    materialdark: {
-        "Primary Color": {
-            id: "primary",
-            default: "#3F51B5",
-            palettes: [
-                "#f34235", "#e81d62", "#9b26af", "#6639b6", "#3e50b4", "#2095f2",
-                "#02a8f3", "#00bbd3", "#009587", "#4bae4f", "#8ac249", "#ccdb38",
-                "#ffea3a", "#ffc006", "#ff9700", "#ff5621", "#9d9d9d", "#5f7c8a",
-                "#785447", "#000000", "#ffffff"
-            ]
-        },
-        "Primary Font": {
-            id: "primary-font",
-            default: "#fff",
-            palettes: [
-                "#ffffff", "#F2F2F2", "#D8D8D8", "#BFBFBF", "#A5A5A5", "#7F7F7F",
-                "#6E6E6E", "#595959", "#3F3F3F", "#262626", "#0C0C0C", "#000000"
-            ]
-        },
-        "Accent Color": {
-            id: "accent",
-            default: "#00b0ff",
-            palettes: [
-                "#ff8A80", "#ff5252", "#ff1744", "#d50000", "#ff80ab", "#ff4081", "#f50057", "#c51162",
-                "#ea80fc", "#e040fb", "#d500f9", "#aa00ff", "#b388ff", "#7c4dff", "#651fff", "#6200ea",
-                "#8c9eff", "#536dfe", "#3d5afe", "#304ffe", "#82b1fc", "#448aff", "#2979ff", "#2962ff",
-                "#80d8ff", "#40c4ff", "#00b0ff", "#0091ea", "#84ffff", "#18ffff", "#00e5ff", "#00b8d4",
-                "#a7ffeb", "#64ffda", "#1de986", "#00bfa5", "#b9fbca", "#69f0ae", "#00e676", "#00c853",
-                "#ccff90", "#b2ff59", "#76ff03", "#64dd17", "#f4ff81", "#eeff41", "#c6ff00", "#aeea00",
-                "#ffff8d", "#ffff00", "#ffea00", "#ffd600", "#ffe57f", "#ffd740", "#ffc400", "#ffa600",
-                "#ffd1b0", "#ffab40", "#ff9100", "#ff6d00", "#ff9e80", "#ff6e40", "#ff3d00", "#dd2c00",
-                "#000000", "#ffffff"
-            ]
-        },
-        "Accent Font": {
-            id: "accent-font",
-            default: "#000000",
-            palettes: [
-                "#ffffff", "#F2F2F2", "#D8D8D8", "#BFBFBF", "#A5A5A5", "#7F7F7F",
-                "#6E6E6E", "#595959", "#3F3F3F", "#262626", "#0C0C0C", "#000000"
-            ]
-        }
-
-
-    },
-    fabricdark: {
-        "Primary Color": {
-            id: "theme-primary",
-            default: "#0074CC",
-            palettes: [
-                "#0070F0", "#2F4AD0", "#2972AE", "#886CE5", "#00BCF2", "#309AEF",
-                "#0A8A0A", "#027E2F", "#538014", "#028172 ", "#FFC906", "#F26F25",
-                "#BD3281", "#BF463B", "#6B4A96", "#BA455A", "#AD1CF8", "#6BBD12",
-                "#C62F2F", "#D93F02", "#AC4AA3", "#AA7A2B", "#FFEF22", "#00D085"
-            ]
-        },
-        "Primary font": {
-            id: "theme-primary-font",
-            default: "#fff",
-            palettes: [
-                "#ffffff", "#F2F2F2", "#D8D8D8", "#BFBFBF", "#A5A5A5", "#7F7F7F",
-                "#6E6E6E", "#595959", "#3F3F3F", "#262626", "#0C0C0C", "#000000"
-            ]
-        }
-    },
-    bootstrapdark: {
-        "Primary Color": {
-            id: "brand-primary",
-            default: "#0070f0",
-            palettes: [
-                "#0070F0", "#2F4AD0", "#2972AE", "#886CE5", "#00BCF2", "#309AEF",
-                "#0A8A0A", "#027E2F", "#538014", "#028172 ", "#FFC906", "#F26F25",
-                "#BD3281", "#BF463B", "#6B4A96", "#BA455A", "#AD1CF8", "#6BBD12",
-                "#C62F2F", "#D93F02", "#AC4AA3", "#AA7A2B", "#FFEF22", "#00D085"
-            ]
-        },
-        "Primary Font": {
-            id: "brand-primary-font",
-            default: "#fff",
-            palettes: [
-                "#ffffff", "#F2F2F2", "#D8D8D8", "#BFBFBF", "#A5A5A5", "#7F7F7F",
-                "#6E6E6E", "#595959", "#3F3F3F", "#262626", "#0C0C0C", "#000000"
-            ]
-        }
-    },
-    highcontrast: {
-        "Selection BG": {
-            id: "selection-bg",
-            default: "#FFD939",
-            palettes: ["#3aca4d", "#ffd939", "#cc76f6", "#18d2eb", "#fe8aeb", "#5b94ff",
-                "#ff82aa", "#7D8DFF", "#00D8AE", "#FF7C7E", "#7AA8FF", "#FF8860",
-                "#00CBF1", "#7ED321", "#FD852F", "#E0FF00", "#CDE6F7", "#C09EF7",
-                "#35D283", "#7FCBFE", "#DBE782", "#FFFFFF"
-            ]
-        },
-        "Selection Border": {
-            id: "selection-border",
-            default: "#FFD939",
-            palettes: ["#3aca4d", "#ffd939", "#cc76f6", "#18d2eb", "#fe8aeb", "#5b94ff",
-                "#ff82aa", "#7D8DFF", "#00D8AE", "#FF7C7E", "#7AA8FF", "#FF8860",
-                "#00CBF1", "#7ED321", "#FD852F", "#E0FF00", "#CDE6F7", "#C09EF7",
-                "#35D283", "#7FCBFE", "#DBE782", "#FFFFFF"
-            ]
-        },
-        "Selection Font": {
-            id: "selection-font",
-            default: "#000000",
-            palettes: [
-                "#FFFFFF", "#F2F2F2", "#D8D8D8", "#BFBFBF", "#A5A5A5", "#7F7F7F",
-                "#6E6E6E", "#595959", "#3F3F3F", "#262626", "#0C0C0C", "#000000"
-            ]
-        },
-        "Hover BG": {
-            id: "hover-bg",
-            default: "#685708",
-            palettes: ["#3aca4d", "#ffd939", "#cc76f6", "#18d2eb", "#fe8aeb", "#5b94ff",
-                "#ff82aa", "#7D8DFF", "#00D8AE", "#FF7C7E", "#7AA8FF", "#FF8860",
-                "#00CBF1", "#7ED321", "#FD852F", "#E0FF00", "#CDE6F7", "#C09EF7",
-                "#35D283", "#7FCBFE", "#DBE782", "#FFFFFF"
-            ]
-        },
-        "Hover Border": {
-            id: "hover-border",
-            default: "#ffffff",
-            palettes: ["#3aca4d", "#ffd939", "#cc76f6", "#18d2eb", "#fe8aeb", "#5b94ff",
-                "#ff82aa", "#7D8DFF", "#00D8AE", "#FF7C7E", "#7AA8FF", "#FF8860",
-                "#00CBF1", "#7ED321", "#FD852F", "#E0FF00", "#CDE6F7", "#C09EF7",
-                "#35D283", "#7FCBFE", "#DBE782", "#FFFFFF"
-            ]
-        },
-        "Hover Font": {
-            id: "hover-font",
-            default: "#FFFFFF",
-            palettes: [
-                "#FFFFFF", "#F2F2F2", "#D8D8D8", "#BFBFBF", "#A5A5A5", "#7F7F7F",
-                "#6E6E6E", "#595959", "#3F3F3F", "#262626", "#0C0C0C", "#000000"
-            ]
-        },
-        "Disable": {
-            id: "disable",
-            default: "#757575",
-            palettes: ["#3aca4d", "#ffd939", "#cc76f6", "#18d2eb", "#fe8aeb", "#5b94ff",
-                "#ff82aa", "#7D8DFF", "#00D8AE", "#FF7C7E", "#7AA8FF", "#FF8860",
-                "#00CBF1", "#7ED321", "#FD852F", "#E0FF00", "#CDE6F7", "#C09EF7",
-                "#35D283", "#7FCBFE", "#DBE782", "#FFFFFF"
-            ]
-        }
-    },
-}
+var themeProps = {};
 
 function filterChanged(event) {
+    if (virtualizeThemeProperties) {
+        _renderProperties(lastRenderedTheme);
+        return;
+    }
     document.querySelectorAll('.theme-prop-wrapper').forEach(function (el) {
-        if (event.target.value.length <= 0 || el.getAttribute('data-id').toLowerCase().indexOf(event.target.value.toLowerCase()) > -1 || el.querySelector('span').innerText.toLowerCase().indexOf(event.target.value.toLowerCase()) > -1 ) {
+        if (_match(event.target.value, el)) {
             el.style.display = 'block';
         } else {
             el.style.display = 'none';
@@ -367,11 +37,28 @@ function filterChanged(event) {
     });
 }
 
+function _match(search, el) {
+    if (!search || !search.length) {
+        return true;
+    }
+    search = search.toLowerCase();
+    
+    var dataId = (el instanceof HTMLElement) ? el.getAttribute('data-id')?.toLowerCase() : el.id,
+        label = (el instanceof HTMLElement) ? el.querySelector('label')?.innerText.toLowerCase() : el.id,
+        value = (el instanceof HTMLElement) ? el.querySelector('input').value.toLowerCase() : el.default,
+        hex = ColorHelper.isHex(value) ? value : (value?.startsWith('rgb') ? ColorHelper.rgbaToHex(value) : ''),
+        rgba = value?.startsWith('rgb') ? value : ColorHelper.hexToRgbA(value),
+        toSearchIn = [dataId, label, value, hex, rgba];
+    
+    return toSearchIn.some(s => s?.indexOf(search) > -1);
+        
+}
+
+
 function loadJson() {
     getThemeColors();
     renderDialogs();
-    //renderRightPane();
-    
+
     var queystring = window.location.search;
     if (queystring.indexOf("?theme=") !== -1) {
         queystring = queystring.replace(googleAngRegex, "");
@@ -380,13 +67,15 @@ function loadJson() {
         loadTheme(queystring, false);
         renderRightPane();
     } else {
-        loadDefaultThemes('material', false);
+        loadDefaultThemes(null, false);
     }
-    
+
 }
 loadJson();
 
 function getThemeColors() {
+    var themes = Object.keys(themeProps);
+    themeColors = {}
     for (var i = 0; i < themes.length; i++) {
         var properties = themeProps[themes[i]];
         var keys = Object.keys(properties);
@@ -403,7 +92,7 @@ function getThemeColors() {
 // Render the right pane components
 function renderRightPane() {
     // theme switcher datasource
-    
+
     themeSwitherPopup = new ej.popups.Popup(document.getElementById('theme-switcher-popup'), {
 
         relateTo: themeDropDown,
@@ -428,7 +117,7 @@ function renderRightPane() {
     document.addEventListener('click', function () { togglePopup(true) });
     document.getElementById('themelist').addEventListener('click', function (e) {
         var parent = e.target.closest('li');
-        var theme= parent.id;
+        var theme = parent.id;
         if (theme === curTheme) {
             return;
         }
@@ -439,20 +128,16 @@ function renderRightPane() {
         curTheme = theme;
         //window.location.href = window.location.origin;
         themeSwitherPopup.hide();
-        var isDark = document.getElementById("dark").ej2_instances[0].checked; 
+        var isDark = document.getElementById("dark").ej2_instances[0].checked;
         if (isDark) {
-            if (theme !== "highcontrast" && theme !== "bootstrap4"  && theme !== "fusion") {
+            if (theme !== "highcontrast" && theme !== "bootstrap4" && theme !== "fusion") {
                 theme = theme + "-dark";
             }
         } else {
-            //if (theme === "highcontrast") {
-            //    theme = theme + "-light";
-                
-            //}
             theme = theme;
         }
         renderProperties(theme);
-        loadTheme(theme,true);
+        loadTheme(theme, true);
     });
 
     var queystring = window.location.search;
@@ -471,7 +156,7 @@ function renderRightPane() {
         document.querySelector('#themelist>.active').classList.remove('active');
         document.querySelector('#themelist>#' + curThemeName).classList.add('active');
     } else {
-        renderProperties('material');
+        renderProperties(curThemeName || 'material');
     }
     // rendering theme mode light/dark
     var themeMode = new ej.buttons.RadioButton({
@@ -481,13 +166,13 @@ function renderRightPane() {
             if (themes === "highcontrast") {
                 themes = themes + "-light";
                 renderProperties(themes);
-                loadTheme(themes,true);
+                loadTheme(themes, true);
             } else {
                 renderProperties(themes);
-                loadTheme(themes,true);
+                loadTheme(themes, true);
             }
         }
-       });
+    });
     themeMode.appendTo('#light');
 
     themeMode = new ej.buttons.RadioButton({
@@ -497,17 +182,15 @@ function renderRightPane() {
             if (themes !== "highcontrast") {
                 themes = themes + "-dark";
                 renderProperties(themes);
-                loadTheme(themes,true);
+                loadTheme(themes, true);
             } else {
                 renderProperties(themes);
-                loadTheme(themes,true);
+                loadTheme(themes, true);
             }
         }
     });
     themeMode.appendTo('#dark');
-
-
-    //renderProperties('material');
+    
     colorpicker();
 }
 
@@ -517,17 +200,36 @@ function loadThemeProperties(theme, callback) {
     if (themeProps[objectName]._varsLoaded) {
         callback();
     } else {
-        fetch('Home/themeProperties?theme=' + theme)
+        fetch('/Home/themeProperties?theme=' + theme)
             .then(response => response.json())
-            .then(data => {
+            .then(data => {                
                 Object.assign(themeProps[objectName], data);
                 themeProps[objectName]._varsLoaded = true;
+                getThemeColors();
                 callback();
             });
     }
 }
 
 function loadDefaultThemes(theme, isRightpanerender) {
+    if (theme) {
+        _loadDefaultThemes(theme, isRightpanerender);
+    } else {
+        fetch('/Home/DefaultTheme')
+            .then(response => response.text())
+            .then(t => {
+                curTheme = curThemeName = t;
+                _loadDefaultThemes(t, isRightpanerender);
+            });
+    }
+}
+
+function applyCustomThemePreview(data) {    
+    var styles = document.getElementById('custom-theme');
+    styles.innerHTML = data;
+}
+
+function _loadDefaultThemes(theme, isRightpanerender) {
     window.themes = theme;
     var themeObj = {};
     themeObj['theme'] = theme;
@@ -538,20 +240,23 @@ function loadDefaultThemes(theme, isRightpanerender) {
     }
     var str = "";
     str = "?theme=" + theme;
-    history.replaceState({}, '', baseurl + str);    
+    if (!window.location.href.includes(str.substring(1))) {
+        window.location.href = '/' + str;
+        return;
+    }
+    history.replaceState({}, '', baseurl + str);
     curTheme = theme;
     themeColors = ej.base.extend({}, defaultVal, {}, true);
     var ajax = new ej.base.Ajax({
         type: "POST",
-        url: "Home/loadtheme",
+        url: "/Home/loadtheme",
         contentType: 'application/json; charset=utf-8',
         processData: false,
         data: JSON.stringify({ themes: themeObj }) // Note it is important
     }, 'POST', true);
     ajax.send();
     ajax.onSuccess = function (data) {
-        var styles = document.getElementById('custom-theme');
-        styles.innerHTML = data;
+        applyCustomThemePreview(data);
         if (isfilterapplied) {
             generatefilterhtml();
         }
@@ -582,7 +287,7 @@ var themeBodyLeftOverlay = ej.base.select('.theme-body-left-ovelay');
 
 function renderComponents() {
     //ej.base.select('.sb-body-overlay').classList.remove('sb-hide');
-    var isMaterial = curTheme === 'material' ||  curTheme === 'material-dark';
+    var isMaterial = curTheme === 'material' || curTheme === 'material-dark';
     ej.base.enableRipple(isMaterial);
     if (!controlContent) {
         cardelements = $('.layout-card');
@@ -623,12 +328,12 @@ function renderComponents() {
         var grid = new ej.grids.Grid({
             dataSource: window.gridData,
             allowPaging: true,
-           
+
             groupSettings: { columns: ['OrderID'] },
             allowFiltering: true,
             filterSettings: { type: 'Menu' },
             pageSettings: { pageCount: 3, pageSize: 3 },
-            actionComplete:function(args) {
+            actionComplete: function (args) {
                 if (args.requestType === 'grouping') {
                     grid.pageSettings.pageSize = 3;
                 }
@@ -1294,7 +999,7 @@ function renderComponents() {
     }
     if ($('#Component-rich-text-editor')) {
         var defaultRTE = new ej.richtexteditor.RichTextEditor({
-            
+
             toolbarSettings: {
                 items: ['Bold', 'Italic', 'Underline', 'StrikeThrough',
                     'FontName', 'FontSize', 'FontColor', 'BackgroundColor',
@@ -1313,7 +1018,7 @@ function renderComponents() {
         });
         progressButton.appendTo('#spinleft');
     }
-   
+
     if ($("#spinright").length) {
         progressButton = new ej.splitbuttons.ProgressButton({
             content: 'Spin Right', spinSettings: { position: 'Right' }, isPrimary: true
@@ -1332,7 +1037,7 @@ function renderComponents() {
         progressButton.appendTo('#disabled');
     }
     if ($('#MenuComponent')) {
-         menuItems = [
+        menuItems = [
             {
                 text: 'File',
                 iconCss: 'em-icons e-file',
@@ -1619,16 +1324,16 @@ function renderComponents() {
         splitObj1.appendTo('#Component-splitter');
     }
     if ($('#Main-splitter')) {
-        var splitObj1 = new ej.layouts.Splitter({
+        window.mainSplitter = splitObj1 = new ej.layouts.Splitter({
             height: '95vh',
             paneSettings: [
-                { size: '85%', min: '450px' },
-                { size: '15%', min: '300px' },
+                { size: '80%', min: '500px' },
+                { size: '20%', min: '450px' },
             ],
             width: '100%',
             separatorSize: 4
         });
-        splitObj1.appendTo('#Main-splitter');
+        window.mainSplitter.appendTo('#Main-splitter');
     }
 
     if ($('#Component-pdf-viewer')) {
@@ -1674,174 +1379,12 @@ function renderComponents() {
             rule: importRules,
         });
         qryBldrObj.appendTo('#Component-query-builder');
-       
+
     }
     if ($('#Component-chips')) {
         new ej.buttons.ChipList({ chips: window.chipsData.defaultData }, '#Component-chips');
     }
-    //if ($('#Component-diagram')) {
-
-
-    //    ej.diagrams.Diagram.Inject(ej.diagrams.UndoRedo);
-
-    //    //Create and add ports for node.
-    //    function getNodePorts(obj) {
-    //        var ports = [
-    //            { id: 'nport1', shape: 'Circle', offset: { x: 0, y: 0.5 } },
-    //            { id: 'nport2', shape: 'Circle', offset: { x: 0.5, y: 1 } },
-    //            { id: 'nport3', shape: 'Circle', offset: { x: 1, y: 0.5 } },
-    //            { id: 'nport4', shape: 'Circle', offset: { x: 0.5, y: 0 } }
-    //        ];
-    //        return ports;
-    //    }
-    //    var bounds = document.getElementById('diagram-space').getBoundingClientRect();
-    //    var centerX = bounds.width / 2;
-    //    //Initializes the nodes for the diagram
-    //    var nodes = [{
-    //        id: 'NewIdea', height: 60, offsetX: centerX - 50, offsetY: 80,
-    //        shape: { type: 'Flow', shape: 'Terminator' },
-    //        annotations: [{
-    //            content: 'Place Order'
-    //        }]
-    //    }, {
-    //        id: 'Meeting', height: 60, offsetX: centerX - 50, offsetY: 160,
-    //        shape: { type: 'Flow', shape: 'Process' },
-    //        annotations: [{
-    //            content: 'Start Transaction'
-    //        }]
-    //    }, {
-    //        id: 'BoardDecision', height: 60, offsetX: centerX - 50, offsetY: 240,
-    //        shape: { type: 'Flow', shape: 'Process' },
-    //        annotations: [{
-    //            content: 'Verification'
-    //        }]
-    //    }, {
-    //        id: 'Project', height: 60, offsetX: centerX - 50, offsetY: 330,
-    //        shape: { type: 'Flow', shape: 'Decision' },
-    //        annotations: [{
-    //            content: 'Credit card valid?'
-    //        }]
-    //    }, {
-    //        id: 'End', height: 60, offsetX: centerX - 50, offsetY: 430,
-    //        shape: { type: 'Flow', shape: 'Decision' },
-    //        annotations: [{
-    //            content: 'Funds available?'
-    //        }]
-    //    }, {
-    //        id: 'node11', height: 60, offsetX: (centerX - 50) + 230, offsetY: 330,
-    //        shape: { type: 'Flow', shape: 'Process' },
-    //        annotations: [{
-    //            content: 'Enter payment method'
-    //        }]
-    //    }, {
-    //        id: 'transaction_entered', height: 60, offsetX: (centerX - 50), offsetY: 630,
-    //        shape: { type: 'Flow', shape: 'Terminator' },
-    //        annotations: [{
-    //            content: 'Log transaction'
-    //        }]
-    //    }, {
-    //        id: 'node12', height: 60, offsetX: (centerX - 50) + 180, offsetY: 630,
-    //        shape: { type: 'Flow', shape: 'Process' },
-    //        annotations: [{
-    //            content: 'Reconcile the entries'
-    //        }]
-    //    }, {
-    //        id: 'transaction_completed', height: 60, offsetX: (centerX - 50), offsetY: 530,
-    //        shape: { type: 'Flow', shape: 'Process' },
-    //        annotations: [{
-    //            content: 'Complete Transaction'
-    //        }]
-    //    }, {
-    //        id: 'data', height: 45, offsetX: (centerX - 50) - 190, offsetY: 530,
-    //        shape: { type: 'Flow', shape: 'Data' },
-    //        annotations: [{
-    //            content: 'Send e-mail', margin: { left: 25, right: 25 }
-    //        }]
-    //    }, {
-    //        id: 'node10', height: 70, offsetX: (centerX - 50) + 175, offsetY: 530,
-    //        shape: { type: 'Flow', shape: 'DirectData' },
-    //        annotations: [{ content: 'Customer Database', margin: { left: 25, right: 25 } }]
-    //    }];
-    //    //Initializes the Connectors for the diagram
-    //    var connectors = [
-    //        {
-    //            id: 'connector1', sourceID: 'NewIdea', targetID: 'Meeting'
-    //        },
-    //        { id: 'connector2', sourceID: 'Meeting', targetID: 'BoardDecision' },
-    //        { id: 'connector3', sourceID: 'BoardDecision', targetID: 'Project' },
-    //        {
-    //            id: 'connector4', sourceID: 'Project',
-    //            annotations: [{ content: 'Yes', style: { fill: 'white' } }], targetID: 'End'
-    //        },
-    //        {
-    //            id: 'connector5', sourceID: 'End',
-    //            annotations: [{ content: 'Yes', style: { fill: 'white' } }], targetID: 'transaction_completed'
-    //        },
-    //        { id: 'connector6', sourceID: 'transaction_completed', targetID: 'transaction_entered' },
-    //        { id: 'connector7', sourceID: 'transaction_completed', targetID: 'data' },
-    //        { id: 'connector8', sourceID: 'transaction_completed', targetID: 'node10' },
-    //        {
-    //            id: 'connector9', sourceID: 'node11', targetID: 'Meeting',
-    //            segments: [{ direction: 'Top', type: 'Orthogonal', length: 120 }]
-    //        },
-    //        {
-    //            id: 'connector10', sourceID: 'End', annotations: [{ content: 'No', style: { fill: 'white' } }],
-    //            targetID: 'node11', segments: [{ direction: 'Right', type: 'Orthogonal', length: 100 }]
-    //        },
-    //        {
-    //            id: 'connector11', sourceID: 'Project', annotations: [{ content: 'No', style: { fill: 'white' } }],
-    //            targetID: 'node11'
-    //        },
-    //        {
-    //            id: 'connector12', style: { strokeDashArray: '2,2' },
-    //            sourceID: 'transaction_entered', targetID: 'node12'
-    //        }
-    //    ];
-    //    var interval = [1, 9, 0.25, 9.75, 0.25, 9.75, 0.25, 9.75, 0.25, 9.75, 0.25, 9.75, 0.25, 9.75, 0.25, 9.75, 0.25, 9.75, 0.25, 9.75];
-    //    var gridlines = { lineColor: '#e0e0e0', lineIntervals: interval };
-    //    //Initializes diagram control
-    //    var diagram = new ej.diagrams.Diagram({
-    //        width: '100%', height: '700px', nodes: nodes, connectors: connectors,
-    //        snapSettings: { horizontalGridlines: gridlines, verticalGridlines: gridlines },
-    //        //Sets the default values of a node
-    //        getNodeDefaults: function (node) {
-    //            var obj = {};
-    //            if (obj.width === undefined) {
-    //                obj.width = 145;
-    //            } else {
-    //                var ratio = 100 / obj.width;
-    //                obj.width = 100;
-    //                obj.height *= ratio;
-    //            }
-    //            obj.style = { fill: '#357BD2', strokeColor: 'white' };
-    //            obj.annotations = [{ style: { color: 'white', fill: 'transparent' } }];
-    //            obj.ports = getNodePorts(node);
-    //            return obj;
-    //        },
-    //        //Sets the default values of a Connector.
-    //        getConnectorDefaults: function (obj) {
-    //            if (obj.id.indexOf('connector') !== -1) {
-    //                obj.type = 'Orthogonal';
-    //                obj.targetDecorator = { shape: 'Arrow', width: 10, height: 10 };
-    //            }
-    //        },
-    //        //Sets the Node style for DragEnter element.
-    //        dragEnter: function (args) {
-    //            var obj = args.element;
-    //            if (obj instanceof ej.diagrams.Node) {
-    //                var oWidth = obj.width;
-    //                var oHeight = obj.height;
-    //                var ratio = 100 / obj.width;
-    //                obj.width = 100;
-    //                obj.height *= ratio;
-    //                obj.offsetX += (obj.width - oWidth) / 2;
-    //                obj.offsetY += (obj.height - oHeight) / 2;
-    //                obj.style = { fill: '#357BD2', strokeColor: 'white' };
-    //            }
-    //        }
-    //    });
-    //    diagram.appendTo('#Component-diagram')
-    //}
+    
     if ($('#component-list-box')) {
         var listBoxObj = new ej.dropdowns.ListBox({
             // Set the dataSource property.
@@ -1867,7 +1410,7 @@ function renderComponents() {
             },
             view: 'Details'
         });
-       
+
 
         fileObject.appendTo('#Component-file-manager');
     }
@@ -1930,6 +1473,13 @@ function removeOverlay(IsThemeSwitch) {
     }
 }
 
+
+function getUrlParams(url) {
+    try {
+        return JSON.parse('{"' + decodeURI(url ? url.match(/(?:[^?]*)\??([^#]*)/)[1] : window.location.search.substring(1)).replace(/"/g, '\\"').replace(/&/g, '","').replace(/=/g, '":"') + '"}');
+    } catch (error) { return {}; }
+}
+
 function renderDialogs() {
     // rendering filter dialog
     $('.theme-filter-header').hide();
@@ -1957,6 +1507,66 @@ function renderDialogs() {
         }
     });
     filterDialog.appendTo('#filterDialog');
+
+    // rendering create dialog    
+
+    createDialog = new ej.popups.Dialog({
+        visible: false,
+        modal: true,
+        content: `<div id="create-dialog">
+                    <div class="headers dlg-header-h">
+                        <span class="header-content"> Create new Theme based from ${getUrlParams().theme}</span>
+                         <div class="filter-dialog-close" onclick="createDialog.hide()"><span class="e-icons close-icon "></span></div>
+                    </div>
+                    <div class="form-group">
+                     <label for="input-name" id="input-name-label">Name</label>
+                     <input onkeyup="updateCreateButtonState(this)" class="form-control form-control-sm" id="input-name" type="text" >
+                        <br/>
+   
+                   </div>
+                 <div class="right-buttons">                     
+                     <button type="button" id="create-newtheme-btn" class="btn btn-primary disabled" onclick="createNewTheme(document.getElementById('input-name').value)">Create</button>
+                     <button type="button" class="btn btn-default" onclick="createDialog.hide()">CANCEL</button>
+               <div>`,
+        width: '330px',
+        isModal: true,
+
+        target: document.body,
+        animationSettings: { effect: 'None' }
+    });
+    createDialog.appendTo('#create-dialog');
+
+    // rendering login dialog
+    loginDialog = new ej.popups.Dialog({
+        visible: false,
+        modal: true,
+        content: `<div id="login-dialog">
+                    <div class="headers">
+                        <span class="header-content"> Login </span>
+                         <div class="filter-dialog-close" onclick="loginDialog.hide()"><span class="e-icons close-icon "></span></div>
+                    </div>
+                    <div class="form-group">
+                     <label for="input-user" id="input-user-label">User</label>
+                     <input class="form-control form-control-sm" id="input-user" type="text" onkeydown="login()" >
+                        <br/>
+                     <label for="input-password" id="input-password-label">Password</label>
+                     <input class="form-control form-control-sm" id="input-password" type="password" onkeydown="login()" >
+                   </div>
+                 <div class="right-buttons">
+                     <span class="dialog-error-msg" id="error-message"></span>
+                     <button type="button" class="btn btn-primary" onclick="login()">LOGIN</button>
+                     <button type="button" class="btn btn-default" onclick="loginDialog.hide()">CANCEL</button>
+               <div>`,
+        width: '330px',
+        isModal: true,
+
+        target: document.body,
+        animationSettings: { effect: 'None' }
+    });
+    loginDialog.appendTo('#login-dialog');
+
+
+
     // rendering export dialog
     exportDialog = new ej.popups.Dialog({
         visible: false,
@@ -2065,6 +1675,78 @@ function renderDialogs() {
 
 }
 
+function checkApply() {
+    var element = document.getElementById('apply-controls');
+    if (element) {
+        element.style.display = 'block';
+    }
+}
+
+function applyChanges() {
+    var theme = change(curTheme || getUrlParams().theme);
+    var ajax = new ej.base.Ajax({
+        type: "POST",
+        url: "/Home/ApplyChanges",
+        contentType: 'application/json; charset=utf-8',
+        processData: false,
+        data: JSON.stringify({ theme: theme })
+    }, 'POST', true);
+    ajax.send();
+    ajax.onSuccess = function (url) {
+        window.location.href = url;
+    };
+}
+
+function deleteCurrentTheme(force) {
+    force = force || confirm('Are you sure you want to delete the theme "' + curTheme + '"');
+    if (force && curTheme) {
+        var ajax = new ej.base.Ajax({
+            type: "POST",
+            url: "/Home/DeleteTheme",
+            contentType: 'application/json; charset=utf-8',
+            processData: false,
+            data: JSON.stringify({ theme: curTheme })
+        }, 'POST', true);
+        ajax.send();
+        ajax.onSuccess = function (url) {
+            window.location.href = url;
+        };
+    }
+}
+
+function getAvailableThemes() {
+    return Array.from(document.querySelector('#themelist').querySelectorAll('li')).map(l => l.innerText.trim());
+}
+
+function updateCreateButtonState(input) {
+    var btn = document.getElementById('create-newtheme-btn')
+    btn.classList[canCreateNewTheme(input.value) ? 'remove' : 'add']('disabled');
+}
+function canCreateNewTheme(newThemeName) {
+    return newThemeName && !getAvailableThemes().includes(newThemeName);
+}
+
+function createNewTheme(newThemeName) {
+    if (canCreateNewTheme(newThemeName)) {
+        var baseTheme = curTheme || getUrlParams().theme,
+            theme = change(baseTheme);
+        theme.theme = newThemeName;
+
+        var ajax = new ej.base.Ajax({
+            type: "POST",
+            url: "/Home/CreateNewTheme",
+            contentType: 'application/json; charset=utf-8',
+            processData: false,
+            data: JSON.stringify({ theme: theme, baseTheme: baseTheme }) 
+        }, 'POST', true);
+        ajax.send();
+        ajax.onSuccess = function (url) {
+            window.location.href = url;
+        };
+
+    }
+}
+
 function exporting(boolean) {
     if (boolean) {
         var components = [];
@@ -2091,9 +1773,9 @@ function exporting(boolean) {
             colorchange['theme'] = window.themes;
             var themes_var;
             if (window.themes.indexOf('-') !== 1) {
-               
-             themes_var = window.themes.replace("-", "");
-                
+
+                themes_var = window.themes.replace("-", "");
+
                 themes_var = themes_var.trim();
             } else {
                 themes_var = window.themes;
@@ -2108,7 +1790,7 @@ function exporting(boolean) {
         overlay(false);
         var ajax = new ej.base.Ajax({
             type: "POST",
-            url: "Home/export",
+            url: "/Home/export",
             contentType: 'application/json; charset=utf-8',
             processData: false,
             data: JSON.stringify({ exporting: colorchange }) // Note it is important
@@ -2129,165 +1811,224 @@ function exporting(boolean) {
 
 function renderProperties(themeName) {
     loadThemeProperties(themeName, function () {
-        _renderProperties(themeName);
-        colorpicker();
+        _renderProperties(themeName);        
     });
+}
+
+function login() {
+    if (!event || !event.key || event.key === 'Enter') {
+        document.getElementById('error-message').innerText = '';
+        var ajax = new ej.base.Ajax({
+            type: "POST",
+            url: "/Account/Login",
+            contentType: 'application/json; charset=utf-8',
+            processData: false,
+            data: JSON.stringify({ UserName: document.getElementById('input-user').value, Password: document.getElementById('input-password').value })
+        }, 'POST', true);
+        ajax.send();
+        ajax.onFailure = function (e) {
+            document.getElementById('error-message').innerText = 'Invalid user or Password';
+        };
+        ajax.onSuccess = function (data) {
+            if (JSON.parse(data)) {
+                loginDialog.hide();
+                window.location.reload();
+            } else {
+                document.getElementById('error-message').innerText = 'Invalid user or Password'
+            }
+        };
+    }
+}
+
+function _editorFor(themeName, property, key) {
+
+    var wrapper = new ej.base.createElement('div', { className: 'theme-prop-wrapper', attrs: { 'data-id': property.id, 'data-property-type': property.type } });
+    var labelElement = new ej.base.createElement('div', { className: 'f-left theme-property', innerHTML: `<label title="${key} (${property.id})" for="property-value-edit-${property.id}">${key}</label>` });
+    var editCtrl = new ej.base.createElement('div', { className: 'f-right theme-value', innerHTML: _inputFor(property) });
+    editCtrl.querySelector('input').onchange = function (evt) {
+        onPropertyValueChange(themeName, property, this.value, this);
+    };
+
+    if (property.type === ScssVariableType.Color && !useNativeColorCtrl) { // prepare Syncfusion ColorPicker 
+        var extraClass = ColorHelper.isTransparent(property.default) ? 'transparent-colorpalette' : (ColorHelper.isNone(property.default) ? 'none-colorpalette' : '');
+        editCtrl.insertAdjacentHTML('beforeend', `<input type="button" class="right-prop-btn ${extraClass} color-picker ${property.id}" />`); // ColorPicker button
+        if (virtualizeThemeProperties) {
+            var btn = editCtrl.querySelector('input[type=button]');
+            btn.style.backgroundColor = property.default;
+            btn.onclick = function (e) {
+                btn.onclick = () => { };
+                ColorHelper.createNewColorPicker(property, '.color-picker.' + property.id, editCtrl, function (propertyId, value) {
+                    var input = getRenderedInputFor(propertyId);
+                    input.value = value;
+                    input.dispatchEvent(new Event('change'));
+                });
+                ColorHelper.applyColorPickerStyles();
+                setTimeout(() => { // Hack to open newly created picker
+                    var x = btn.parentElement.querySelector('.theme-color');                    
+                    x.click(e);
+                }, 100);
+            };
+        }
+    }
+    
+    var createdInput = editCtrl.querySelector('input');
+    if (createdInput?.getAttribute('data-type')) {
+        editCtrl.insertAdjacentHTML('beforeend', `<input type="button" title="Toggle plain input" class="right-prop-btn toggle-input-mode-btn ${property.id}" />`);
+        editCtrl.querySelector('input[type=button]').onclick = function () {
+            toggleInputType(createdInput);
+        };
+    }
+
+    // Empty right button only to align everything correct
+    if (!editCtrl.querySelector('.right-prop-btn') && !editCtrl.querySelector('.color-picker')) {
+        editCtrl.insertAdjacentHTML('beforeend', `<input type="button" title="Toggle plain input" class="right-prop-btn empty ${property.id}" />`);
+    }
+    
+    wrapper.appendChild(labelElement);
+    wrapper.appendChild(editCtrl);
+
+    return wrapper;
+}
+
+function toggleInputType(inputCtrl) {
+    var type = inputCtrl.getAttribute('data-type');
+    if (type) {
+        inputCtrl.setAttribute('data-type', inputCtrl.type);
+        inputCtrl.type = type;        
+    }
+}
+
+function getRenderedInputFor(propertyId) {   
+    return document.getElementById(`property-value-edit-${propertyId}`);
+}
+
+function _inputFor(property) {
+    var inputId = `property-value-edit-${property.id}`;
+
+    var type = 'type="text"';
+    if (property.type === ScssVariableType.Color && useNativeColorCtrl) {
+        if (ColorHelper.isTransparentOrNone(property.default)) {
+            type = 'type="text" data-type="color"';            
+        } else {
+            type = 'type="color" data-type="text"';
+        }
+    }
+    return `<input list="preset-${property.id}" value="${property.default}" ${type} id="${inputId}" class="property-edit-input-${property.id} property-edit-input" /> <datalist id="preset-${property.id}"> ${property.palettes.map(c => '<option>' + c + '</option>').join('')} </datalist> `;
+}
+
+function onPropertyValueChange(themeName, property, value, sender) {
+   // force = force || confirm('Are you sure you want to delete the theme "' + curTheme + '"');
+    // TODO: Check property value valid for type
+
+    if (virtualizeThemeProperties) { // If we virtualize rendering we need to update default value as well
+        property.default = value;
+    }
+
+    var colorEle = sender.parentElement.querySelector('.theme-color');
+    var colorchange = change(themeName, property.id, value);
+    var controlSection = document.getElementById('control-section');
+    var scrollTop = controlSection.scrollTop;
+    var darkOrLight = themeName.indexOf('dark') >= 0 || themeName.indexOf('light') >= 0;
+
+    themeBodyLeftOverlay.style.backgroundColor = "#383838";
+    overlay(false);
+
+    if (darkOrLight) {
+        window.dependency_arr.push("layouts/card");
+        colorchange["dependency"] = window.dependency_arr;
+        colorchange.theme = colorchange.theme.replace('light', '');
+    }
+
+    var ajax = new ej.base.Ajax({
+        type: "POST",
+        url: !darkOrLight ? "/Home/ThemeChange" : "/Home/DarkThemeChange",
+        contentType: 'application/json; charset=utf-8',
+        processData: false,
+        data: JSON.stringify({ color: colorchange }) // Note it is important
+    }, 'POST', true);
+    ajax.send();
+    ajax.onSuccess = function (data) {
+        applyCustomThemePreview(data);
+        ColorHelper.setTransparentClsOrBgValue(value, colorEle);
+        removeOverlay(false);
+        themeBodyLeftOverlay.style.backgroundColor = "transparent";
+        controlSection.scrollTop = scrollTop;
+    };
+
+    checkApply();
+}
+
+function varCount(visible) {    
+    document.getElementById('var-count').style.opacity = visible ? '1' : '0';
 }
 
 // Rendering theme properties elements
 function _renderProperties(themeName) {
+    lastRenderedTheme = themeName;
     ej.base.enableRipple(false);
     if (themeName.indexOf('-') !== -1) {
         themeName = themeName.replace('-', "");
         themeName = themeName.trim();
     }
     var properties = window.themeProps[themeName];
-    if (properties !== undefined) {
-        var keys = Object.keys(properties);
+
+    if (properties !== undefined) {        
+        var keys = Object.keys(properties),
+            search = document.getElementById('filter-input').value || '';
         document.getElementById('theme-properties').innerHTML = "";
-        for (var i = 0; i < keys.length; i++) {
-            if (keys[i].startsWith('_')) {
-                break;
-            }
-            var property = properties[keys[i]];
-            
-            var wrapper = new ej.base.createElement('div', { className: 'theme-prop-wrapper', attrs: { 'data-id': property.id } });
-            var labelElement = new ej.base.createElement('div', { className: 'f-left theme-property', innerHTML: '<span>' + keys[i] + '</span' });
-            clrpkrWrapper = new ej.base.createElement('div', { className: 'f-right theme-value', innerHTML: `<input type="color" class="color-picker ${property.id}" />` });
-            wrapper.appendChild(labelElement);
-            wrapper.appendChild(clrpkrWrapper);
-            document.getElementById('theme-properties').appendChild(wrapper);
-            var obj = new ej.inputs.ColorPicker({
-                mode: 'Palette',
-                value: property.default,
-                inline: false,
-                showButtons: true,
-                cssClass: 'e-themestudio-colorpicker',
-                modeSwitcher: true,
-                columns: 6,
-                presetColors: {
-                    'custom': property.palettes
-                },
-                beforeTileRender: (args) => {
-                    args.element.classList.add('e-circle-palette');
-                    args.element.appendChild(new ej.base.createElement('span', { className: 'e-circle-selection' }));
-                    var value = args.element.getAttribute("aria-label");
-                    if (value === "#ffffff") {
-                        args.element.classList.add('white-colorpattle')
-                    }
-                },
-                beforeOpen: function (args) {
-                },
-                open: function (args) {
-
-                },
-
-                change: function (args) {                    
-                    var element = this.element.closest('.theme-prop-wrapper');
-                    var value = args.currentValue.rgba;
-                    var colorEle = this.getWrapper().querySelector('.theme-color');
-                    var colorchange = change(themeName, element.getAttribute('data-id'), value);
-                    var controlSection = document.getElementById('control-section');
-                    var scrollTop = controlSection.scrollTop;
-                    themeBodyLeftOverlay.style.backgroundColor = "#383838";
-                    overlay(false);
-                    if (themeName.indexOf('dark') === -1 && themeName.indexOf('light') === -1) {
-                        var ajax = new ej.base.Ajax({
-                            type: "POST",
-                            url: "Home/ThemeChange",
-                            contentType: 'application/json; charset=utf-8',
-                            processData: false,
-                            data: JSON.stringify({ color: colorchange }) // Note it is important
-                        }, 'POST', true);
-                        ajax.send();
-                        ajax.onSuccess = function (data) {
-                            var styles = document.getElementById('custom-theme');
-                            styles.innerHTML = data;
-                            colorEle.style.backgroundColor = value;
-
-                            removeOverlay(false);
-                            themeBodyLeftOverlay.style.backgroundColor = "transparent";
-                            controlSection.scrollTop = scrollTop;
-                        };
-                    } else {
-                        window.dependency_arr.push("layouts/card");
-                        colorchange["dependency"] = window.dependency_arr;
-                        colorchange.theme = colorchange.theme.replace('light', '');
-                        var ajax1 = new ej.base.Ajax({
-                            type: "POST",
-                            url: "Home/DarkThemeChange",
-                            contentType: 'application/json; charset=utf-8',
-                            processData: false,
-                            data: JSON.stringify({ color: colorchange }) // Note it is important
-                        }, 'POST', true);
-                        ajax1.send();
-                        ajax1.onSuccess = function (data) {
-                            var styles = document.getElementById('custom-theme');
-                            styles.innerHTML = data;
-                            colorEle.style.backgroundColor = value;
-
-                            removeOverlay(false);
-                            themeBodyLeftOverlay.style.backgroundColor = "transparent";
-                            controlSection.scrollTop = scrollTop;
-                        };
-                    }
-
+        if (virtualizeThemeProperties) {
+            keys = keys.filter(k => k.toLowerCase().includes(search.toLowerCase()) || _match(search, properties[k]));
+            document.getElementById('var-count').innerHTML = `${keys.length} Variables`;
+            var list = new VirtualList({
+                w: '100%',
+                h: 900,
+                id: 'virtual-theme-properties',
+                itemHeight: 45,
+                totalRows: keys.length,
+                generatorFn: function (i) {
+                    //document.getElementById('filter-input').value                
+                    var property = properties[keys[i]];
+                    var inputWrapper = _editorFor(themeName, property, keys[i]);
+              
+                    return inputWrapper;
                 }
-            }, '.color-picker.' + property.id);
+            });
+
+            list.container.style.marginLeft = "auto";
+            list.container.style.marginRight = "auto";
+            document.getElementById("theme-properties").appendChild(list.container);
+            setTimeout(() => { document.getElementById('virtual-theme-properties').style.height = '100%'; }, 500); // Need to do this afterwards, otherwise layout crash.. no idea currently
+        } else {
+            document.getElementById('var-count').innerHTML = `${keys.length} Variables`;
+            for (var i = 0; i < keys.length; i++) {
+                if (keys[i].startsWith('_')) {
+                    continue;
+                }
+                var property = properties[keys[i]];
+                var inputWrapper = document.getElementById('theme-properties').appendChild(_editorFor(themeName, property, keys[i]));
+
+                ColorHelper.createNewColorPicker(property, '.color-picker.' + property.id, inputWrapper, function (propertyId, value) {
+                    var input = getRenderedInputFor(propertyId);
+                    input.value = value;
+                    input.dispatchEvent(new Event('change'));
+                });
+            }
+            ColorHelper.applyColorPickerStyles();
         }
+        
         if (themeName === 'material' || themeName === 'materialdark') {
             ej.base.enableRipple(true);
         }
     }
-    //else {
-    //    var properties = window.themeProps["material"];
-    //        var keys = Object.keys(properties);
-    //        document.getElementById('theme-properties').innerHTML = "";
-    //        for (var i = 0; i < keys.length; i++) {
-    //            var property = properties[keys[i]];
-    //            var wrapper = new ej.base.createElement('div', { className: 'theme-prop-wrapper', attrs: { 'data-id': property.id } });
-    //            var labelElement = new ej.base.createElement('div', { className: 'f-left theme-property', innerHTML: '<span>' + keys[i] + '</span' });
-    //            clrpkrWrapper = new ej.base.createElement('div', { className: 'f-right theme-value', innerHTML: `<input type="color" class="color-picker ${property.id}" />` });
-    //            wrapper.appendChild(labelElement);
-    //            wrapper.appendChild(clrpkrWrapper);
-    //            document.getElementById('theme-properties').appendChild(wrapper);
-    //            var obj = new ej.inputs.ColorPicker({
-    //                mode: 'Palette',
-    //                value: property.default,
-    //                inline: false,
-    //                showButtons: true,
-    //                cssClass: 'e-themestudio-colorpicker',
-    //                modeSwitcher: true,
-    //                columns: 6,
-    //                presetColors: {
-    //                    'custom': property.palettes
-    //                },
-    //                beforeTileRender: (args) => {
-    //                    args.element.classList.add('e-circle-palette');
-    //                    args.element.appendChild(new ej.base.createElement('span', { className: 'e-circle-selection' }));
-    //                    var value = args.element.getAttribute("aria-label");
-    //                    if (value === "#ffffff") {
-    //                        args.element.classList.add('white-colorpattle')
-    //                    }
-    //                },
-    //                beforeOpen: function (args) {
-    //                },
-    //                open: function (args) {
-
-    //                }
-    //            }, '.color-picker.' + property.id);
-    //        }
-    //        if (themeName === 'material') {
-    //            ej.base.enableRipple(true);
-    //        }
-    //}
 }
 
 /* change the color values */
 function change(theme, property, color) {
     var colorObj = {};
     colorObj.properties = themeColors[theme];
-    colorObj.properties['$' + property] = color;
+    if (property && color) {
+        colorObj.properties['$' + property] = color;
+    }
     if (theme.indexOf('dark') !== -1) {
         theme = theme.replace('dark', '-dark');
         theme = theme.trim();
@@ -2304,120 +2045,16 @@ function loadTheme(theme, isOverylay) {
     if (isOverylay) {
         overlay(true);
     }
+
+    Array.from(document.body.classList).filter(s => s.startsWith('themestudio-')).forEach(function (t) {
+        document.body.classList.remove(t);
+    });
     
-    if (theme === 'highcontrast') {
-        document.body.classList.remove('themestudio-bootstrap');
-        document.body.classList.remove('themestudio-fabric');
-        document.body.classList.remove('themestudio-material');
-        document.body.classList.remove('themestudio-bootstrap-dark');
-        document.body.classList.remove('themestudio-material-dark');
-        document.body.classList.remove('themestudio-fabric-dark');
-        document.body.classList.add('themestudio-highcontrast');
-        document.body.classList.remove('themestudio-highcontrast-light');
-        document.body.classList.remove('themestudio-bootstrp4');
-        document.body.classList.remove('themestudio-fusion');
-    }
-    else if (theme === "bootstrap-dark") {
-        document.body.classList.remove('themestudio-bootstrap');
-        document.body.classList.remove('themestudio-fabric');
-        document.body.classList.remove('themestudio-material');
-        document.body.classList.remove('themestudio-highcontrast');
-        document.body.classList.remove('themestudio-material-dark');
-        document.body.classList.remove('themestudio-fabric-dark');
-        document.body.classList.add('themestudio-bootstrap-dark');
-        document.body.classList.remove('themestudio-highcontrast-light');
-        document.body.classList.remove('themestudio-bootstrap4');
-        document.body.classList.remove('themestudio-fusion');
-    }
-    else if (theme === 'material-dark') {
-        document.body.classList.remove('themestudio-bootstrap');
-        document.body.classList.remove('themestudio-fabric');
-        document.body.classList.remove('themestudio-material');
-        document.body.classList.remove('themestudio-highcontrast');
-        document.body.classList.add('themestudio-material-dark');
-        document.body.classList.remove('themestudio-fabric-dark');
-        document.body.classList.remove('themestudio-bootstrap-dark');
-        document.body.classList.remove('themestudio-highcontrast-light');
-        document.body.classList.remove('themestudio-bootstrap4');
-        document.body.classList.remove('themestudio-fusion');
-    }
-    else if (theme === 'fabric-dark') {
-        document.body.classList.remove('themestudio-bootstrap');
-        document.body.classList.remove('themestudio-fabric');
-        document.body.classList.remove('themestudio-material');
-        document.body.classList.remove('themestudio-highcontrast');
-        document.body.classList.remove('themestudio-material-dark');
-        document.body.classList.add('themestudio-fabric-dark');
-        document.body.classList.remove('themestudio-bootstrap-dark');
-        document.body.classList.remove('themestudio-highcontrast-light');
-        document.body.classList.remove('themestudio-bootstrap4');
-        document.body.classList.remove('themestudio-fusion');
-    } else if (theme === 'highcontrast-light') {
-        document.body.classList.remove('themestudio-bootstrap');
-        document.body.classList.remove('themestudio-fabric');
-        document.body.classList.remove('themestudio-material');
-        document.body.classList.remove('themestudio-bootstrap-dark');
-        document.body.classList.remove('themestudio-highcontrast');
-        document.body.classList.remove('themestudio-material-dark');
-        document.body.classList.remove('themestudio-fabric-dark');
-        document.body.classList.add('themestudio-highcontrast-light');
-        document.body.classList.remove('themestudio-bootstrp4');
-        document.body.classList.remove('themestudio-fusion');
-        document.body.classList.remove('themestudio-fusion');
-    }
-    else if (theme === 'bootstrap4') {
-        document.body.classList.remove('themestudio-bootstrap');
-        document.body.classList.remove('themestudio-fabric');
-        document.body.classList.remove('themestudio-material');
-        document.body.classList.remove('themestudio-bootstrap-dark');
-        document.body.classList.remove('themestudio-highcontrast');
-        document.body.classList.remove('themestudio-material-dark');
-        document.body.classList.remove('themestudio-fabric-dark');
-        document.body.classList.remove('themestudio-highcontrast-light');
-        document.body.classList.add('themestudio-bootstrap4');
-        document.body.classList.remove('themestudio-fusion');
-        
-    }
-    else if (theme === 'fusion') {
-        document.body.classList.remove('themestudio-bootstrap');
-        document.body.classList.remove('themestudio-fabric');
-        document.body.classList.remove('themestudio-material');
-        document.body.classList.remove('themestudio-bootstrap-dark');
-        document.body.classList.remove('themestudio-highcontrast');
-        document.body.classList.remove('themestudio-material-dark');
-        document.body.classList.remove('themestudio-fabric-dark');
-        document.body.classList.remove('themestudio-highcontrast-light');
-        document.body.classList.remove('themestudio-bootstrap4');
-        document.body.classList.add('themestudio-fusion');
-        
-    }
-    else {
-        document.body.classList.remove('themestudio-bootstrap-dark');
-        document.body.classList.remove('themestudio-highcontrast');
-        document.body.classList.remove('themestudio-material-dark');
-        document.body.classList.remove('themestudio-fabric-dark');
-        document.body.classList.remove('themestudio-highcontrast-light');
-        document.body.classList.remove('themestudio-bootstrap4');
-        document.body.classList.remove('themestudio-fusion');
-        if (theme === 'material') {
-            document.body.classList.remove('themestudio-bootstrap');
-            document.body.classList.remove('themestudio-fabric');
-            document.body.classList.add('themestudio-material');
-        }
-        else if (theme === 'bootstrap') {
-            document.body.classList.add('themestudio-bootstrap');
-            document.body.classList.remove('themestudio-fabric');
-            document.body.classList.remove('themestudio-material');
-        }
-        else if (theme === 'fabric') {
-            document.body.classList.remove('themestudio-bootstrap');
-            document.body.classList.add('themestudio-fabric');
-            document.body.classList.remove('themestudio-material');
-        }
-    }
+    document.body.classList.add('themestudio-' + theme);
+  
     document.getElementById("inputdefault").value = theme;
 
-    if (theme === 'material' || theme === 'fabric' || theme === 'bootstrap' || theme === 'highcontrast' || theme === 'bootstrap4' || theme === 'fusion') {
+    if (!theme.includes('-dark')) {
         colorpicker();
         loadDefaultThemes(theme, true);
     }
@@ -2443,7 +2080,7 @@ function loadTheme(theme, isOverylay) {
             loadDefaultThemes1(theme, true);
         }, 500);
 
-       
+
     }
 
 }
@@ -2476,6 +2113,14 @@ document.getElementById('download-now').onclick = function () {
     exportDialog.show();
     document.getElementById('downloads-info').style.display = '';
 };
+
+var loginBtnEl = document.getElementById('login-now');
+if (loginBtnEl) {
+    loginBtnEl.onclick = function () {
+        loginDialog.show();
+    };
+}
+
 var selectAll = new ej.buttons.CheckBox({
     label: 'Select all',
     checked: false,
@@ -2711,7 +2356,7 @@ var catCard = {
         'col-cards': {
             'cat-editors': ['textbox', 'numerictextbox', 'maskedtextbox', 'slider', 'inplace-editor'],
             'cat-pickers': ['datepicker', 'timepicker', 'datetimepicker', 'daterangepicker'],
-            'cat-dropdown': ['auto-complete', 'drop-down-list', 'multi-select', 'combo-box','list-box'],
+            'cat-dropdown': ['auto-complete', 'drop-down-list', 'multi-select', 'combo-box', 'list-box'],
             'cat-button': ['button', 'drop-down-button', 'split-button', 'button-group', 'progress-button'],
             'check-box': null,
             'radio-button': null,
@@ -2929,18 +2574,18 @@ function getdependency(comp_array) {
     window.dependency_arr = [];
     theme = themeDeps(comp_array, window.dependentCollection["styles"], window.dependentCollection["resources"]);
     var packs = Object.keys(theme.compPack);
-    dependency_arr = ['base','buttons/button'];
+    dependency_arr = ['base', 'buttons/button'];
     var selectComparray = [];
     var colorpickercomponent = [];
     var filecomponent = [];
     for (var pack of packs) {
 
         for (var comp of theme.compPack[pack]) {
-            if (comp_array.indexOf(comp) !== -1 || dependency_arr.indexOf(comp) !== -1  ) {
-               
-                    var styledependency = pack + '/' + (comp === 'listview' ? 'list-view' : comp);
+            if (comp_array.indexOf(comp) !== -1 || dependency_arr.indexOf(comp) !== -1) {
+
+                var styledependency = pack + '/' + (comp === 'listview' ? 'list-view' : comp);
                 selectComparray.push(styledependency);
-                
+
             }
             else {
                 if (((comp === "color-picker") && window.dependency_arr.indexOf('button') === -1) && comp !== "file-manager") {
@@ -2954,11 +2599,11 @@ function getdependency(comp_array) {
                     filecomponent.push(styledependency);
                 }
 
-                }
-               
+            }
+
 
         }
-       
+
     }
     window.dependency_arr.push('layouts/dashboardlayout');
     window.dependency_arr = window.dependency_arr.concat(selectComparray);
@@ -3094,15 +2739,14 @@ function importing(boolean) {
             if (filecontents.theme.indexOf("-") === -1) {
                 var ajax = new ej.base.Ajax({
                     type: "POST",
-                    url: "Home/ThemeChange",
+                    url: "/Home/ThemeChange",
                     contentType: 'application/json; charset=utf-8',
                     processData: false,
                     data: JSON.stringify({ color: filecontents }) // Note it is important
                 }, 'POST', true);
                 ajax.send();
                 ajax.onSuccess = function (data) {
-                    var styles = document.getElementById('custom-theme');
-                    styles.innerHTML = data;
+                    applyCustomThemePreview(data);
                     //renderProperties(filecontents.theme);
                     //colorpicker();
                     for (i = 0; i < colorElement.length; i++) {
@@ -3141,15 +2785,14 @@ function importing(boolean) {
                 filecontents["dependency"] = window.dependency_arr;
                 var ajax2 = new ej.base.Ajax({
                     type: "POST",
-                    url: "Home/DarkThemeChange",
+                    url: "/Home/DarkThemeChange",
                     contentType: 'application/json; charset=utf-8',
                     processData: false,
                     data: JSON.stringify({ color: filecontents }) // Note it is important
                 }, 'POST', true);
                 ajax2.send();
                 ajax2.onSuccess = function (data) {
-                    var styles = document.getElementById('custom-theme');
-                    styles.innerHTML = data;
+                    applyCustomThemePreview(data);
                     for (i = 0; i < colorElement.length; i++) {
                         colorElement[i].style.backgroundColor = properties[key[i]];
                     }
@@ -3158,7 +2801,7 @@ function importing(boolean) {
                     controlSection.scrollTop = scrollTop;
                 }
             }
-            
+
         }
 
     }
@@ -3199,24 +2842,16 @@ function twocolumn_layout() {
 }
 $(document).keyup(function (e) {
     if (e.keyCode == 27) { // escape key maps to keycode `27`
-        filterDialog.hide();
-        exportDialog.hide();
-        importDialog.hide();
+        filterDialog?.hide();
+        exportDialog?.hide();
+        importDialog?.hide();
+        loginDialog?.hide();
+        createDialog?.hide();
     }
 })
 
 function colorpicker() {
-    var themeElement = document.getElementById('theme-properties')
-    var element = themeElement.querySelectorAll('.e-colorpicker-wrapper');
-    for (var i = 0, len = element.length; i < len; i++) {
-        var ele = element[i];
-        var cl = ele.querySelectorAll('button')[1];
-        cl.classList = '';
-        cl.classList.add('theme-color-picker-override');
-        cl.children[0].classList = 'theme-color';
-        var colorele = element[i].querySelector('input');
-        cl.children[0].style.backgroundColor = colorele.ej2_instances[0].value;
-    }
+    ColorHelper.applyColorPickerStyles();
 }
 function loadDefaultThemes1(theme, rendered) {
     window.themes = theme;
@@ -3236,20 +2871,19 @@ function loadDefaultThemes1(theme, rendered) {
     themeObj["dependency"] = window.dependency_arr;
     var ajax = new ej.base.Ajax({
         type: "POST",
-        url: "Home/dark",
+        url: "/Home/dark",
         contentType: 'application/json; charset=utf-8',
         processData: false,
         data: JSON.stringify({ themes: themeObj }) // Note it is important
     }, 'POST', true);
     ajax.send();
     ajax.onSuccess = function (data) {
-        var styles = document.getElementById('custom-theme');
-        styles.innerHTML = data;
+        applyCustomThemePreview(data);
         destroyControls();
         renderComponents();
-        
+
         renderRightPane1(darktheme);
-        
+
 
 
 
@@ -3266,8 +2900,8 @@ function loadDefaultThemes1(theme, rendered) {
 }
 function renderRightPane1(theme) {
     // theme switcher datasource
-   
-        
-        renderProperties(theme);
-                
+
+
+    renderProperties(theme);
+
 }

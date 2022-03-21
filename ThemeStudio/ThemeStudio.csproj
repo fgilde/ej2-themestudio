@@ -143,19 +143,28 @@
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Attributes\GZipOrDeflateAttribute.cs" />
+    <Compile Include="Attributes\SessionAuthorizeAttribute.cs" />
+    <Compile Include="Constants.cs" />
+    <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\CdnController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Extensions\CompileResultExtensions.cs" />
     <Compile Include="Extensions\DateTimeExtensions.cs" />
+    <Compile Include="Extensions\DictionaryExtensions.cs" />
     <Compile Include="Extensions\ThemePropertiesExtensions.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Helper\AuthHelper.cs" />
+    <Compile Include="Helper\ColorHelper.cs" />
     <Compile Include="Helper\Random.cs" />
     <Compile Include="Helper\SassCompile.cs" />
     <Compile Include="Helper\ScssHelper\CssVariableDeclaration.cs" />
     <Compile Include="Helper\ScssHelper\ScssVariable.cs" />
+    <Compile Include="Helper\ScssHelper\ScssVariableSuggestion.cs" />
     <Compile Include="Helper\ScssHelper\ScssVariableType.cs" />
     <Compile Include="Helper\ServerHelper.cs" />
+    <Compile Include="Helper\ThemeHelper.cs" />
     <Compile Include="Models\CompileResult.cs" />
     <Compile Include="Models\TemplateContent.cs" />
     <Compile Include="Models\ThemeProperties.cs" />
@@ -176,6 +185,7 @@
     <Content Include="Content\Fonts\TS icon Font.svg" />
     <Content Include="Content\images\colorpicker.svg" />
     <Content Include="Content\images\Preview tag.svg" />
+    <Content Include="Content\images\toggle.svg" />
     <Content Include="Content\index.css" />
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
@@ -185,8 +195,10 @@
     <Content Include="ApplicationInsights.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="Scripts\ScssVariableType.js" />
     <Content Include="Scripts\combine.js" />
     <Content Include="Scripts\datasource.js" />
+    <Content Include="Scripts\ColorHelper.js" />
     <Content Include="Scripts\ej1\ej.widget.all.min.map" />
     <Content Include="Content\Fonts\TS icon Font.eot" />
     <Content Include="Content\Fonts\TS icon Font.ttf" />
@@ -922,11 +934,7 @@
     <Content Include="ej2-resource\styles\treemap\fusion.scss" />
     <Content Include="ej2-resource\styles\treemap\highcontrast.scss" />
     <Content Include="ej2-resource\styles\treemap\material.scss" />
-    <None Include="Properties\PublishProfiles\CustomProfile.pubxml" />
-    <None Include="Properties\PublishProfiles\CustomProfile1.pubxml" />
-    <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
-    <None Include="Properties\PublishProfiles\FolderProfile1.pubxml" />
-    <None Include="Properties\PublishProfiles\FolderProfile2.pubxml" />
+    <None Include="Properties\PublishProfiles\sw-theme-studio - Web Deploy.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\ej1\ej.widget.all.min.js" />
     <Content Include="Scripts\index.js" />
@@ -941,6 +949,7 @@
     <Content Include="Scripts\modernizr-2.6.2.js" />
     <Content Include="Scripts\respond.js" />
     <Content Include="Scripts\respond.min.js" />
+    <Content Include="Scripts\VirtualList.js" />
     <Content Include="template\bootstrap.txt" />
     <Content Include="template\bootstrap4.txt" />
     <Content Include="template\dark\bootstrap-dark.txt" />
