@@ -1,0 +1,49 @@
+trigger:
+- master
+
+variables:
+  - name: version
+    value: "$(Build.BuildId)"
+
+
+stages:
+
+  
+  - stage: Distribution
+    jobs:
+      - job: Build
+        pool: "AI2"
+        steps:
+          - task: Docker@2
+            inputs:
+              containerRegistry: 'docker-registry.services.sabio.de'
+              repository: 'serviceware-ux/sw-theme-studio'
+              command: 'build'
+              Dockerfile: 'ThemeStudio/Dockerfile'
+              buildContext: '.'
+              tags: |
+                $(Build.BuildId)
+                latest
+
+          - task: Docker@1
+            displayName: push
+            inputs:
+              containerregistrytype: "Container Registry"
+              dockerRegistryEndpoint: "docker-registry.services.sabio.de"
+              command: "Push an image"
+              imageName: "docker-registry.services.sabio.de/serviceware-ux/sw-theme-studio:$(Build.BuildId)"
+          - script: docker image rm --no-prune docker-registry.services.sabio.de/serviceware-ux/sw-theme-studio:$(Build.BuildId)
+            displayName: "Untag image locally"
+            condition: succeededOrFailed()
+      
+  - stage: GenerateVersion
+    displayName: "Generate Version File"
+    jobs:
+      - job: GenerateVersion
+        pool: "AI2"
+        steps:
+          - script: echo "$(version)" >> $(Build.ArtifactStagingDirectory)/version.txt
+            displayName: "write version"
+          - task: PublishBuildArtifacts@1
+            inputs:
+              artifactName: variables

@@ -1,4 +1,5 @@
 ﻿@using ThemeStudio.Helper
+@using ThemeStudio.Extensions
 
 <style id="custom-theme"></style>
 <div class="theme-body-left-ovelay e-view" id="left-overlay">
@@ -919,7 +920,7 @@
                             <div class="theme-switch-label f-left" id="choose">Choose Theme</div>
                             <div class="f-right" id="theme-right">
 
-                                @if (Session.IsAuthenticated())
+                                @if (Context.Session.IsAuthenticated())
                                 {
                                     <button title="Create new" id="create-new" onclick="createDialog.show();" class="sb-download-btn scaled-round">
                                         +
@@ -938,8 +939,8 @@
 
                         <div class="theme-cdn">
                             <span class="cdn-info">CDN-Link:</span>
-                            <a target="_blank" href="@Url.Action("Theme", "Cdn", new { theme=Request.QueryString.Get("theme"), type="css"})">css</a> |
-                            <a target="_blank" href="@Url.Action("Theme", "Cdn", new { theme=Request.QueryString.Get("theme"), type="scss"})" href="#">scss</a>
+                            <a target="_blank" href="@Url.Action("Theme", "Cdn", new { theme=Context.Request.Query["theme"], type="css", components=""}).EnsureEndsWith("/")">CSS</a> |
+                            <a target="_blank" href="@Url.Action("Theme", "Cdn", new { theme=Context.Request.Query["theme"], type="scss", components=""}).EnsureEndsWith("/")">SCSS</a>
                         </div>
 
                         <div class="theme-mode">
@@ -964,7 +965,7 @@
                         <div id="placeholder" style="text-align: center;"></div>
                         <div id="theme-properties" class="themeproperties"></div>
 
-                        @if (Session.IsAuthenticated())
+                        @if (Context.Session.IsAuthenticated())
                         {
                             <div class="apply-changes" id="apply-controls">
                                 <button id="save-theme-changes" onclick="applyChanges();" class="sb-download-btn" style="width: 100%; text-align: left;">

@@ -6,7 +6,7 @@ var shelljs = require("shelljs");
 
 
 gulp.task("style-deps-json", function () {
-    var style = JSON.parse(fs.readFileSync("./ej2-resource/styles.json", "utf8"));
+    var style = JSON.parse(fs.readFileSync("./wwwroot/ej2-resource/styles.json", "utf8"));
     var packs = Object.keys(style);
     var tStyle = {};
     var compName = "";
@@ -30,7 +30,7 @@ function themeName(name) {
 gulp.task("allscss", function () {
     var themes = ['material','fabric','bootstrap','bootstrap4','highcontrast'];
     for(var i =0 ;i<themes.length;i++){
-        var styleFiles = glob.sync("./ej2-resource/styles/**/"+themes[i]+".scss");
+        var styleFiles = glob.sync("./wwwroot/ej2-resource/styles/**/"+themes[i]+".scss");
         var styles = {};
         var content = "";
         var pathArray = [];
@@ -43,29 +43,29 @@ gulp.task("allscss", function () {
             
         }
        
-        fs.writeFileSync("./ej2-resource/styles/all"+themes[i]+".scss", content, "utf8");
+        fs.writeFileSync("./wwwroot/ej2-resource/styles/all"+themes[i]+".scss", content, "utf8");
 
     }
    
 });
 gulp.task("clone", function () {
-    shelljs.rm('-rf', './ej2-resources');
+    shelljs.rm('-rf', './wwwroot/ej2-resources');
     shelljs.exec('git clone https://gitlab.syncfusion.com/essential-studio/ej2-resources -b master ej2-resources');
 
 });
 gulp.task("copy-file", function () {
-    var pathBase = './ej2-resources';
+    var pathBase = './wwwroot/ej2-resources';
     gulp.src([pathBase + '/styles/**/*'])
-    .pipe(gulp.dest('./ej2-resource/styles/'));
+    .pipe(gulp.dest('./wwwroot/ej2-resource/styles/'));
     gulp.src([pathBase+'/*.json','!'+pathBase+'/package.json'])  
-    .pipe(gulp.dest('./ej2-resource/'));
+    .pipe(gulp.dest('./wwwroot/ej2-resource/'));
     
 })
 gulp.task("combine-json", function () {
     var style = JSON.parse(fs.readFileSync("styleDeps.json", "utf8"));
-    var resource = JSON.parse(fs.readFileSync("./ej2-resource/resources.json", "utf8"));
+    var resource = JSON.parse(fs.readFileSync("./wwwroot/ej2-resource/resources.json", "utf8"));
     var combine = {styles:style, resources:resource }; 
-    fs.writeFileSync("Scripts/combine.js","window.dependentCollection="+ JSON.stringify(combine), "utf8")
+    fs.writeFileSync("wwwroot/js/combine.js","window.dependentCollection="+ JSON.stringify(combine), "utf8")
 });
 
 

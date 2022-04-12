@@ -1,36 +1,30 @@
 ﻿using System;
 using System.IO;
-using System.Web.Mvc;
-using Newtonsoft.Json;
+using Microsoft.AspNetCore.Mvc;
 using ThemeStudio.Extensions;
 using ThemeStudio.Helper;
-using ThemeStudio.Helper.ScssHelper;
 using ThemeStudio.Models;
 
 namespace ThemeStudio.Controllers
 {
-    public class CdnController : Controller
+    public class CdnController : Microsoft.AspNetCore.Mvc.Controller
     {
         [HttpGet]
-        [Route("style/{theme}/{type}")]
-        public ContentResult Theme(string theme, string type)
+        [Route("theme/{theme}/{type}/{components?}")]
+        public ContentResult Theme(string theme, string type, string components)
         {
-            var sassFilePath =
-                Path.Combine(
-                    Directory.CreateDirectory(Path.Combine(Paths.Output,
-                        $"{theme}-{DateTime.Now.GetTimestamp()}-{Helper.Random.RandomNumberStr()}")).FullName,
-                    $"{theme}.scss");
+            var sassFilePath = Path.Combine(Directory.CreateDirectory(Path.Combine(Paths.Output, $"{theme}-{DateTime.Now.GetTimestamp()}-{Helper.Random.RandomNumberStr()}")).FullName, $"{theme}.scss");
 
-            ThemeProperties exporting = ThemeProperties.FromTheme(theme);
+            ThemeProperties exporting = ThemeProperties.FromTheme(theme, components != null ? components.Split(',') : null);
 
             var res = Paths.ReadTemplateContent(theme, theme.Contains("-dark"))
                 .ReplaceWith(exporting)
-                .AddContent(exporting, true)
+                .AddContent(exporting)
                 .ConvertScssVariablesToCssVariables(sassFilePath)
                 .CompileContent();
             System.IO.File.Delete(sassFilePath);
-            return Content(type == "css" ? res.CompiledContent : res.InitialContent,
-                type == "css" ? "text/css" : "text/x-scss");
+            return Content(type == "css" ? res.CompiledContent : res.InitialContent, type == "css" ? "text/css" : "text/x-scss");
         }
+
     }
 }

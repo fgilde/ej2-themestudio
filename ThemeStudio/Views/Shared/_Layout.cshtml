@@ -1,4 +1,8 @@
 ﻿@using ThemeStudio.Helper
+@using Microsoft.Extensions.Configuration
+@using Microsoft.AspNetCore.Http
+@using System.Reflection
+@inject IConfiguration config
 <!DOCTYPE html>
 <html>
 <head>
@@ -22,8 +26,9 @@
 
 
     @*<link href="~/Content/ej2-custom.css" rel="stylesheet" />*@
-    <link href="~/Content/index.css" rel="stylesheet" />
-    @Styles.Render("~/Content/css")
+    <link href="~/css/index.css" rel="stylesheet" />
+    <link href="~/css/bootstrap.min.css" rel="stylesheet" />
+    @*<link href="~/css/site.css" rel="stylesheet" />*@
 </head>
 <body class="e-view">
     <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-WLQL39J" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
@@ -41,11 +46,13 @@
                             <div style="line-height: 4px;" class="ts-header-text-left-second ">
                                 Theme Studio
                             </div>
+                            <span class="version-info">
+                                @Assembly.GetExecutingAssembly().GetName().Version.ToString()
+                            </span>
                         </h1>
                     </div>
                     <div class='ts-header-item ts-table-cell'>
                         <div id='ts-preview-text'>
-
                         </div>
                     </div>
                 </div>
@@ -54,15 +61,22 @@
                 <div class='ts-header-right ts-right ts-table'>
 
                     <div class="sb-header-item sb-table-cell sb-download-wrapper">
-                        @if (!Session.IsAuthenticated())
+                        @if (!Context.Session.IsAuthenticated())
                         {
-                            <button id="login-now" class="sb-download-btn">
-                                Login
-                            </button>
+                            @if(string.IsNullOrEmpty(config["Authentication:External:Authority"]))
+                            {
+                                <button id="login-now" class="sb-download-btn">Login</button>
+                            }
+                            else
+                            {
+                                <button id="loginsplitbutton"></button>
+                            }
+
                         }
                         else
                         {
-                            <a href="@Url.Action("Logout", "Account", new { theme=Request.QueryString.Get("theme")})">
+                            <span class="welcome-msg">Hello, @Context.Session.GetString(Constants.SessionNameKey)</span>
+                            <a href="@Url.Action("Logout", "Account", new { theme=Context.Request.Query["theme"]})">
                                 <button id="logout-now" class="sb-download-btn">
                                     Logout
                                 </button>
@@ -100,11 +114,19 @@
         @RenderBody()
     </div>
 
-    @Scripts.Render("~/bundles/jquery")
 
-    <script src="~/Scripts/ej2.min.js" type="text/javascript"></script>
+    <script src="~/js/jquery-1.10.2.js"></script>
+    <script src="~/js/ej2.min.js" type="text/javascript"></script>
 
-    @Scripts.Render("~/bundles/themestudio")
+    @*@Scripts.Render("~/bundles/themestudio")*@
+
+    <script src="~/js/datasource.js"></script>
+    <script src="~/js/combine.js"></script>
+    <script src="~/js/VirtualList.js"></script>
+    <script src="~/js/ColorHelper.js"></script>
+    <script src="~/js/ScssVariableType.js"></script>
+    <script src="~/js/index.js"></script>
+
     @RenderSection("scripts", required: false)
 </body>
 </html>

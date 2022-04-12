@@ -1,8 +1,8 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
-using System.Web.ModelBinding;
-using System.Web.Mvc;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using ThemeStudio.Attributes;
 using ThemeStudio.Extensions;
 using ThemeStudio.Helper;
@@ -13,25 +13,31 @@ namespace ThemeStudio.Controllers
 {
     public class HomeController : Controller
     {
+        public string Test(string theme)
+        {
+            var t = Models.ThemeProperties.FromTheme(theme ?? Paths.DefaultTheme);
+            var enumerable = t.GetDependencyFiles().ToList();
+            return enumerable.Count + " Files" + Environment.NewLine + string.Join(Environment.NewLine, enumerable);
+        }
 
-        [GZipOrDeflate]
-        public string ThemeChange(ThemeProperties color)
+        [HttpPost]
+        public string ThemeChange([FromBody] ThemeProperties color)
         {
             return Paths.ReadTemplateContent(color)
                 .ReplaceWith(color)
                 .AddContent(color)
-                .CompileContent()
-                .CompiledContent;
+                .CompileContent();
         }
 
-        public string Export(ThemeProperties exporting)
+        [HttpPost]
+        public string Export([FromBody] ThemeProperties exporting)
         {
-            var zipFileName = $"{exporting.file}-{DateTime.Now.GetTimestamp()}-{Helper.Random.RandomNumberStr()}";
-            var sassFilePath = Path.Combine(Directory.CreateDirectory(Path.Combine(Paths.Output, zipFileName)).FullName, $"{exporting.theme}.scss");
+            var zipFileName = $"{exporting.File}-{DateTime.Now.GetTimestamp()}-{Helper.Random.RandomNumberStr()}";
+            var sassFilePath = Path.Combine(Directory.CreateDirectory(Path.Combine(Paths.Output, zipFileName)).FullName, $"{exporting.Theme}.scss");
 
             return Paths.ReadTemplateContent(exporting)
                 .ReplaceWith(exporting)
-                .AddContent(exporting, true)
+                .AddContent(exporting)
                 .ConvertScssVariablesToCssVariables(sassFilePath)
                 .CompileContent()
                 .AddCompatibilityIf(exporting, Path.Combine(Paths.Output, zipFileName, "compatibility"))
@@ -42,49 +48,49 @@ namespace ThemeStudio.Controllers
 
 
         [HttpGet]
-        public string ThemeProperties([QueryString] string theme)
+        public string ThemeProperties([FromQuery] string theme)
         {
-            var result = ScssHelper.ReadEditableVariables(Paths.GetAllScssFiles(theme)).ToThemePropertiesJson();
-            return result;
+            return ScssHelper.ReadEditableVariables(Paths.GetAllScssFiles(theme)).ToThemePropertiesJson();
         }
 
-        [GZipOrDeflate]
-        public string LoadTheme(ThemeProperties themes)
+        [HttpPost]
+        public string LoadTheme([FromBody] ThemeProperties theme)
         {
-            return ThemeChange(Models.ThemeProperties.FromTheme(themes.theme ?? Paths.DefaultTheme));
+            return ThemeChange(Models.ThemeProperties.FromTheme(theme.Theme ?? Paths.DefaultTheme));
         }
 
         [HttpPost]
         [SessionAuthorize]
-        public string ApplyChanges(ThemeProperties theme)
+        public string ApplyChanges([FromBody] ThemeProperties theme)
         {
             theme.GetChangedScssVariables().SaveChanges();
-            theme.GetChangedScssVariables(new[] {Paths.AllScssFile(theme.theme)}).SaveChanges();
-            return Url.Action("Index", new { theme.theme });
+            theme.GetChangedScssVariables(new[] { Paths.AllScssFile(theme.Theme) }).SaveChanges();
+            return Url.Action("Index", new { theme = theme.Theme });
         }
 
         [HttpPost]
         [SessionAuthorize]
-        public string CreateNewTheme(ThemeProperties theme, string baseTheme)
+        public string CreateNewTheme([FromBody] CreateNewThemeModel model)
         {
-            ThemeHelper.CreateNewTheme(theme.theme, baseTheme);
-            return ApplyChanges(theme);
+            return ApplyChanges(ThemeHelper.CreateNewTheme(model));
         }
 
         [HttpPost]
         [SessionAuthorize]
-        public string DeleteTheme(string theme)
+        public string DeleteTheme([FromBody] string theme)
         {
             ThemeHelper.DeleteTheme(theme);
             return Url.Action("Index");
         }
 
-        public string Dark(ThemeProperties themes)
+        [HttpPost]
+        public string Dark([FromBody] ThemeProperties themes)
         {
-            return SassCompile.CompileContent(themes.GetDependenciesContent()).CompiledContent;
+            return SassCompile.CompileContent(themes.GetDependenciesContent());
         }
 
-        public string DarkThemeChange(ThemeProperties color)
+        [HttpPost]
+        public string DarkThemeChange([FromBody] ThemeProperties color)
         {
             return ThemeChange(color);
         }
@@ -93,6 +99,7 @@ namespace ThemeStudio.Controllers
         {
             return Paths.DefaultTheme;
         }
+
 
         public ActionResult Index()
         {

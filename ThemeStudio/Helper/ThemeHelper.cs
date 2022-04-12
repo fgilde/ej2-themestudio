@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using Antlr.Runtime.Misc;
 using ThemeStudio.Helper.ScssHelper;
 using ThemeStudio.Models;
 
@@ -10,6 +9,12 @@ namespace ThemeStudio.Helper
 {
     public static class ThemeHelper
     {
+        public static ThemeProperties CreateNewTheme(CreateNewThemeModel model)
+        {
+            CreateNewTheme(model.Properties.Theme, model.BaseTheme);
+            return model.Properties;
+        }
+
         public static void CreateNewTheme(string theme, string baseTheme)
         {
             var isDark = baseTheme.Contains("-dark");
@@ -40,8 +45,8 @@ namespace ThemeStudio.Helper
 
                 return false;
             };
-            files = files ?? Paths.GetAllScssFiles(theme.theme);
-            return ScssHelper.ScssHelper.ReadVariables(files).Where(v => theme.properties.Any(p => changeValue(p, v)));
+            files ??= Paths.GetAllScssFiles(theme.Theme);
+            return ScssHelper.ScssHelper.ReadVariables(files).Where(v => theme.Properties.Any(p => changeValue(p, v)));
         }
     }
 }

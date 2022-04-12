@@ -1,32 +1,53 @@
 ﻿using System;
-using System.Web.Mvc;
+using System.Linq;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Routing;
+using Microsoft.Extensions.Configuration;
 using ThemeStudio.Helper;
+using ThemeStudio.Models;
 
 namespace ThemeStudio.Controllers
 {
-    public class AccountController : Controller
+    public class AccountController : Microsoft.AspNetCore.Mvc.Controller
     {
-        [HttpPost]
-        public ActionResult Login(LoginModel model)
+        private readonly IConfiguration _configuration;
+
+        public AccountController(IConfiguration configuration)
         {
-            // TODO: Build real authentication and authorization
-            if (model.Password == "admin" && model.UserName == "admin$MasterPassword")
+            _configuration = configuration;
+        }
+
+        [Authorize]
+        [HttpGet("/login")]
+        public ActionResult Login()
+        {
+            HttpContext.Session.SetIsAuthenticated(true);
+            HttpContext.Session.SetString(Constants.SessionNameKey, HttpContext.User.Identity?.Name ?? "Unknown");
+            Request.Query.TryGetValue("theme", out var theme);
+            return RedirectToAction("Index", "Home", new { theme });
+        }
+
+        [HttpPost]
+        public ActionResult Login([FromBody]LoginModel model)
+        {
+            var accounts = _configuration.GetSection("Authentication:Internal:Accounts").Get<LoginModel[]>();
+            //if (model.UserName == "admin" && model.Password == "S3rv1cew@rePassword4Designer")
+            if(accounts.Any(m => m.Equals(model)))
             {
-                return Json(Session.SetIsAuthenticated(true));
+                HttpContext.Session.SetString(Constants.SessionNameKey, model.UserName);
+                return Json(HttpContext.Session.SetIsAuthenticated(true));
             }
-            return new HttpUnauthorizedResult();
+            return new UnauthorizedResult();
         }
 
         public ActionResult Logout()
         {
-            Session.SetIsAuthenticated(false);
-            return RedirectToAction("Index", "Home", new {theme = Request.QueryString.Get("theme")});
+            Request.Query.TryGetValue("theme", out var theme);
+            HttpContext.Session.SetIsAuthenticated(false);
+            HttpContext.Session.SetString(Constants.SessionNameKey, string.Empty);
+            return RedirectToAction("Index", "Home", new { theme });
         }
-    }
-
-    public class LoginModel
-    {
-        public string UserName { get; set; }
-        public string Password { get; set; }
     }
 }

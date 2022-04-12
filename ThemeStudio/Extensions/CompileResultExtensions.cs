@@ -2,8 +2,6 @@
 using System.IO;
 using System.IO.Compression;
 using System.Threading.Tasks;
-using System.Web;
-using ThemeStudio.Helper;
 using ThemeStudio.Models;
 
 namespace ThemeStudio.Extensions
@@ -18,8 +16,8 @@ namespace ThemeStudio.Extensions
 
         public static CompileResult WriteTo(this CompileResult result, ThemeProperties theme, string path)
         {
-            File.WriteAllText(Path.Combine(path, $"{theme.theme}.css"), result.CompiledContent);
-            File.WriteAllText(Path.Combine(path, $"{theme.theme}.scss"), result.InitialContent);
+            File.WriteAllText(Path.Combine(path, $"{theme.Theme}.css"), result.CompiledContent);
+            File.WriteAllText(Path.Combine(path, $"{theme.Theme}.scss"), result.InitialContent);
             File.WriteAllText(Path.Combine(path, "settings.json"), theme.GetSettingsJson());
             return result;
         }
@@ -51,7 +49,7 @@ namespace ThemeStudio.Extensions
 
         internal static string GetRoute(this Tuple<CompileResult, FileInfo> tuple)
         {
-            return ServerHelper.MapPathReverse(tuple.Item2.FullName, false);
+            return $"/output/zip/{tuple.Item2.Name}";
         }
 
     }

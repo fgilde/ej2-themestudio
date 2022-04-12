@@ -1,0 +1,29 @@
+﻿{{:common}}
+
+$border-default: #757575;
+$border-alt: #4D4D4D;
+$border-fg: #000000;
+$border-fg-alt: #ffd939;
+$bg-base-0: #FFFFFF;
+$bg-base-5: #F1F1F1;
+$bg-base-10: #E4E4E4;
+$bg-base-15: #D8D8D8;
+$bg-base-20: #CCCCCC;
+$bg-base-75: #3D3D3D;
+$bg-base-100: #000000;
+$header-font: #23726C;
+$header-font-alt: #000000;
+$content-font: #000000;
+$content-font-alt: #4F4F4F;
+$link: #8A8AFF;
+$invert-font: #FFFFFF;
+$success-bg: #166600;
+$error-bg: #B30900;
+$message-font: #000000;
+$alert-bg: #944000;
+$info-bg: #0056B3;
+$success-alt: #2BC700;
+$error-alt: #ff6161;
+$alert-alt: #ff7d1a;
+$info-alt: #66b0ff;
+$shadow: #000;

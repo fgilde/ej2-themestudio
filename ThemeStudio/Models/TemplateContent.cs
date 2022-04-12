@@ -24,7 +24,7 @@ namespace ThemeStudio.Models
         }
 
         public static implicit operator string(TemplateContent d) => d._content;
-        public static explicit operator TemplateContent(string s) => new TemplateContent(s);
+        public static explicit operator TemplateContent(string s) => new(s);
         public override string ToString() => _content;
         
         public TemplateContent ConvertScssVariablesToCssVariables(string pathToSaveTo)
@@ -36,13 +36,13 @@ namespace ThemeStudio.Models
 
         public TemplateContent SaveTo(string filePath)
         {
-            System.IO.File.WriteAllText(filePath, _content);
+            File.WriteAllText(filePath, _content);
             return this;
         }
 
-        public TemplateContent AddContent(ThemeProperties theme, bool forceDependencyContent = false)
+        public TemplateContent AddContent(ThemeProperties theme)
         {
-            return AddContent(theme.GetScssContent(forceDependencyContent));
+            return AddContent(theme.GetScssContent());
         }
 
         public TemplateContent AddContent(string content)

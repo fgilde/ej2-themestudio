@@ -1,17 +1,19 @@
 ﻿using System;
-using System.Drawing;
+using System.IO;
 using System.Linq;
+using Newtonsoft.Json;
 
 namespace ThemeStudio.Helper.ScssHelper
 {
     public class ScssVariable
     {
-        private static string[] knownFonts = FontFamily.Families.Select(f => f.Name.ToLower()).ToArray();
-        private static string[] knownStyles = Enum.GetNames(typeof(FontStyle)).Concat(new[] { "normal" }).Select(s => s.ToLower()).ToArray();
+        private static string[] knownFonts = FontHelper.FontNames.Select(f => f.ToLower()).ToArray();
+        private static string[] knownStyles = Enum.GetNames(typeof(System.Drawing.FontStyle)).Concat(new[] { "normal" }).Select(s => s.ToLower()).ToArray();
         
         public ScssVariable(string key, string value, bool hasDefaultFlag, string fileName, int lineIndex)
         {
             FileName = fileName;
+            Component = Paths.GetComponentNameByFileFilePath(FileName);
             LineIndex = lineIndex;
             Key = key;
             HasDefaultFlag = hasDefaultFlag;
@@ -22,8 +24,8 @@ namespace ThemeStudio.Helper.ScssHelper
         }
         
         public string[] UsedVariabled { get; }
-        
         public string FileName { get; }
+        public string Component { get; }
         public int LineIndex { get; }
         public string CssVarame => $"--{Key.Replace("$", "")}";
         public string Name { get; set; }

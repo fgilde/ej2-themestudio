@@ -1,6 +1,5 @@
 ﻿using System.IO;
-using LibSass.Compiler;
-using LibSass.Compiler.Options;
+using LibSassHost;
 using ThemeStudio.Models;
 
 namespace ThemeStudio.Helper
@@ -14,11 +13,10 @@ namespace ThemeStudio.Helper
 
         public static CompileResult CompileContent(string sassContent)
         {
-            var options = new SassOptions
-            {
-                Data = sassContent
-            };
-            return Compile(options);
+            CompilationOptions options = new CompilationOptions();
+           // options.IncludePaths = Directory.GetDirectories(Paths.ResourceStyles);
+           CompilationResult r = SassCompiler.Compile(sassContent, options);
+            return new CompileResult(r, sassContent);
         }
 
         public static CompileResult CompileFile(this FileInfo path)
@@ -28,18 +26,8 @@ namespace ThemeStudio.Helper
 
         public static CompileResult CompileFile(string path)
         {
-            var options = new SassOptions
-            {
-                InputPath = path
-            };
-            return Compile(options);
-        }
-
-        private static CompileResult Compile(SassOptions options)
-        {
-            var sass = new SassCompiler(options);
-            var result = sass.Compile();
-            return new CompileResult(result, options.Data);
+            CompilationResult r = SassCompiler.CompileFile(path);
+            return new CompileResult(r, File.ReadAllText(path));
         }
     }
 }

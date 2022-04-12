@@ -4,7 +4,6 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
-using Microsoft.Ajax.Utilities;
 using ThemeStudio.Extensions;
 
 namespace ThemeStudio.Helper.ScssHelper
@@ -33,6 +32,7 @@ namespace ThemeStudio.Helper.ScssHelper
                 builder.Append("\"" + variable.Name.Replace("Color", "") + "\" :{");
                 builder.Append("\"id\": \"" + variable.Key.Replace("$", "") + "\",");
                 builder.Append("\"default\": \"" + variable.Value + "\",");
+                builder.Append("\"component\": \"" + variable.Component + "\",");
                 builder.Append("\"type\": " + (int)variable.Type + ",");
                 builder.Append("\"palettes\": [" + paletteStr + "]");
                 builder.Append("}");
@@ -49,12 +49,6 @@ namespace ThemeStudio.Helper.ScssHelper
                 res = res.Where(v => !v.Value.Contains("%")).DistinctBy(v => ColorHelper.ParseColor(v.Value)).ToArray();
             
             return res;
-        }
-
-        public static IEnumerable<ScssVariable> ReadColorVariables(IEnumerable<string> fileNames)
-        {
-            return ReadEditableVariables(fileNames);
-            //return ReadVariables(fileNames).Where(v => v.Type == ScssVariableType.Color && !v.HasVariableReference);
         }
 
         public static IEnumerable<ScssVariable> ReadEditableVariables(IEnumerable<string> fileNames)
@@ -100,7 +94,6 @@ namespace ThemeStudio.Helper.ScssHelper
 
                         lines[variable.LineIndex] = variable.ToDeclaration(true);
                     }
-
                     File.WriteAllLines(grouping.Key, lines);
                 }
             }

@@ -1,0 +1,91 @@
+
+div.cat-chbx, .comp-chbx div.e-checkbox-wrapper {
+    padding-top: 16px;
+}
+
+.theme-div-sep {
+    height: 10px;
+}
+
+.comp-chbx div.e-checkbox-wrapper {
+    width: 24%;
+    padding-left: 20px;
+}
+
+.cat-chbx label .e-label,
+.cat-chbx label .e-label:hover {
+    color: #3c78ef;
+    font-size: 12px;
+    font-weight: 500;
+}
+
+#filterDialog .e-dlg-header-content {
+    height: 36px;
+    padding: 10px 10px 0px 16px;
+}
+
+#filterDialog .e-dlg-header {
+    font-size: 13px;
+    font-weight: 500;
+}
+
+#filterDialog_dialog-content {
+    padding: 0px;
+}
+
+.theme-filter-header {
+    width: 100%;
+    display: table;
+    height: 45px;
+    padding: 0px 16px 0px 16px;
+    border-bottom: 1px solid #d3d3d3;
+}
+
+.theme-filter-selectall {
+    padding-top: 15px;
+    display: table-cell;
+}
+
+.theme-quick-search {
+    width: 200px;
+    position: absolute;
+    right: 180px;
+    padding-top: 2px;
+}
+
+.filter-search {
+    position: absolute;
+    right: 0px;
+    top: 36px;
+    padding-right: 16px;
+    padding-top: 10px;
+}
+
+.theme-filter-body {
+    height: 50vh;
+    padding-left: 16px;
+    overflow-y: auto;
+    border-bottom: 1px solid #d3d3d3;
+}
+
+#filterDialog .e-footer-content button {
+    background-color: rgba(0, 0, 0, 0.09);
+    color: #505050;
+}
+
+    #filterDialog .e-dlg-header-content,
+    #filterDialog .e-footer-content button:hover,
+    #filterDialog div.e-checkbox-wrapper .e-frame.e-check, .e-css.e-checkbox-wrapper .e-frame.e-check,
+    #filterDialog .e-dlg-header-content button.e-dlg-closeicon-btn.e-control.e-btn.e-flat.e-icon-btn:hover {
+        background-color: #3c78ef;
+    }
+
+        #filterDialog .e-dlg-header,
+        #filterDialog .e-footer-content button:hover,
+        #filterDialog .e-dlg-header-content span.e-btn-icon.e-icon-dlg-close.e-icons {
+            color: #ffffff;
+        }
+
+.filter-hide {
+    display: none !important;
+}

@@ -1,0 +1,42 @@
+
+//default 
+$numeric-skin-name: 'bootstrap' !default;
+$numeric-input-icon-size: 12px !default;
+$numeric-input-bigger-icon-size: 14px !default;
+//enddefault
+@include export-module('numerictextbox-bootstrap-dark-icons') {
+  .e-input-group-icon.e-spin-up::before {
+    content: '\e834';
+    font-family: 'e-icons';
+  }
+
+  .e-input-group-icon.e-spin-down::before {
+    content: '\e83d';
+    font-family: 'e-icons';
+  }
+}
+
+.e-numeric-container {
+  width: 100%;
+}
+@include export-module('numerictextbox-theme') {
+  .e-numeric.e-control-wrapper {
+    &.e-input-group:not(.e-disabled):active:not(.e-success):not(.e-warning):not(.e-error):not(.e-input-focus) {
+      @if $numeric-skin-name == 'bootstrap' {
+        border-color: $input-group-full-border-color;
+        box-shadow: none;
+      }
+    }
+
+    &.e-input-group .e-input-group-icon {
+      font-size: $numeric-input-icon-size;
+    }
+  }
+
+  .e-bigger {
+    & .e-control-wrapper.e-numeric.e-input-group .e-input-group-icon,
+    &.e-control-wrapper.e-numeric.e-input-group .e-input-group-icon {
+      font-size: $numeric-input-bigger-icon-size;
+    }
+  }
+}
