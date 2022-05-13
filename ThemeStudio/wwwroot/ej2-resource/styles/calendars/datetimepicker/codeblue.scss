@@ -1,0 +1,228 @@
+
+$datetime-default-text-indent: 16px !default;
+$datetime-list-bigger-line-height: 48px !default;
+$datetime-list-normal-line-height: 36px !default;
+$datetime-list-normal-font-size: 13px !default;
+$datetime-list-bigger-font-size: 14px !default;
+$datetime-list-normal-text-indent: $datetime-default-text-indent !default;
+$datetime-list-bigger-text-indent: 16px !default;
+$datetime-popup-border-radius: 2px !default;
+$datetime-list-font-weight: normal !default;
+$datetime-popup-shadow: 0 5px 5px -3px rgba($grey-light-font, .2), 0 8px 10px 1px rgba($grey-light-font, .14), 0 3px 14px 2px rgba($grey-light-font, .12) !default;
+$datetime-list-default-font-color: rgba($grey-light-font, .87) !default;
+$datetime-list-border-color: none !default;
+$datetime-list-bg-color: $grey-white !default;
+$datetime-list-active-bg-color: $grey-200 !default;
+$datetime-list-active-font-color: $accent !default;
+$datetime-list-active-icon-color: $accent !default;
+$datetime-list-hover-bg-color: $grey-200 !default;
+$datetime-list-hover-font-color: $grey-light-font !default;
+$datetime-list-popup-icon-active-color: $accent !default;
+$datetime-list-active-hover-bg-color: $grey-200 !default;
+$datetime-list-active-hover-font-color: $accent !default;
+$datetime-list-normal-padding: 8px !default;
+$datetime-list-bigger-padding: 8px !default;
+$datetime-time-font-icon: '\e20c' !default;
+$datetime-icon-normal-font-size: 16px !default;
+$datetime-icon-bigger-font-size: 20px !default;
+$datetime-date-icon-margin: 0 0 4px !default;
+$datetime-time-icon-margin: 0 0 4px 6px !default;
+$datetime-time-bigger-icon-margin: 5px 0 6px 8px !default;
+$datetime-time-rtl-icon-margin: 0 6px 4px 0 !default;
+$datetime-time-rtl-bigger-icon-margin: 5px 8px 6px 0 !default;
+$datetime-normal-min-height: 24px !default;
+$datetime-normal-min-width: 24px !default;
+$datetime-bigger-min-height: 26px !default;
+$datetime-bigger-min-width: 26px !default;
+$datetime-time-icon-border: 0 !default;
+$datetime-time-icon-border-style: none !default;
+$datetime-list-hover-border-color: none !default;
+$datetime-list-default-border-style: none !default;
+$datetime-default-overlay: rgba($grey-black, .6) !default;
+@include export-module('datetimepicker-material-icons') {
+  /*! component icons */
+  .e-datetime-wrapper {
+
+    & .e-time-icon.e-icons::before {
+      content: '\e20c';
+      font-family: 'e-icons';
+    }
+  }
+}
+
+@include export-module('datetimepicker-layout') {
+  //   datetimepicker layout
+  .e-datetime-wrapper {
+    // sass-lint:disable no-vendor-prefixes
+    -webkit-tap-highlight-color: transparent;
+
+    & .e-time-icon.e-icons::before {
+      font-size: $datetime-icon-normal-font-size;
+    }
+
+    &.e-control-wrapper {
+      box-sizing: border-box;
+    }
+
+    & .e-time-icon.e-icons.e-disabled,
+    & .e-date-icon.e-icons.e-disabled {
+      pointer-events: none;
+    }
+
+    & .e-clear-icon {
+      box-sizing: content-box;
+    }
+
+    & span {
+      cursor: pointer;
+    }
+
+    & .e-input-group-icon.e-date-icon,
+    & .e-input-group-icon.e-time-icon {
+      font-size: 16px;
+      margin: $datetime-date-icon-margin;
+      min-height: $datetime-normal-min-height;
+      min-width: $datetime-normal-min-width;
+      outline: none;
+    }
+
+    & .e-input-group-icon.e-time-icon {
+      border: $datetime-time-icon-border;
+      border-style: $datetime-time-icon-border-style;
+      margin: $datetime-time-icon-margin;
+    }
+
+    &.e-rtl .e-input-group-icon.e-time-icon {
+      margin: $datetime-time-rtl-icon-margin;
+    }
+  }
+
+  #{&}.e-datetimepicker.e-time-modal {
+    background-color: $datetime-default-overlay;
+    height: 100%;
+    left: 0;
+    opacity: .5;
+    pointer-events: auto;
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 999;
+	}
+
+  #{&}.e-datetimepicker.e-popup {
+    border-style: solid;
+    border-width: 1px;
+    overflow: auto;
+
+    & .e-content {
+      position: relative;
+    }
+
+    & .e-list-parent.e-ul {
+      margin: 0;
+      padding: $datetime-list-normal-padding 0;
+
+      & .e-list-item {
+        color: $datetime-list-default-font-color;
+        cursor: default;
+        font-size: $datetime-list-normal-font-size;
+        overflow: hidden;
+        position: relative;
+        text-overflow: ellipsis;
+        vertical-align: middle;
+        white-space: nowrap;
+        width: 100%;
+      }
+
+      & .e-list-item.e-hover {
+        cursor: pointer;
+      }
+    }
+  }
+
+  //normal styles
+
+  #{&}.e-datetimepicker.e-popup {
+    & .e-list-parent.e-ul .e-list-item {
+      line-height: $datetime-list-normal-line-height;
+      text-indent: $datetime-list-normal-text-indent;
+    }
+  }
+
+  //bigger styles
+  .e-bigger.e-datetime-wrapper,
+  .e-bigger .e-datetime-wrapper {
+
+    & .e-time-icon.e-icons::before {
+      font-size: $datetime-icon-bigger-font-size;
+    }
+
+    & .e-input-group-icon.e-time-icon {
+      margin: $datetime-time-bigger-icon-margin;
+      min-height: $datetime-bigger-min-height;
+      min-width: $datetime-bigger-min-width;
+    }
+
+    &.e-rtl .e-input-group-icon.e-time-icon {
+      margin: $datetime-time-rtl-bigger-icon-margin;
+    }
+  }
+
+  .e-bigger #{&}.e-datetimepicker.e-popup,
+  .e-bigger#{&}.e-datetimepicker.e-popup {
+    & .e-list-parent.e-ul {
+      padding: $datetime-list-bigger-padding 0;
+
+      & .e-list-item {
+        font-size: $datetime-list-bigger-font-size;
+        line-height: $datetime-list-bigger-line-height;
+        text-indent: $datetime-list-bigger-text-indent;
+      }
+    }
+  }
+}
+@include export-module('datetimepicker-theme') {
+  /*! datetimepicker theme */
+  .e-datetime-wrapper {
+    & .e-input-group-icon.e-icons.e-active {
+      color: $datetime-list-active-icon-color;
+    }
+
+    &.e-input-group:not(.e-disabled) .e-input-group-icon.e-active:active {
+      color: $datetime-list-popup-icon-active-color;
+    }
+  }
+
+  .e-datetimepicker.e-popup {
+    border: $datetime-list-border-color;
+    border-radius: $datetime-popup-border-radius;
+    box-shadow: $datetime-popup-shadow;
+
+    & .e-list-parent.e-ul {
+      background-color: $datetime-list-bg-color;
+
+      & li.e-list-item {
+        border: $datetime-list-default-border-style;
+        color: $datetime-list-default-font-color;
+      }
+
+      & .e-list-item.e-hover,
+      & .e-list-item.e-navigation,
+      & .e-list-item:focus {
+        background-color: $datetime-list-hover-bg-color;
+        border: $datetime-list-hover-border-color;
+        color: $datetime-list-hover-font-color;
+      }
+
+      & .e-list-item.e-active {
+        background-color: $datetime-list-active-bg-color;
+        color: $datetime-list-active-font-color;
+      }
+
+      & .e-list-item.e-active.e-hover {
+        background-color: $datetime-list-active-hover-bg-color;
+        color: $datetime-list-active-hover-font-color;
+      }
+    }
+  }
+}
