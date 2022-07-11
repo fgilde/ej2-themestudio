@@ -13,19 +13,19 @@ namespace ThemeStudio.Helper.ScssHelper
         public static IEnumerable<ScssVariable> FillReferences(this IEnumerable<ScssVariable> variables)
         {
             return variables;
-        }       
-        
+        }
+
         public static string ToThemePropertiesJson(this IEnumerable<ScssVariable> variables)
         {
             var vars = variables.ToList();
             var suggestionCache = new Dictionary<ScssVariableType, ScssVariable[]>();
-            
+
             var builder = new StringBuilder();
             builder.Append("{");
             for (var index = 0; index < vars.Count; index++)
             {
                 var variable = vars[index];
-                
+
                 var suggestion = suggestionCache.ContainsKey(variable.Type) ? suggestionCache[variable.Type] : suggestionCache.AddValue(variable.Type, Suggestions(variable, vars));
                 var paletteStr = string.Join(",", suggestion.Select(s => $"\"{s.Value}\""));
 
@@ -47,23 +47,14 @@ namespace ThemeStudio.Helper.ScssHelper
             var res = variables.Where(v => v.Type == variable.Type).DistinctBy(v => v.Value).OrderBy(s => s.Value).ToArray();
             if (variable.Type == ScssVariableType.Color)
                 res = res.Where(v => !v.Value.Contains("%")).DistinctBy(v => ColorHelper.ParseColor(v.Value)).ToArray();
-            
+
             return res;
         }
 
-        public static IEnumerable<ScssVariable> ReadEditableVariables(IEnumerable<string> fileNames)
+        public static IEnumerable<ScssVariable> ReadEditableVariables(IEnumerable<string> fileNames, ScssVariableType[] allowedTypes = null)
         {
-            
-            return ReadVariables(fileNames).Where(v => (
-                v.Type == ScssVariableType.Color 
-                || v.Type == ScssVariableType.FontFamily 
-                || v.Type == ScssVariableType.FontStyle 
-                || v.Type == ScssVariableType.BooleanValue
-                // || v.Type == ScssVariableType.VariableReference
-                || v.Type == ScssVariableType.Number
-                || v.Type == ScssVariableType.Size 
-                )
-             && !v.HasVariableReference);
+            allowedTypes ??= new[] { ScssVariableType.Color, ScssVariableType.FontFamily, ScssVariableType.FontStyle, ScssVariableType.BooleanValue, ScssVariableType.Number, ScssVariableType.Size };
+            return ReadVariables(fileNames).Where(v => allowedTypes.Contains(v.Type) && !v.HasVariableReference);
         }
 
         public static IEnumerable<ScssVariable> ReadVariables(IEnumerable<string> fileNames)
@@ -100,10 +91,10 @@ namespace ThemeStudio.Helper.ScssHelper
             return scssVariables;
         }
 
-        public static string ConvertScssVariablesToCssVars(string scssFile, bool saveChangesToFile)
+        public static string ConvertScssVariablesToCssVars(string scssFile, bool saveChangesToFile, ScssVariableType[] allowedTypes)
         {
             var content = File.ReadAllText(scssFile);
-            var vars = ReadVariables(scssFile).Where(v => v.Type != ScssVariableType.Unknown).ToList();
+            var vars = ReadVariables(scssFile).Where(v => v.Type != ScssVariableType.Unknown && (allowedTypes == null || allowedTypes.Length <= 0 || allowedTypes.Contains(v.Type))).ToList();
             var declarations = BuildCssVariableDeclarations(vars, CssVariableDeclaration.UseScssVariable);
             content = ReplaceScssVariableUsings(content, vars);
 
@@ -111,6 +102,16 @@ namespace ThemeStudio.Helper.ScssHelper
             if (saveChangesToFile)
                 File.WriteAllText(scssFile, result);
             return result;
+        }
+
+        internal static ScssVariableType[] ParseAllowedScssVariableTypes(string typeNames)
+        {
+            return !string.IsNullOrWhiteSpace(typeNames) ? ParseAllowedScssVariableTypes(typeNames.Split(',')) : null;
+        }
+
+        internal static ScssVariableType[] ParseAllowedScssVariableTypes(string[] typeNames)
+        {
+            return Enum.GetValues<ScssVariableType>().Where(t => typeNames.Contains(Enum.GetName(t))).ToArray();
         }
 
         private static string ReplaceScssVariableUsings(string content, IList<ScssVariable> vars)
@@ -172,7 +173,7 @@ namespace ThemeStudio.Helper.ScssHelper
                 {
                     builder.AppendLine().AppendLine($"{var.CssVarame}: {var.Value};");
                 }
-                else if(valueDeclaration == CssVariableDeclaration.UseScssVariable)
+                else if (valueDeclaration == CssVariableDeclaration.UseScssVariable)
                 {
                     builder.AppendLine().AppendLine($"{var.CssVarame}: {"#{" + var.Key + "}"};");
                 }

@@ -9,7 +9,7 @@
     <IISExpressUseClassicPipelineMode />
     <UseGlobalApplicationHostFile />
     <ProjectView>ProjectFiles</ProjectView>
-    <NameOfLastUsedPublishProfile>C:\dev\SW-Azure\sw-theme-studio\ThemeStudio\Properties\PublishProfiles\sw-theme-studio - Web Deploy.pubxml</NameOfLastUsedPublishProfile>
+    <NameOfLastUsedPublishProfile>C:\dev\privat\github\ej2-themestudio\ThemeStudio\Properties\PublishProfiles\CustomProfile.pubxml</NameOfLastUsedPublishProfile>
     <LastActiveSolutionConfig>Debug|Any CPU</LastActiveSolutionConfig>
     <ActiveDebugTarget>ContainerToolsProjectDebugExtension</ActiveDebugTarget>
     <ActiveDebugProfile>ThemeStudio</ActiveDebugProfile>

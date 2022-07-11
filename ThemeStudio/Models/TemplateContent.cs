@@ -26,11 +26,11 @@ namespace ThemeStudio.Models
         public static implicit operator string(TemplateContent d) => d._content;
         public static explicit operator TemplateContent(string s) => new(s);
         public override string ToString() => _content;
-        
-        public TemplateContent ConvertScssVariablesToCssVariables(string pathToSaveTo)
+
+        public TemplateContent ConvertScssVariablesToCssVariables(string pathToSaveTo, ScssVariableType[] allowedTypes)
         {
             SaveTo(pathToSaveTo); // TODO: Eliminate double save, currently needed because Var reader needs a file at this moment
-            _content = ScssHelper.ConvertScssVariablesToCssVars(pathToSaveTo, true);
+            _content = ScssHelper.ConvertScssVariablesToCssVars(pathToSaveTo, true, allowedTypes);
             return this;
         }
 

@@ -2,7 +2,7 @@
 var useNativeColorCtrl = false;
 var virtualizeThemeProperties = true;
 
-
+var varTypeFilter = ['Color']; // Default Typefilter color
 var defaultVal = {};
 var themeColors = {};
 var exportDialog, importDialog, filterDialog, loginDialog, createDialog;
@@ -23,6 +23,22 @@ var googleAngRegex = /\&+[^>]+/g;
 //var element = document.getElementById("controls");
 var themeProps = {};
 
+function initTypeFilter() {
+    if (varTypeFilter && varTypeFilter.length) {
+        varTypeFilter.forEach(value => {
+            $('#variableTypeFilter').val(value);
+        });
+    }
+    updateCdnLinksWithFilter();
+    $('#variableTypeFilter').select2();
+    $("#variableTypeFilter").change(function (a) {
+        varTypeFilter = a.val;
+        updateCdnLinksWithFilter();
+        renderProperties(curThemeName, true);
+    });
+}
+initTypeFilter();
+
 function filterChanged(event) {
     if (virtualizeThemeProperties) {
         _renderProperties(lastRenderedTheme);
@@ -42,16 +58,17 @@ function _match(search, el) {
         return true;
     }
     search = search.toLowerCase();
-    
+
     var dataId = (el instanceof HTMLElement) ? el.getAttribute('data-id')?.toLowerCase() : el.id,
+        component = (el instanceof HTMLElement) ? el.getAttribute('component-id')?.toLowerCase() : el.component,
         label = (el instanceof HTMLElement) ? el.querySelector('label')?.innerText.toLowerCase() : el.id,
         value = (el instanceof HTMLElement) ? el.querySelector('input').value.toLowerCase() : el.default,
         hex = ColorHelper.isHex(value) ? value : (value?.startsWith('rgb') ? ColorHelper.rgbaToHex(value) : ''),
         rgba = value?.startsWith('rgb') ? value : ColorHelper.hexToRgbA(value),
-        toSearchIn = [dataId, label, value, hex, rgba];
-    
+        toSearchIn = [dataId, label, value, hex, rgba, component];
+
     return toSearchIn.some(s => s?.indexOf(search) > -1);
-        
+
 }
 
 
@@ -190,19 +207,26 @@ function renderRightPane() {
         }
     });
     themeMode.appendTo('#dark');
-    
+
     colorpicker();
 }
 
-function loadThemeProperties(theme, callback) {
+function loadThemeProperties(theme, callback, force) {
     var objectName = theme.replace('-', '');
+    if (force) {
+        themeProps[objectName] = {};
+    }
     themeProps[objectName] = themeProps[objectName] || {};
     if (themeProps[objectName]._varsLoaded) {
         callback();
     } else {
-        fetch('/Home/themeProperties?theme=' + theme)
+        var url = '/Home/ThemeProperties?theme=' + theme;
+        if (varTypeFilter && varTypeFilter.length) {
+            url += '&varTypes=' + varTypeFilter.join(',');
+        }
+        fetch(url)
             .then(response => response.json())
-            .then(data => {                
+            .then(data => {
                 Object.assign(themeProps[objectName], data);
                 themeProps[objectName]._varsLoaded = true;
                 getThemeColors();
@@ -224,7 +248,7 @@ function loadDefaultThemes(theme, isRightpanerender) {
     }
 }
 
-function applyCustomThemePreview(data) {    
+function applyCustomThemePreview(data) {
     var styles = document.getElementById('custom-theme');
     styles.innerHTML = data;
 }
@@ -247,12 +271,17 @@ function _loadDefaultThemes(theme, isRightpanerender) {
     history.replaceState({}, '', baseurl + str);
     curTheme = theme;
     themeColors = ej.base.extend({}, defaultVal, {}, true);
+
+    var loadThemeUrl = "/Home/LoadTheme";
+    if (varTypeFilter && varTypeFilter.length) {
+        loadThemeUrl += '?varTypes=' + varTypeFilter.join(',');
+    }
     var ajax = new ej.base.Ajax({
         type: "POST",
-        url: "/Home/loadtheme",
+        url: loadThemeUrl,
         contentType: 'application/json; charset=utf-8',
         processData: false,
-        data: JSON.stringify({ themes: themeObj }) // Note it is important
+        data: JSON.stringify(themeObj) // Note it is important
     }, 'POST', true);
     ajax.send();
     ajax.onSuccess = function (data) {
@@ -568,6 +597,25 @@ function renderComponents() {
     if ($("#textsplitbtn").length) {
         splitButton = new ej.splitbuttons.SplitButton({ items: sitems, content: 'Paste', cssClass: 'e-primary' });
         splitButton.appendTo('#textsplitbtn');
+    }
+
+    if ($("#loginsplitbutton").length) {
+        var loginBtn = new ej.splitbuttons.SplitButton({
+            click: () => window.location.href = `/login?theme=${curTheme}`,
+            select: a => a.item.click(a),
+            items: [
+                {
+                    text: 'External',
+                    click: () => window.location.href = `/login?theme=${curTheme}`
+                },
+                {
+                    text: 'Internal',
+                    click: () => loginDialog.show()
+
+                },
+            ], content: 'Login', cssClass: 'e-primary', iconCss: 'e-btn-icons e-profile'
+        });
+        loginBtn.appendTo('#loginsplitbutton');
     }
 
     if ($("#icontextsplitbtn").length) {
@@ -930,9 +978,9 @@ function renderComponents() {
     next.appendTo('#imports');
     //check box
     var next = new ej.popups.Tooltip({
-        content: "If  include compatibility css option is checked, it will generate compatiblity  css files.  " +
+        content: "If  include compatibility css option is checked, it will generate Compatibility  css files.  " +
 
-            "Using these compatiblity theme files you can render both Essential JS 1 and Essential JS 2 components in a single page."
+            "Using these Compatibility theme files you can render both Essential JS 1 and Essential JS 2 components in a single page."
     });
     next.appendTo('#import');
     //render colorpicker components
@@ -1323,12 +1371,15 @@ function renderComponents() {
         });
         splitObj1.appendTo('#Component-splitter');
     }
-    if ($('#Main-splitter')) {
+
+    if (!window.mainSplitter && $('#Main-splitter')) {
         window.mainSplitter = splitObj1 = new ej.layouts.Splitter({
+            enablePersistence: true,
+            updatePrePaneInPercentage: true,
             height: '95vh',
             paneSettings: [
-                { size: '80%', min: '500px' },
-                { size: '20%', min: '450px' },
+                { size: '70%', min: '500px' },
+                { size: '30%', min: '450px' },
             ],
             width: '100%',
             separatorSize: 4
@@ -1384,7 +1435,7 @@ function renderComponents() {
     if ($('#Component-chips')) {
         new ej.buttons.ChipList({ chips: window.chipsData.defaultData }, '#Component-chips');
     }
-    
+
     if ($('#component-list-box')) {
         var listBoxObj = new ej.dropdowns.ListBox({
             // Set the dataSource property.
@@ -1689,7 +1740,7 @@ function applyChanges() {
         url: "/Home/ApplyChanges",
         contentType: 'application/json; charset=utf-8',
         processData: false,
-        data: JSON.stringify({ theme: theme })
+        data: JSON.stringify(theme)
     }, 'POST', true);
     ajax.send();
     ajax.onSuccess = function (url) {
@@ -1705,7 +1756,7 @@ function deleteCurrentTheme(force) {
             url: "/Home/DeleteTheme",
             contentType: 'application/json; charset=utf-8',
             processData: false,
-            data: JSON.stringify({ theme: curTheme })
+            data: JSON.stringify(curTheme)
         }, 'POST', true);
         ajax.send();
         ajax.onSuccess = function (url) {
@@ -1737,7 +1788,7 @@ function createNewTheme(newThemeName) {
             url: "/Home/CreateNewTheme",
             contentType: 'application/json; charset=utf-8',
             processData: false,
-            data: JSON.stringify({ theme: theme, baseTheme: baseTheme }) 
+            data: JSON.stringify({ properties: theme, baseTheme: baseTheme })
         }, 'POST', true);
         ajax.send();
         ajax.onSuccess = function (url) {
@@ -1747,22 +1798,27 @@ function createNewTheme(newThemeName) {
     }
 }
 
+function currentComponents() {
+    var components = [];
+    componentsId = [];
+    var checked = ej.base.selectAll('.theme-filter-body input:checked');
+    for (var comp of checked) {
+        if (comp.id.indexOf('cat') == -1) {
+            var compName = comp.id;
+            componentsId.push(compName);
+            compName = compName.replace("comp-", "");
+            compName = compName === 'textbox' ? 'input' : compName;
+            components.push(compName);
+        }
+
+
+    }
+    return components;
+}
+
 function exporting(boolean) {
     if (boolean) {
-        var components = [];
-        componentsId = [];
-        var checked = ej.base.selectAll('.theme-filter-body input:checked');
-        for (var comp of checked) {
-            if (comp.id.indexOf('cat') == -1) {
-                var compName = comp.id;
-                componentsId.push(compName);
-                compName = compName.replace("comp-", "");
-                compName = compName === 'textbox' ? 'input' : compName;
-                components.push(compName);
-            }
-
-
-        }
+        var components = currentComponents();
         var compatibility = document.getElementById("ts-checkbox").checked; // check compatibility css required or not
         var fileElement = document.getElementById("inputdefault");
         var filename = fileElement.value;
@@ -1783,17 +1839,23 @@ function exporting(boolean) {
             colorchange['file'] = filename;
             colorchange.properties = themeColors[themes_var];
             colorchange['components'] = componentsId;
-            colorchange['compatiblity'] = compatibility;
+            colorchange['compatibility'] = compatibility;
         }
         colorchange["dependency"] = window.dependency_arr;
         themeBodyLeftOverlay.style.backgroundColor = "#383838";
         overlay(false);
+
+        var url = "/Home/Export";
+        if (varTypeFilter && varTypeFilter.length) {
+            url += '?varTypes=' + varTypeFilter.join(',');
+        }
+
         var ajax = new ej.base.Ajax({
             type: "POST",
-            url: "/Home/export",
+            url: url,
             contentType: 'application/json; charset=utf-8',
             processData: false,
-            data: JSON.stringify({ exporting: colorchange }) // Note it is important
+            data: JSON.stringify(colorchange) // Note it is important
         }, 'POST', true);
         ajax.send();
         ajax.onSuccess = function (data) {
@@ -1809,41 +1871,52 @@ function exporting(boolean) {
     exportDialog.hide();
 }
 
-function renderProperties(themeName) {
+function renderProperties(themeName, force) {
     loadThemeProperties(themeName, function () {
-        _renderProperties(themeName);        
-    });
+        _renderProperties(themeName);
+    }, force);
 }
 
 function login() {
-    if (!event || !event.key || event.key === 'Enter') {
-        document.getElementById('error-message').innerText = '';
-        var ajax = new ej.base.Ajax({
-            type: "POST",
-            url: "/Account/Login",
-            contentType: 'application/json; charset=utf-8',
-            processData: false,
-            data: JSON.stringify({ UserName: document.getElementById('input-user').value, Password: document.getElementById('input-password').value })
-        }, 'POST', true);
-        ajax.send();
-        ajax.onFailure = function (e) {
-            document.getElementById('error-message').innerText = 'Invalid user or Password';
-        };
-        ajax.onSuccess = function (data) {
-            if (JSON.parse(data)) {
-                loginDialog.hide();
-                window.location.reload();
-            } else {
-                document.getElementById('error-message').innerText = 'Invalid user or Password'
-            }
-        };
+    if (loginDialog?.visible) {
+        if (!event || !event.key || event.key === 'Enter') {
+            document.getElementById('error-message').innerText = '';
+            var ajax = new ej.base.Ajax({
+                type: "POST",
+                url: "/Account/Login",
+                contentType: 'application/json; charset=utf-8',
+                processData: false,
+                data: JSON.stringify({ UserName: document.getElementById('input-user').value, Password: document.getElementById('input-password').value })
+            }, 'POST', true);
+            ajax.send();
+            ajax.onFailure = function (e) {
+                document.getElementById('error-message').innerText = 'Invalid user or Password';
+            };
+            ajax.onSuccess = function (data) {
+                if (JSON.parse(data)) {
+                    loginDialog.hide();
+                    window.location.reload();
+                } else {
+                    document.getElementById('error-message').innerText = 'Invalid user or Password'
+                }
+            };
+        }
     }
+}
+
+function toolTipForProperty(property, key) {
+    return `
+${key || ''} \r
+Id: ${property.id} \r
+Value: ${property.default} \r
+Component: ${property.component} \r
+`;
 }
 
 function _editorFor(themeName, property, key) {
 
     var wrapper = new ej.base.createElement('div', { className: 'theme-prop-wrapper', attrs: { 'data-id': property.id, 'data-property-type': property.type } });
-    var labelElement = new ej.base.createElement('div', { className: 'f-left theme-property', innerHTML: `<label title="${key} (${property.id})" for="property-value-edit-${property.id}">${key}</label>` });
+    var labelElement = new ej.base.createElement('div', { className: 'f-left theme-property', innerHTML: `<label title="${toolTipForProperty(property, key)}" for="property-value-edit-${property.id}">${key}</label>` });
     var editCtrl = new ej.base.createElement('div', { className: 'f-right theme-value', innerHTML: _inputFor(property) });
     editCtrl.querySelector('input').onchange = function (evt) {
         onPropertyValueChange(themeName, property, this.value, this);
@@ -1855,6 +1928,7 @@ function _editorFor(themeName, property, key) {
         if (virtualizeThemeProperties) {
             var btn = editCtrl.querySelector('input[type=button]');
             btn.style.backgroundColor = property.default;
+            btn.title = toolTipForProperty(property, key);
             btn.onclick = function (e) {
                 btn.onclick = () => { };
                 ColorHelper.createNewColorPicker(property, '.color-picker.' + property.id, editCtrl, function (propertyId, value) {
@@ -1864,13 +1938,13 @@ function _editorFor(themeName, property, key) {
                 });
                 ColorHelper.applyColorPickerStyles();
                 setTimeout(() => { // Hack to open newly created picker
-                    var x = btn.parentElement.querySelector('.theme-color');                    
+                    var x = btn.parentElement.querySelector('.theme-color');
                     x.click(e);
                 }, 100);
             };
         }
     }
-    
+
     var createdInput = editCtrl.querySelector('input');
     if (createdInput?.getAttribute('data-type')) {
         editCtrl.insertAdjacentHTML('beforeend', `<input type="button" title="Toggle plain input" class="right-prop-btn toggle-input-mode-btn ${property.id}" />`);
@@ -1883,7 +1957,7 @@ function _editorFor(themeName, property, key) {
     if (!editCtrl.querySelector('.right-prop-btn') && !editCtrl.querySelector('.color-picker')) {
         editCtrl.insertAdjacentHTML('beforeend', `<input type="button" title="Toggle plain input" class="right-prop-btn empty ${property.id}" />`);
     }
-    
+
     wrapper.appendChild(labelElement);
     wrapper.appendChild(editCtrl);
 
@@ -1894,11 +1968,11 @@ function toggleInputType(inputCtrl) {
     var type = inputCtrl.getAttribute('data-type');
     if (type) {
         inputCtrl.setAttribute('data-type', inputCtrl.type);
-        inputCtrl.type = type;        
+        inputCtrl.type = type;
     }
 }
 
-function getRenderedInputFor(propertyId) {   
+function getRenderedInputFor(propertyId) {
     return document.getElementById(`property-value-edit-${propertyId}`);
 }
 
@@ -1908,16 +1982,16 @@ function _inputFor(property) {
     var type = 'type="text"';
     if (property.type === ScssVariableType.Color && useNativeColorCtrl) {
         if (ColorHelper.isTransparentOrNone(property.default)) {
-            type = 'type="text" data-type="color"';            
+            type = 'type="text" data-type="color"';
         } else {
             type = 'type="color" data-type="text"';
         }
     }
-    return `<input list="preset-${property.id}" value="${property.default}" ${type} id="${inputId}" class="property-edit-input-${property.id} property-edit-input" /> <datalist id="preset-${property.id}"> ${property.palettes.map(c => '<option>' + c + '</option>').join('')} </datalist> `;
+    return `<input title="${toolTipForProperty(property)}" list="preset-${property.id}" value="${property.default}" ${type} id="${inputId}" class="property-edit-input-${property.id} property-edit-input" /> <datalist id="preset-${property.id}"> ${property.palettes.map(c => '<option>' + c + '</option>').join('')} </datalist> `;
 }
 
 function onPropertyValueChange(themeName, property, value, sender) {
-   // force = force || confirm('Are you sure you want to delete the theme "' + curTheme + '"');
+    // force = force || confirm('Are you sure you want to delete the theme "' + curTheme + '"');
     // TODO: Check property value valid for type
 
     if (virtualizeThemeProperties) { // If we virtualize rendering we need to update default value as well
@@ -1938,13 +2012,12 @@ function onPropertyValueChange(themeName, property, value, sender) {
         colorchange["dependency"] = window.dependency_arr;
         colorchange.theme = colorchange.theme.replace('light', '');
     }
-
     var ajax = new ej.base.Ajax({
         type: "POST",
         url: !darkOrLight ? "/Home/ThemeChange" : "/Home/DarkThemeChange",
         contentType: 'application/json; charset=utf-8',
         processData: false,
-        data: JSON.stringify({ color: colorchange }) // Note it is important
+        data: JSON.stringify(colorchange)
     }, 'POST', true);
     ajax.send();
     ajax.onSuccess = function (data) {
@@ -1958,8 +2031,17 @@ function onPropertyValueChange(themeName, property, value, sender) {
     checkApply();
 }
 
-function varCount(visible) {    
+function varCount(visible) {
     document.getElementById('var-count').style.opacity = visible ? '1' : '0';
+}
+
+function isInComponentFilter(themeProperty, components) {
+    if (!themeProperty || !themeProperty.component) {
+        return false;
+    }
+    var component = themeProperty.component.toLowerCase();
+    components = components || currentComponents();
+    return !isfilterapplied || component === 'base' || components.includes(component);
 }
 
 // Rendering theme properties elements
@@ -1972,12 +2054,14 @@ function _renderProperties(themeName) {
     }
     var properties = window.themeProps[themeName];
 
-    if (properties !== undefined) {        
+    if (properties !== undefined) {
         var keys = Object.keys(properties),
             search = document.getElementById('filter-input').value || '';
         document.getElementById('theme-properties').innerHTML = "";
         if (virtualizeThemeProperties) {
-            keys = keys.filter(k => k.toLowerCase().includes(search.toLowerCase()) || _match(search, properties[k]));
+            var components = currentComponents();
+            keys = keys.filter(k => (k.toLowerCase().includes(search.toLowerCase()) || _match(search, properties[k])) && isInComponentFilter(properties[k], components));
+
             document.getElementById('var-count').innerHTML = `${keys.length} Variables`;
             var list = new VirtualList({
                 w: '100%',
@@ -1989,7 +2073,7 @@ function _renderProperties(themeName) {
                     //document.getElementById('filter-input').value                
                     var property = properties[keys[i]];
                     var inputWrapper = _editorFor(themeName, property, keys[i]);
-              
+
                     return inputWrapper;
                 }
             });
@@ -1997,7 +2081,7 @@ function _renderProperties(themeName) {
             list.container.style.marginLeft = "auto";
             list.container.style.marginRight = "auto";
             document.getElementById("theme-properties").appendChild(list.container);
-            setTimeout(() => { document.getElementById('virtual-theme-properties').style.height = '100%'; }, 500); // Need to do this afterwards, otherwise layout crash.. no idea currently
+            setTimeout(() => { document.getElementById('virtual-theme-properties').style.height = '98%'; }, 500); // Need to do this afterwards, otherwise layout crash.. no idea currently
         } else {
             document.getElementById('var-count').innerHTML = `${keys.length} Variables`;
             for (var i = 0; i < keys.length; i++) {
@@ -2015,7 +2099,7 @@ function _renderProperties(themeName) {
             }
             ColorHelper.applyColorPickerStyles();
         }
-        
+
         if (themeName === 'material' || themeName === 'materialdark') {
             ej.base.enableRipple(true);
         }
@@ -2049,9 +2133,9 @@ function loadTheme(theme, isOverylay) {
     Array.from(document.body.classList).filter(s => s.startsWith('themestudio-')).forEach(function (t) {
         document.body.classList.remove(t);
     });
-    
+
     document.body.classList.add('themestudio-' + theme);
-  
+
     document.getElementById("inputdefault").value = theme;
 
     if (!theme.includes('-dark')) {
@@ -2440,6 +2524,10 @@ function filtering(boolean) {
             twocolumn_layout();
             filterDialog.hide();
             document.getElementById('filters').classList.remove('actives');
+            updateCdnLinksWithFilter();
+            if (virtualizeThemeProperties) {
+                _renderProperties(lastRenderedTheme);
+            }
             return;
         }
 
@@ -2474,7 +2562,10 @@ function filtering(boolean) {
         getCheckedCategories(filterObj.cats.checked, filterObj.comps, true);
         getCheckedCategories(filterObj.cats.intermediate, filterObj.comps, false);
         generatefilterhtml();
-
+        updateCdnLinksWithFilter();
+        if (virtualizeThemeProperties) {
+            _renderProperties(lastRenderedTheme);
+        }
     }
 
     document.getElementById('filters').classList.add('actives');
@@ -2482,7 +2573,21 @@ function filtering(boolean) {
     document.getElementById('filters').classList.remove('actives');
 }
 
-
+function updateCdnLinksWithFilter() {
+    var componentsParam = currentComponents().join(',');
+    document.querySelector('.theme-cdn').querySelectorAll('a').forEach(a => {
+        a.href = a.href.substring(0, a.href.lastIndexOf('/'));
+        if (!a.href.endsWith('/')) {
+            a.href += '/';
+        }
+        if (isfilterapplied) {
+            a.href = `${a.href}${componentsParam}`;
+        }
+        if (varTypeFilter && varTypeFilter.length) {
+            a.href += '?varTypes=' + varTypeFilter.join(',');
+        }
+    });
+}
 
 function getCheckedCategories(categories, comps, ischecked) {
 
@@ -2742,7 +2847,7 @@ function importing(boolean) {
                     url: "/Home/ThemeChange",
                     contentType: 'application/json; charset=utf-8',
                     processData: false,
-                    data: JSON.stringify({ color: filecontents }) // Note it is important
+                    data: JSON.stringify(filecontents) // Note it is important
                 }, 'POST', true);
                 ajax.send();
                 ajax.onSuccess = function (data) {
@@ -2788,7 +2893,7 @@ function importing(boolean) {
                     url: "/Home/DarkThemeChange",
                     contentType: 'application/json; charset=utf-8',
                     processData: false,
-                    data: JSON.stringify({ color: filecontents }) // Note it is important
+                    data: JSON.stringify(filecontents)
                 }, 'POST', true);
                 ajax2.send();
                 ajax2.onSuccess = function (data) {
@@ -2871,10 +2976,10 @@ function loadDefaultThemes1(theme, rendered) {
     themeObj["dependency"] = window.dependency_arr;
     var ajax = new ej.base.Ajax({
         type: "POST",
-        url: "/Home/dark",
+        url: "/Home/Dark",
         contentType: 'application/json; charset=utf-8',
         processData: false,
-        data: JSON.stringify({ themes: themeObj }) // Note it is important
+        data: JSON.stringify(themeObj)
     }, 'POST', true);
     ajax.send();
     ajax.onSuccess = function (data) {

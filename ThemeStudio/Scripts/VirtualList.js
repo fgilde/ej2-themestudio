@@ -5,7 +5,7 @@
 
     this.items = config.items;
     this.generatorFn = config.generatorFn;
-    console.log(config.totalRows);
+    //console.log(config.totalRows);
     this.totalRows = config.totalRows || (config.items && config.items.length);
 
     var totalHeight = itemHeight * this.totalRows;
