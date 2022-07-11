@@ -2,7 +2,7 @@
 var useNativeColorCtrl = false;
 var virtualizeThemeProperties = true;
 
-
+var varTypeFilter = ['Color']; // Default Typefilter color
 var defaultVal = {};
 var themeColors = {};
 var exportDialog, importDialog, filterDialog, loginDialog, createDialog;
@@ -22,6 +22,23 @@ var googleAngRegex = /\&+[^>]+/g;
 
 //var element = document.getElementById("controls");
 var themeProps = {};
+
+function initTypeFilter() {
+
+    if (varTypeFilter && varTypeFilter.length) {
+        varTypeFilter.forEach(value => {
+            $('#variableTypeFilter').val(value);
+        });
+    }
+    updateCdnLinksWithFilter();
+    $('#variableTypeFilter').select2();
+    $("#variableTypeFilter").change(function (a) {
+        varTypeFilter = a.val;
+        updateCdnLinksWithFilter();
+        renderProperties(curThemeName, true);
+    });
+}
+initTypeFilter();
 
 function filterChanged(event) {
     if (virtualizeThemeProperties) {
@@ -195,13 +212,20 @@ function renderRightPane() {
     colorpicker();
 }
 
-function loadThemeProperties(theme, callback) {
+function loadThemeProperties(theme, callback, force) {
     var objectName = theme.replace('-', '');
+    if (force) {
+        themeProps[objectName] = {};
+    }
     themeProps[objectName] = themeProps[objectName] || {};
     if (themeProps[objectName]._varsLoaded) {
         callback();
     } else {
-        fetch('/Home/ThemeProperties?theme=' + theme)
+        var url = '/Home/ThemeProperties?theme=' + theme;
+        if (varTypeFilter && varTypeFilter.length) {
+            url += '&varTypes=' + varTypeFilter.join(',');
+        }
+        fetch(url)
             .then(response => response.json())
             .then(data => {
                 Object.assign(themeProps[objectName], data);
@@ -248,9 +272,14 @@ function _loadDefaultThemes(theme, isRightpanerender) {
     history.replaceState({}, '', baseurl + str);
     curTheme = theme;
     themeColors = ej.base.extend({}, defaultVal, {}, true);
+
+    var loadThemeUrl = "/Home/LoadTheme";
+    if (varTypeFilter && varTypeFilter.length) {
+        loadThemeUrl += '?varTypes=' + varTypeFilter.join(',');
+    }
     var ajax = new ej.base.Ajax({
         type: "POST",
-        url: "/Home/LoadTheme",
+        url: loadThemeUrl,
         contentType: 'application/json; charset=utf-8',
         processData: false,
         data: JSON.stringify(themeObj) // Note it is important
@@ -583,7 +612,7 @@ function renderComponents() {
                 {
                     text: 'Internal',
                     click: () => loginDialog.show()
-                    
+
                 },
             ], content: 'Login', cssClass: 'e-primary', iconCss: 'e-btn-icons e-profile'
         });
@@ -1816,9 +1845,15 @@ function exporting(boolean) {
         colorchange["dependency"] = window.dependency_arr;
         themeBodyLeftOverlay.style.backgroundColor = "#383838";
         overlay(false);
+
+        var url = "/Home/Export";
+        if (varTypeFilter && varTypeFilter.length) {
+            url += '?varTypes=' + varTypeFilter.join(',');
+        }
+
         var ajax = new ej.base.Ajax({
             type: "POST",
-            url: "/Home/Export",
+            url: url,
             contentType: 'application/json; charset=utf-8',
             processData: false,
             data: JSON.stringify(colorchange) // Note it is important
@@ -1837,10 +1872,10 @@ function exporting(boolean) {
     exportDialog.hide();
 }
 
-function renderProperties(themeName) {
+function renderProperties(themeName, force) {
     loadThemeProperties(themeName, function () {
         _renderProperties(themeName);
-    });
+    }, force);
 }
 
 function login() {
@@ -2548,6 +2583,9 @@ function updateCdnLinksWithFilter() {
         }
         if (isfilterapplied) {
             a.href = `${a.href}${componentsParam}`;
+        }
+        if (varTypeFilter && varTypeFilter.length) {
+            a.href += '?varTypes=' + varTypeFilter.join(',');
         }
     });
 }

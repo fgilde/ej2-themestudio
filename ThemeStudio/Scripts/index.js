@@ -24,6 +24,7 @@ var googleAngRegex = /\&+[^>]+/g;
 var themeProps = {};
 
 function initTypeFilter() {
+    
     if (varTypeFilter && varTypeFilter.length) {
         varTypeFilter.forEach(value => {
             $('#variableTypeFilter').val(value);
