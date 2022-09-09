@@ -104,7 +104,14 @@
                         <button id="download-now" class="sb-download-btn">
                             Download
                         </button>
+                        @if (Context.Session.IsAuthenticated())
+                        {
+                            <button onclick="window.location.href='Home/Upload'" class="sb-download-btn">
+                                Upload
+                            </button>
+                        }
                     </div>
+                    
                 </div>
             </div>
 

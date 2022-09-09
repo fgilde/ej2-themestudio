@@ -1,6 +1,8 @@
 ﻿using System;
 using System.IO;
+using System.IO.Compression;
 using System.Linq;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using ThemeStudio.Attributes;
 using ThemeStudio.Extensions;
@@ -97,6 +99,40 @@ namespace ThemeStudio.Controllers
         {
             return ThemeChange(color);
         }
+        
+        [HttpPost]
+        //[SessionAuthorize]
+        public ActionResult ImportOrUpdateTheme(IFormFile file)
+        {
+            string themeName = Path.GetFileNameWithoutExtension(file.FileName).Split("-").FirstOrDefault();
+            if(file.ContentType != "application/zip" && file.ContentType != "application/x-zip-compressed")
+                throw new NotSupportedException("Only zip files are supported");
+            using (var stream = file.OpenReadStream())
+            using (var archive = new ZipArchive(stream))
+            {
+                foreach (var entry in archive.Entries)
+                {
+                    if (entry.FullName == entry.Name) // Entry in root
+                    {
+                        var path = Path.Combine(Paths.ResourceStyles, $"all{entry.FullName}");
+                        entry.ExtractToFile(path, true);
+                    }
+                    else
+                    {
+                        var entryFullName = entry.FullName.Replace("individual-scss/", "");
+                        var path = Path.Combine(Paths.ResourceStyles, Path.GetDirectoryName(entryFullName));
+                        var ext = Path.GetExtension(entry.FullName);
+                        var target = Path.Combine(path, $"{themeName}{ext}");
+                        if (!Directory.Exists(path))
+                            Directory.CreateDirectory(path);
+                        entry.ExtractToFile(target, true);
+                    }
+                    
+                }
+                // do something with the inner file
+            }
+            return RedirectToAction("Index");
+        }
 
         public string DefaultTheme()
         {
@@ -113,6 +149,13 @@ namespace ThemeStudio.Controllers
         {
             ViewBag.Message = "Your application description page.";
 
+            return View();
+        }
+
+        [SessionAuthorize]
+        public ActionResult Upload()
+        {
+            ViewBag.Message = "Upload new Theme or Update existing";
             return View();
         }
 

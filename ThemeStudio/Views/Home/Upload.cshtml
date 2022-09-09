@@ -1,0 +1,23 @@
+﻿@{
+    ViewBag.Title = "Upload";
+    Layout = null;
+}
+<div>
+
+    <h2>@ViewBag.Title.</h2>
+    <h3>@ViewBag.Message</h3>
+
+    <p>Here you can update an existing theme Or Upload a new one.</p>
+    <span>Only fully exported Zip files from <a target="_blank" href="https://blazor.syncfusion.com/themestudio/?theme=bootstrap">Original Theme studio</a> are supported</span>
+
+
+    @using (Html.BeginForm("ImportOrUpdateTheme", "Home", FormMethod.Post, new { enctype = "multipart/form-data" }))
+    {
+        <div>
+            @Html.TextBox("file", "", new {  type= "file"}) <br />
+            <input type="submit" value="Upload" />
+            @ViewBag.Message
+        </div>
+    }
+
+</div>
