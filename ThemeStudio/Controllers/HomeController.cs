@@ -120,7 +120,7 @@ namespace ThemeStudio.Controllers
                     else
                     {
                         var entryFullName = entry.FullName.Replace("individual-scss/", "");
-                        var path = Path.Combine(Paths.ResourceStyles, Path.GetDirectoryName(entryFullName));
+                        var path = Path.Combine(Paths.ResourceStyles, Path.GetDirectoryName(entryFullName), Path.GetFileNameWithoutExtension(entry.Name));
                         var ext = Path.GetExtension(entry.FullName);
                         var target = Path.Combine(path, $"{themeName}{ext}");
                         if (!Directory.Exists(path))
