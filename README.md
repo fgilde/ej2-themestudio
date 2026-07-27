@@ -13,3 +13,6 @@ Also this theme studio give you the possibility to change all theme color and no
 - Add Auth with external oidc
 - Improve filter
 - If filter applied only properties for these components are editable and exported in cdn links as well
+
+
+<img width="2218" height="1295" alt="image" src="https://github.com/user-attachments/assets/db3b6dc2-c617-4aab-a177-3044bdef6e51" />
